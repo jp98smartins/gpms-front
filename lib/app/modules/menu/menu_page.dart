@@ -1,6 +1,7 @@
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:gpms/app/modules/menu/bloc/menu_bloc.dart';
 import 'package:flutter/material.dart';
+
+import 'bloc/menu_bloc.dart';
 
 class MenuPage extends StatefulWidget {
   const MenuPage({Key? key}) : super(key: key);

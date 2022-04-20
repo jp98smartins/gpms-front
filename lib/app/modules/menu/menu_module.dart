@@ -1,6 +1,7 @@
-import 'package:gpms/app/modules/menu/menu_Page.dart';
-import 'package:gpms/app/modules/menu/bloc/menu_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+
+import 'bloc/menu_bloc.dart';
+import 'menu_page.dart';
 
 class MenuModule extends Module {
   @override

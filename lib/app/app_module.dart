@@ -1,9 +1,9 @@
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:gpms/app/modules/game/game_module.dart';
-import 'package:gpms/app/modules/splash/splash_module.dart';
 
 import 'core/routes/app_routes.dart';
+import 'modules/game/game_module.dart';
 import 'modules/menu/menu_module.dart';
+import 'modules/splash/splash_module.dart';
 
 class AppModule extends Module {
   @override
