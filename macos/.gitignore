@@ -1,0 +1,9 @@
+# Flutter-related
+**/Flutter/ephemeral/
+**/Pods/
+**/.symlinks/
+Podfile.lock
+
+# Xcode-related
+**/dgph
+**/xcuserdata/
