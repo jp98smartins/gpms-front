@@ -1,6 +1,7 @@
-import 'package:gpms/app/modules/game/game_Page.dart';
-import 'package:gpms/app/modules/game/bloc/game_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+
+import 'bloc/game_bloc.dart';
+import 'game_page.dart';
 
 class GameModule extends Module {
   @override
