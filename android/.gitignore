@@ -12,3 +12,4 @@ gpms_android.iml
 key.properties
 **/*.keystore
 **/*.jks
+**/local.properties

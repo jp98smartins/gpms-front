@@ -22,6 +22,7 @@ pubspec.lock
 
 # VSCode related
 .vscode
+.vs
 .idea
 gpms.iml
 
