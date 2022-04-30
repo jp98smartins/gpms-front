@@ -1,16 +1,23 @@
-# gpms
+# GPMS
 
-A new Flutter project.
+Projeto Mobile em Flutter sobre um jogo de xadrez
 
-## Getting Started
+## Documentação
 
-This project is a starting point for a Flutter application.
+Documentação sobre o planejamento do projeto
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+- [Estrutura analítica do projeto (EAP)](https://drive.google.com/file/d/1-HJGlOov82Om2RD3W1Rhc5HY5aXbdytF/view?usp=sharing)
+- [Mapeamento das atividades](https://docs.google.com/spreadsheets/d/1Ms6_9h2ctcZBrMT40-nv6atBDTA7fDstsaecy08aJjM/edit?usp=sharing)
+- [Análise de riscos](https://docs.google.com/spreadsheets/d/1Q1c-4CqQvzvcd9F--tXvZ49dNrUkLgXFthFmxNCKGjs/edit?usp=sharing)
+- [Modelagem das telas](https://www.figma.com/file/MO43QVwkbHdHTgE9oK9BZI/Aplicativo-Xadrez?node-id=0%3A1)
+- [Monitoramento e controle](https://trello.com/b/TeGcImtt/gpms)
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+## Participantes
+
+- Gabriel Inácio dos Santos Moreira (gabrielinacio@id.uff.br) 
+- João Pedro Martins (joaopedromartins@id.uff.br)
+- Lucas de Oliveira Tenório (lucasot@id.uff.br)
+- Rafael Lins Pinheiro (rafaellins@id.uff.br)
+- Ricardo de Freitas Carletti (ricardocarletti@id.uff.br)
