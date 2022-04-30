@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 
-class SplashPage extends StatefulWidget {
+import '../../core/adapters/svg_image_adapter.dart';
+import '../../core/theme/app_assets.dart';
+
+class SplashPage extends StatelessWidget {
   const SplashPage({Key? key}) : super(key: key);
 
   @override
-  SplashPageState createState() => SplashPageState();
-}
-
-class SplashPageState extends State<SplashPage> {
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Splash")),
-      body: Column(children: const <Widget>[]),
+      body: Center(
+        child: SvgImageAdapter.fromAsset(
+          AppAssets.whiteIcon,
+          key: const Key("AppIcon"),
+          width: 175.0,
+          semantics: "Icone do Aplicativo",
+        ),
+      ),
     );
   }
 }

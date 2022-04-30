@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 import 'app_colors.dart';
@@ -7,7 +9,7 @@ abstract class AppTheme {
   ThemeData get getAppTheme;
 }
 
-class LightAppTheme implements AppTheme {
+class DefaultAppTheme implements AppTheme {
   static const double defaultBorderWidth = 2.0;
   static const double defaultCheckboxBorderWidth = 0.5;
   static const double defaultElevation = 4.0;
@@ -16,6 +18,29 @@ class LightAppTheme implements AppTheme {
 
   @override
   ThemeData get getAppTheme => ThemeData(
+        appBarTheme: const AppBarTheme(
+          backgroundColor: AppColors.backgroundSecondary,
+          elevation: defaultElevation,
+          foregroundColor: AppColors.foregroundPrimary,
+          titleTextStyle: TextStyle(
+            color: AppColors.foregroundPrimary,
+            fontFamily: AppFonts.title,
+            fontSize: 36.0,
+            fontWeight: FontWeight.w700,
+          ),
+          centerTitle: false,
+          actionsIconTheme: IconThemeData(
+            color: AppColors.foregroundPrimary,
+            size: 28.0,
+          ),
+          shadowColor: AppColors.shadow,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(defaultRadius),
+              bottomRight: Radius.circular(defaultRadius),
+            ),
+          ),
+        ),
         // Elevated Button Theme
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ButtonStyle(
@@ -27,6 +52,9 @@ class LightAppTheme implements AppTheme {
             ),
             foregroundColor: MaterialStateProperty.resolveWith(
               (states) => AppColors.foregroundTertiary,
+            ),
+            fixedSize: MaterialStateProperty.resolveWith(
+              (states) => const Size(250, 60),
             ),
             shape: MaterialStateProperty.resolveWith(
               (states) => RoundedRectangleBorder(
@@ -41,107 +69,103 @@ class LightAppTheme implements AppTheme {
         ),
         // Text Themes
         textTheme: const TextTheme(
-          /// BUTTON -----
+          /// Button Text
           ///
-          /// KANIT - BOLD - 16
+          /// [AppColors.backgroundSecondary] - #575656
+          /// [AppFonts.primary] - Oxanium
+          /// [FontSize] - 20
+          /// [FontWeight.w700] - Bold
           button: TextStyle(
-            fontSize: 16.0,
+            color: AppColors.backgroundSecondary,
+            fontFamily: AppFonts.primary,
+            fontSize: 20.0,
             fontWeight: FontWeight.bold,
-            fontFamily: AppFonts.getPrimaryFont,
           ),
 
-          /// KANIT - BOLD - 18 - VERMELHO
+          /// Main Title
+          ///
+          /// [AppColors.foregroundPrimary] - White
+          /// [AppFonts.title] - Caveat
+          /// [FontSize] - 96
+          /// [FontWeight.w700] - Bold
           headline1: TextStyle(
-            fontFamily: AppFonts.getPrimaryFont,
-            fontSize: 18.0,
+            color: AppColors.foregroundPrimary,
+            fontFamily: AppFonts.title,
+            fontSize: 96.0,
             fontWeight: FontWeight.w700,
-            color: AppColors.primary,
           ),
 
-          /// KANIT - BOLD - 16 - VERMELHO
+          /// AppBar Title
+          ///
+          /// [AppColors.foregroundPrimary] - White
+          /// [AppFonts.title] - Caveat
+          /// [FontSize] - 36
+          /// [FontWeight.w700] - Bold
           headline2: TextStyle(
-            fontFamily: AppFonts.getPrimaryFont,
-            fontSize: 16.0,
+            color: AppColors.foregroundPrimary,
+            fontFamily: AppFonts.title,
+            fontSize: 36.0,
             fontWeight: FontWeight.w700,
-            color: AppColors.primary,
           ),
 
-          /// KANIT - BOLD - 14 - VERMELHO
-          headline3: TextStyle(
-            fontFamily: AppFonts.getPrimaryFont,
-            fontSize: 14.0,
-            fontWeight: FontWeight.w700,
-            color: AppColors.primary,
-          ),
-
-          /// KANIT - BOLD - 12 - VERMELHO
-          headline4: TextStyle(
-            fontFamily: AppFonts.getPrimaryFont,
-            fontSize: 12.0,
-            fontWeight: FontWeight.w700,
-            color: AppColors.primary,
-          ),
-
-          /// KANIT - SEMIBOLD - 16 - VERMELHO
-          headline5: TextStyle(
-            fontFamily: AppFonts.getPrimaryFont,
-            fontSize: 16.0,
-            fontWeight: FontWeight.w600,
-            color: AppColors.primary,
-          ),
-
-          /// KANIT - SEMIBOLD - 14 - VERMELHO
-          headline6: TextStyle(
-            fontFamily: AppFonts.getPrimaryFont,
-            fontSize: 14.0,
-            fontWeight: FontWeight.w600,
-            color: AppColors.primary,
-          ),
-
-          /// BODIES -----
+          /// Default Text
           ///
-          /// KANIT - BOLD - 12
+          /// [AppColors.foregroundPrimary] - White
+          /// [AppFonts.primary] - Oxanium
+          /// [FontSize] - 20
+          /// [FontWeight.w700] - Bold
           bodyText1: TextStyle(
-            fontFamily: AppFonts.getPrimaryFont,
-            fontSize: 16.0,
+            color: AppColors.foregroundPrimary,
+            fontFamily: AppFonts.primary,
+            fontSize: 20.0,
             fontWeight: FontWeight.bold,
           ),
 
-          /// KANIT - SEMIBOLD - 12
+          /// Dialog Text
+          ///
+          /// [AppColors.foregroundPrimary] - White
+          /// [AppFonts.primary] - Oxanium
+          /// [FontSize] - 24
+          /// [FontWeight.w700] - Bold
           bodyText2: TextStyle(
-            fontFamily: AppFonts.getPrimaryFont,
-            fontSize: 14.0,
+            color: AppColors.foregroundPrimary,
+            fontFamily: AppFonts.primary,
+            fontSize: 24.0,
             fontWeight: FontWeight.bold,
           ),
 
-          /// SUBTITLES -----
+          /// Dropdown Button Text
           ///
-          /// KANIT - LIGHT - 12
+          /// [AppColors.foregroundPrimary] - White
+          /// [AppFonts.secondary] - Arial
+          /// [FontSize] - 18
+          /// [FontWeight.w700] - Bold
           subtitle1: TextStyle(
-            fontFamily: AppFonts.getPrimaryFont,
-            fontSize: 12.0,
-            fontWeight: FontWeight.w300,
+            fontFamily: AppFonts.secondary,
+            fontSize: 18.0,
+            fontWeight: FontWeight.bold,
           ),
 
-          /// KANIT - LIGHT - 12 - UNDERLIDED
-          subtitle2: TextStyle(
-            fontFamily: AppFonts.getPrimaryFont,
-            fontSize: 12.0,
-            fontWeight: FontWeight.w300,
-            decoration: TextDecoration.underline,
-          ),
-
-          /// CAPTION -----
+          /// Board Text
           ///
-          /// KANIT - LIGHT - 11
+          /// [AppColors.foregroundPrimary] - White
+          /// [AppFonts.secondary] - Arial
+          /// [FontSize] - 24
+          /// [FontWeight.w700] - Bold
           caption: TextStyle(
-            fontFamily: AppFonts.getPrimaryFont,
-            fontSize: 11.0,
-            fontWeight: FontWeight.w300,
+            fontFamily: AppFonts.secondary,
+            fontSize: 24.0,
+            fontWeight: FontWeight.bold,
           ),
         ),
         // TextField Theme
         inputDecorationTheme: InputDecorationTheme(
+          contentPadding: const EdgeInsets.symmetric(horizontal: 10.0),
+          constraints: const BoxConstraints(
+            maxWidth: 250,
+            minWidth: 250,
+            minHeight: 60,
+          ),
           // Enabled Text and Border Style
           border: OutlineInputBorder(
             borderSide: const BorderSide(
@@ -150,74 +174,69 @@ class LightAppTheme implements AppTheme {
             ),
             borderRadius: BorderRadius.circular(defaultRadius),
           ),
-          enabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(
-              color: AppColors.foregroundPrimary,
+          enabledBorder: OutlineInputBorder(
+            borderSide: const BorderSide(
+              color: AppColors.foregroundSecondary,
               width: defaultBorderWidth,
             ),
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(defaultRadius),
-              bottomRight: Radius.circular(defaultRadius),
-            ),
+            borderRadius: BorderRadius.circular(defaultRadius),
           ),
-          hintStyle: TextStyle(
-            color: AppColors.foregroundTertiary,
-            fontFamily: AppFonts.getPrimaryFont,
+          hintStyle: const TextStyle(
+            color: AppColors.foregroundSecondary,
+            fontFamily: AppFonts.primary,
             fontSize: 12.0,
           ),
           // Focused Text and Border Style
           focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(
-              color: AppColors.primary,
+            borderSide: const BorderSide(
+              color: AppColors.foregroundPrimary,
               width: defaultBorderWidth,
             ),
-            borderRadius: BorderRadius.all(Radius.circular(defaultRadius)),
+            borderRadius: BorderRadius.circular(defaultRadius),
           ),
-          focusColor: AppColors.foregroundTertiary,
+          focusColor: AppColors.foregroundPrimary,
           focusedErrorBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: AppColors.error,
+            borderSide: const BorderSide(
+              color: AppColors.errorPrimary,
               width: defaultBorderWidth,
             ),
-            borderRadius: BorderRadius.all(Radius.circular(defaultRadius)),
+            borderRadius: BorderRadius.circular(defaultRadius),
           ),
           // Error Text and Border Style
           errorBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              color: AppColors.error,
+            borderSide: const BorderSide(
+              color: AppColors.errorSecondary,
               width: defaultBorderWidth,
             ),
-            borderRadius: BorderRadius.all(Radius.circular(defaultRadius)),
+            borderRadius: BorderRadius.circular(defaultRadius),
           ),
-          errorStyle: TextStyle(
-            color: AppColors.error,
-            fontFamily: AppFonts.getSecondaryFont,
+          errorStyle: const TextStyle(
+            color: AppColors.errorPrimary,
+            fontFamily: AppFonts.secondary,
             fontSize: 10.0,
           ),
-          contentPadding: EdgeInsets.only(left: 10.0),
-        ),
-        textSelectionTheme: const TextSelectionThemeData(
-          cursorColor: AppColors.info15,
+          suffixIconColor: AppColors.foregroundSecondary,
         ),
         // Colors
-        primaryColor: AppColors.primary,
+        primaryColor: AppColors.foregroundPrimary,
         backgroundColor: AppColors.backgroundPrimary,
         scaffoldBackgroundColor: AppColors.backgroundPrimary,
         brightness: Brightness.dark,
-        // CheckBox
-        checkboxTheme: CheckboxThemeData(
-          shape: RoundedRectangleBorder(
-            side: const BorderSide(
-              color: AppColors.foregroundTertiary,
-              width: defaultCheckboxBorderWidth,
-            ),
-            borderRadius: BorderRadius.circular(defaultCheckboxRadius),
-          ),
-        ),
         // Dialog
         dialogBackgroundColor: AppColors.shadow,
         dialogTheme: const DialogTheme(
-          backgroundColor: AppColors.backgroundPrimary,
+          alignment: Alignment.center,
+          titleTextStyle: TextStyle(
+            color: AppColors.foregroundPrimary,
+            fontFamily: AppFonts.primary,
+            fontSize: 24.0,
+            fontWeight: FontWeight.bold,
+          ),
+          shape: RoundedRectangleBorder(
+            side: BorderSide(color: AppColors.backgroungTertiary, width: 2.0),
+            borderRadius: BorderRadius.all(Radius.circular(defaultRadius)),
+          ),
+          backgroundColor: AppColors.backgroundSecondary,
         ),
       );
 }

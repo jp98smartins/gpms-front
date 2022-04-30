@@ -63,7 +63,15 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/images/
+    - assets/images/avatars/
+    - assets/images/award/
+    - assets/images/bishop/
+    - assets/images/icon/
+    - assets/images/king/
+    - assets/images/knight/
+    - assets/images/pawn/
+    - assets/images/queen/
+    - assets/images/rook/
 
   fonts:
     - family: Oxanium

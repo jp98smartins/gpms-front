@@ -8,12 +8,14 @@ class SvgImageAdapter {
     double? height,
     double? width,
     Color? color,
+    String? semantics,
     AlignmentGeometry alignment = Alignment.center,
     BoxFit fit = BoxFit.contain,
   }) {
     return SvgPicture.asset(
       path,
       key: key,
+      semanticsLabel: semantics,
       height: height,
       width: width,
       color: color,
