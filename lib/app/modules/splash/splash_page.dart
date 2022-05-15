@@ -1,23 +1,28 @@
 import 'package:flutter/material.dart';
 
-import '../../core/adapters/svg_image_adapter.dart';
 import '../../core/theme/app_assets.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_fonts.dart';
+import '../../core/adapters/svg_image_adapter.dart';
 
 class SplashPage extends StatelessWidget {
   const SplashPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     // não consegui usar a merda do tema, trocar quando souber
     const headline1 = TextStyle(
       color: AppColors.foregroundPrimary,
       fontFamily: AppFonts.title,
       fontSize: 96.0,
       fontWeight: FontWeight.w700,
+    );
+
+    const button = TextStyle(
+      color: AppColors.backgroundSecondary,
+      fontFamily: AppFonts.primary,
+      fontSize: 20.0,
+      fontWeight: FontWeight.bold,
     );
 
     var itemsGameMode = <String>['PvP', 'PvE', 'EvE']
@@ -46,11 +51,11 @@ class SplashPage extends StatelessWidget {
               width: 175.0,
               semantics: "Icone do Aplicativo",
             ),
-            const SizedBox(height: 30),
             const Text(
-              'XADREZ',
-              style: const Theme.of(context).textTheme.headline1,
+              'xadrez',
+              style: headline1,
             ),
+            const SizedBox(height: 10),
             DropdownButton(
               value: valueGameMode,
               items: itemsGameMode,
@@ -61,6 +66,14 @@ class SplashPage extends StatelessWidget {
               value: valueGameLevel,
               items: itemsGameLevel,
               onChanged: (String? newValue) {},
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {},
+              child: const Text(
+                "Iniciar Jogo",
+                style: button,
+              ),
             )
           ],
         ),
