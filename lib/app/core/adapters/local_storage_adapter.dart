@@ -37,7 +37,7 @@ class LocalStorageAdapter implements ILocalStorage {
   @override
   Future<void> delete(String key) async {
     try {
-      return _box.delete(key);
+      return await _box.delete(key);
     } catch (error) {
       rethrow;
     }
@@ -53,9 +53,9 @@ class LocalStorageAdapter implements ILocalStorage {
   }
 
   @override
-  Future<void> write(String key, value) {
+  Future<void> write(String key, value) async {
     try {
-      return _box.put(key, value);
+      return await _box.put(key, value);
     } catch (error) {
       rethrow;
     }
