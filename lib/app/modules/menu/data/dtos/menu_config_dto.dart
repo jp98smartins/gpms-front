@@ -22,14 +22,16 @@ class MenuConfigDto extends MenuConfigEntity {
     );
   }
 
-  Map toMap(MenuConfigDto menuConfigDto) {
+  static Map toMap(MenuConfigDto menuConfigDto) {
     return {
       'game_type': menuConfigDto.gameTypeDto.index,
       'game_difficulty': menuConfigDto.gameDifficultyDto.index,
     };
   }
 
-  String toJson(Map map) => jsonEncode(map);
+  static String toJson(MenuConfigDto menuConfigDto) => jsonEncode(
+        MenuConfigDto.toMap(menuConfigDto),
+      );
   factory MenuConfigDto.fromJson(String json) => MenuConfigDto.fromMap(
         jsonDecode(json),
       );
