@@ -185,7 +185,7 @@ class DefaultAppTheme implements AppTheme {
             fontSize: 12.0,
           ),
           // Focused Text and Border Style
-          focusedBorder: UnderlineInputBorder(
+          focusedBorder: OutlineInputBorder(
             borderSide: const BorderSide(
               color: AppColors.foregroundPrimary,
               width: defaultBorderWidth,

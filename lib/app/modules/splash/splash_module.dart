@@ -9,6 +9,6 @@ class SplashModule extends Module {
 
   @override
   final List<ModularRoute> routes = [
-    ChildRoute(AppRoutes.initialRoute, child: (_, args) => const SplashPage()),
+    ChildRoute(AppRoutes.initialRoute, child: (_, args) => SplashPage()),
   ];
 }

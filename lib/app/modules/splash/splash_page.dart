@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 
 import '../../core/adapters/svg_image_adapter.dart';
+import '../../core/routes/app_routes.dart';
 import '../../core/theme/app_assets.dart';
 
 class SplashPage extends StatelessWidget {
@@ -8,6 +10,10 @@ class SplashPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Future.delayed(
+      const Duration(milliseconds: 1500),
+      () => Modular.to.popAndPushNamed(AppRoutes.menuRoute),
+    );
     return Scaffold(
       body: Center(
         child: SvgImageAdapter.fromAsset(
