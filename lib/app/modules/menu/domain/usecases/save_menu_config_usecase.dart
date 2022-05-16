@@ -6,5 +6,7 @@ abstract class ISaveMenuConfigUseCase {
 
 class SaveMenuConfigUseCase implements ISaveMenuConfigUseCase {
   @override
-  Future<bool> call(MenuConfigDto menuConfigDto) async {}
+  Future<bool> call(MenuConfigDto menuConfigDto) async {
+    throw UnimplementedError();
+  }
 }
