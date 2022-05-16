@@ -1,12 +1,17 @@
 import '../../data/dtos/menu_config_dto.dart';
+import '../repositories/menu_config_repository.dart';
 
 abstract class IFetchMenuConfigUseCase {
   Future<MenuConfigDto?> call();
 }
 
 class FetchMenuConfigUseCase implements IFetchMenuConfigUseCase {
+  final IMenuConfigRepository _repository;
+
+  FetchMenuConfigUseCase(this._repository);
+
   @override
   Future<MenuConfigDto?> call() async {
-    throw UnimplementedError();
+    return await _repository.fecht();
   }
 }
