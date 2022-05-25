@@ -3,8 +3,8 @@ import 'package:flutter/cupertino.dart';
 enum PieceColor { black, white }
 
 class Location {
-  final int x;
-  final int y;
+  int x;
+  int y;
 
   Location(this.x, this.y);
 

@@ -54,14 +54,17 @@ List<ChessPiece> itensTabuleiro = [
   Knight(PieceColor.white, Location(7, 7)),
   Rook(PieceColor.white, Location(7, 8)),
 ];
+var posicoesY = ['', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+var posicoesX = ['8', '7', '6', '5', '4', '3', '2', '1', ''];
 
 class GamePageState extends State<GamePage> {
   final GameBloc bloc = Modular.get();
   late final double widthTile = MediaQuery.of(context).size.width / 9.5;
   var pecaAnterior = -1;
-  var corClaro = const Color.fromRGBO(205, 212, 215, 1);
+  var corClaro = Color.fromARGB(255, 155, 161, 163);
   var corEscuro = const Color.fromRGBO(117, 153, 186, 1);
   var corFundoNormal = const Color.fromRGBO(52, 52, 52, 1);
+  Location ultimo = Location(-1, -1);
 
   @override
   Widget build(BuildContext context) {
@@ -124,8 +127,6 @@ class GamePageState extends State<GamePage> {
   }
 
   Container escolheContainerFilho(int x, int y) {
-    var posicoesY = ['', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
-    var posicoesX = ['8', '7', '6', '5', '4', '3', '2', '1', ''];
     if (x == 8) {
       return Container(
         child: Center(
@@ -145,24 +146,46 @@ class GamePageState extends State<GamePage> {
       );
     }
 
-    for (ChessPiece chessPiece in itensTabuleiro) {
-      if (chessPiece.location.x == x && chessPiece.location.y == y) {
-        return Container(
-          child: Center(
-            child: chessPiece.image,
-          ),
-          padding: const EdgeInsets.all(5),
-        );
-      }
-    }
-
+    var possivelPesaAtual = encontraPeca(Location(x, y));
     return Container(
-      child: Center(
-        child: Text(''),
+      child: FlatButton(
+        color: (ultimo.x == x && ultimo.y == y)
+            ? Colors.red.withOpacity(0.6)
+            : Colors.black.withOpacity(0.0),
+        onPressed: () {
+          final possivelPecaAtual = encontraPeca(Location(x, y));
+          if (ultimo.x == -1 && ultimo.y == -1 && possivelPecaAtual != null) {
+            ultimo.x = x;
+            ultimo.y = y;
+          } else {
+            final possivelPecaAntiga = encontraPeca(ultimo);
+            if (possivelPecaAntiga != null) {
+              possivelPecaAntiga.location.x = x;
+              possivelPecaAntiga.location.y = y;
+            }
+
+            ultimo.x = -1;
+            ultimo.y = -1;
+          }
+          setState(() {});
+        },
+        child: Center(
+          child: encontraPeca(Location(x, y)) == null
+              ? Text('')
+              : possivelPesaAtual!.image,
+        ),
+        padding: const EdgeInsets.all(5),
       ),
-      padding: const EdgeInsets.all(5),
     );
   }
-}
 
-// Widget
+  ChessPiece? encontraPeca(Location location) {
+    for (ChessPiece chessPiece in itensTabuleiro) {
+      if (chessPiece.location.x == location.x &&
+          chessPiece.location.y == location.y) {
+        return chessPiece;
+      }
+    }
+    return null;
+  }
+}
