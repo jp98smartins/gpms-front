@@ -1,14 +1,14 @@
-import 'package:dartz/dartz_unsafe.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter/material.dart';
-import 'package:gpms/app/core/adapters/svg_image_adapter.dart';
-import 'package:gpms/app/core/theme/app_assets.dart';
-import 'package:gpms/app/modules/game/domain/entities/Bishop_entity.dart';
-import 'package:gpms/app/modules/game/domain/entities/chess_piece_entity.dart';
-import 'package:gpms/app/modules/game/domain/entities/king_entity.dart';
-import 'package:gpms/app/modules/game/domain/entities/knight_entity.dart';
-import 'package:gpms/app/modules/game/domain/entities/queen_entity.dart';
-import 'package:gpms/app/modules/game/domain/entities/rook_entity.dart';
+
+import '../../core/adapters/svg_image_adapter.dart';
+import '../../core/theme/app_assets.dart';
+import 'domain/entities/Bishop_entity.dart';
+import 'domain/entities/chess_piece_entity.dart';
+import 'domain/entities/king_entity.dart';
+import 'domain/entities/knight_entity.dart';
+import 'domain/entities/queen_entity.dart';
+import 'domain/entities/rook_entity.dart';
 
 import 'bloc/game_bloc.dart';
 import 'domain/entities/pawn_entity.dart';
@@ -58,7 +58,6 @@ List<ChessPiece> itensTabuleiro = [
 class GamePageState extends State<GamePage> {
   final GameBloc bloc = Modular.get();
   late final double widthTile = MediaQuery.of(context).size.width / 9.5;
-  var tabuleiro = List.filled(64, 'vazio');
   var pecaAnterior = -1;
   var corClaro = const Color.fromRGBO(205, 212, 215, 1);
   var corEscuro = const Color.fromRGBO(117, 153, 186, 1);
