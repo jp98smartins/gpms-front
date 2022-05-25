@@ -2,6 +2,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/adapters/svg_image_adapter.dart';
+import '../../core/routes/app_routes.dart';
 import '../../core/theme/app_assets.dart';
 import 'bloc/menu_bloc.dart';
 import 'widgets/dropdown_form_field_app.dart';
@@ -75,6 +76,11 @@ class MenuPageState extends State<MenuPage> {
               onPressed: () {
                 print(valueGameLevel);
                 print(valueGameMode);
+                //TODO guardar dados valueGameLevel e valueGameMode
+                Future.delayed(
+                  const Duration(milliseconds: 1500),
+                  () => Modular.to.pushNamed(AppRoutes.gameRoute),
+                );
               },
               child: const Text(
                 "Iniciar Jogo",
