@@ -17,6 +17,7 @@ abstract class ChessPiece {
   final String name;
   final PieceColor pieceColor;
   Location location;
+  List<Location>? legalMoviments;
 
   ChessPiece({
     required this.died,
@@ -28,5 +29,11 @@ abstract class ChessPiece {
 
   Widget get image;
 
-  List<Location> legalMoviments(List<ChessPiece> allPieces);
+  void addLegalMoviments(Location location) {
+    if (legalMoviments == null) {
+      legalMoviments = [location];
+    } else {
+      legalMoviments?.add(location);
+    }
+  }
 }

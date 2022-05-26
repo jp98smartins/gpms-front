@@ -21,41 +21,41 @@ class GamePage extends StatefulWidget {
 }
 
 List<ChessPiece> itensTabuleiro = [
-  Rook(PieceColor.black, Location(0, 1)),
-  Knight(PieceColor.black, Location(0, 2)),
-  Bishop(PieceColor.black, Location(0, 3)),
-  Queen(PieceColor.black, Location(0, 4)),
-  King(PieceColor.black, Location(0, 5)),
-  Bishop(PieceColor.black, Location(0, 6)),
-  Knight(PieceColor.black, Location(0, 7)),
-  Rook(PieceColor.black, Location(0, 8)),
+  Rook(PieceColor.black, Location(1, 0)),
+  Knight(PieceColor.black, Location(2, 0)),
+  Bishop(PieceColor.black, Location(3, 0)),
+  Queen(PieceColor.black, Location(4, 0)),
+  King(PieceColor.black, Location(5, 0)),
+  Bishop(PieceColor.black, Location(6, 0)),
+  Knight(PieceColor.black, Location(7, 0)),
+  Rook(PieceColor.black, Location(8, 0)),
   Pawn(PieceColor.black, Location(1, 1)),
-  Pawn(PieceColor.black, Location(1, 3)),
-  Pawn(PieceColor.black, Location(1, 4)),
-  Pawn(PieceColor.black, Location(1, 5)),
-  Pawn(PieceColor.black, Location(1, 2)),
-  Pawn(PieceColor.black, Location(1, 6)),
-  Pawn(PieceColor.black, Location(1, 7)),
-  Pawn(PieceColor.black, Location(1, 8)),
-  Pawn(PieceColor.white, Location(6, 1)),
-  Pawn(PieceColor.white, Location(6, 2)),
-  Pawn(PieceColor.white, Location(6, 3)),
-  Pawn(PieceColor.white, Location(6, 4)),
-  Pawn(PieceColor.white, Location(6, 5)),
+  Pawn(PieceColor.black, Location(3, 1)),
+  Pawn(PieceColor.black, Location(4, 1)),
+  Pawn(PieceColor.black, Location(5, 1)),
+  Pawn(PieceColor.black, Location(2, 1)),
+  Pawn(PieceColor.black, Location(6, 1)),
+  Pawn(PieceColor.black, Location(7, 1)),
+  Pawn(PieceColor.black, Location(8, 1)),
+  Pawn(PieceColor.white, Location(1, 6)),
+  Pawn(PieceColor.white, Location(2, 6)),
+  Pawn(PieceColor.white, Location(3, 6)),
+  Pawn(PieceColor.white, Location(4, 6)),
+  Pawn(PieceColor.white, Location(5, 6)),
   Pawn(PieceColor.white, Location(6, 6)),
-  Pawn(PieceColor.white, Location(6, 7)),
-  Pawn(PieceColor.white, Location(6, 8)),
-  Rook(PieceColor.white, Location(7, 1)),
-  Knight(PieceColor.white, Location(7, 2)),
-  Bishop(PieceColor.white, Location(7, 3)),
-  Queen(PieceColor.white, Location(7, 4)),
-  King(PieceColor.white, Location(7, 5)),
-  Bishop(PieceColor.white, Location(7, 6)),
+  Pawn(PieceColor.white, Location(7, 6)),
+  Pawn(PieceColor.white, Location(8, 6)),
+  Rook(PieceColor.white, Location(1, 7)),
+  Knight(PieceColor.white, Location(2, 7)),
+  Bishop(PieceColor.white, Location(3, 7)),
+  Queen(PieceColor.white, Location(4, 7)),
+  King(PieceColor.white, Location(5, 7)),
+  Bishop(PieceColor.white, Location(6, 7)),
   Knight(PieceColor.white, Location(7, 7)),
-  Rook(PieceColor.white, Location(7, 8)),
+  Rook(PieceColor.white, Location(8, 7)),
 ];
 var posicoesY = ['', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
-var posicoesX = ['8', '7', '6', '5', '4', '3', '2', '1', ''];
+var posicoesX = ['1', '2', '3', '4', '5', '6', '7', '8', ''];
 
 class GamePageState extends State<GamePage> {
   final GameBloc bloc = Modular.get();
@@ -90,11 +90,11 @@ class GamePageState extends State<GamePage> {
             children: [
               ...List.generate(
                 9,
-                (x) => Row(
+                (y) => Row(
                   children: [
                     ...List.generate(
                       9,
-                      (y) => Container(
+                      (x) => Container(
                         // ignore: prefer_const_constructors
                         decoration: BoxDecoration(
                           color: escolheCor(x, y),
@@ -117,7 +117,7 @@ class GamePageState extends State<GamePage> {
   }
 
   Color escolheCor(int x, int y) {
-    if (x == 8 || y == 0) {
+    if (x == 0 || y == 8) {
       //Escolher cor da casa no tabuleiro
       return corFundoNormal;
     }
@@ -129,20 +129,20 @@ class GamePageState extends State<GamePage> {
 
   Container escolheContainerFilho(int x, int y) {
     //definição linha e coluna
-    if (x == 8) {
+    if (x == 0) {
       return Container(
         child: Center(
             child: Text(
-          '${posicoesY[y]}',
+          '${posicoesX[y]}',
           style: Theme.of(context).textTheme.caption,
         )),
       );
     }
-    if (y == 0) {
+    if (y == 8) {
       return Container(
         child: Center(
             child: Text(
-          '${posicoesX[x]}',
+          '${posicoesY[x]}',
           style: Theme.of(context).textTheme.caption,
         )),
       );
@@ -172,7 +172,7 @@ class GamePageState extends State<GamePage> {
         },
         child: Center(
           child: encontraPeca(Location(x, y)) == null
-              ? Text('')
+              ? Text('${x} ${y}')
               : possivelPecaAtual!.image,
         ),
         padding: const EdgeInsets.all(5),

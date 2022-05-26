@@ -15,11 +15,6 @@ class Queen extends ChessPiece {
         );
 
   @override
-  List<Location> legalMoviments(List<ChessPiece> allPieces) {
-    // TODO: implement legalMoviments
-    throw UnimplementedError();
-  }
-
   @override
   Widget get image => SvgImageAdapter.fromAsset(
         pieceColor == PieceColor.white
