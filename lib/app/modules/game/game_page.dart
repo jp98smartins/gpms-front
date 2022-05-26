@@ -61,8 +61,8 @@ class GamePageState extends State<GamePage> {
   final GameBloc bloc = Modular.get();
   late final double widthTile = MediaQuery.of(context).size.width / 9.5;
   var pecaAnterior = -1;
-  var corClaro = Color.fromARGB(255, 155, 161, 163);
-  var corEscuro = const Color.fromRGBO(117, 153, 186, 1);
+  var corClaro = Color.fromARGB(255, 164, 177, 214);
+  var corEscuro = Color.fromARGB(255, 63, 97, 207);
   var corFundoNormal = const Color.fromRGBO(52, 52, 52, 1);
   Location ultimo = Location(-1, -1);
 
@@ -118,6 +118,7 @@ class GamePageState extends State<GamePage> {
 
   Color escolheCor(int x, int y) {
     if (x == 8 || y == 0) {
+      //Escolher cor da casa no tabuleiro
       return corFundoNormal;
     }
     if ((x.isEven && y.isOdd) || (x.isOdd && y.isEven)) {
@@ -127,6 +128,7 @@ class GamePageState extends State<GamePage> {
   }
 
   Container escolheContainerFilho(int x, int y) {
+    //definição linha e coluna
     if (x == 8) {
       return Container(
         child: Center(
@@ -146,14 +148,13 @@ class GamePageState extends State<GamePage> {
       );
     }
 
-    var possivelPesaAtual = encontraPeca(Location(x, y));
+    var possivelPecaAtual = encontraPeca(Location(x, y));
     return Container(
       child: FlatButton(
         color: (ultimo.x == x && ultimo.y == y)
             ? Colors.red.withOpacity(0.6)
             : Colors.black.withOpacity(0.0),
         onPressed: () {
-          final possivelPecaAtual = encontraPeca(Location(x, y));
           if (ultimo.x == -1 && ultimo.y == -1 && possivelPecaAtual != null) {
             ultimo.x = x;
             ultimo.y = y;
@@ -172,7 +173,7 @@ class GamePageState extends State<GamePage> {
         child: Center(
           child: encontraPeca(Location(x, y)) == null
               ? Text('')
-              : possivelPesaAtual!.image,
+              : possivelPecaAtual!.image,
         ),
         padding: const EdgeInsets.all(5),
       ),
