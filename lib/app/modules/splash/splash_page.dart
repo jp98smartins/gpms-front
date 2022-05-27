@@ -12,7 +12,7 @@ class SplashPage extends StatelessWidget {
   Widget build(BuildContext context) {
     Future.delayed(
       const Duration(milliseconds: 1500),
-      () => Modular.to.popAndPushNamed(AppRoutes.gameRoute),
+      () => Modular.to.popAndPushNamed(AppRoutes.menuRoute),
     );
     return Scaffold(
       body: Center(

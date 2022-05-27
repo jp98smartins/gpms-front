@@ -68,6 +68,7 @@ class GamePageState extends State<GamePage> {
 
   @override
   Widget build(BuildContext context) {
+    controller.fetchMenuConfigs(context);
     return Scaffold(
       appBar: AppBar(
         leading: Padding(

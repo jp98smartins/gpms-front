@@ -211,7 +211,7 @@ class DefaultAppTheme implements AppTheme {
           errorStyle: const TextStyle(
             color: AppColors.errorPrimary,
             fontFamily: AppFonts.secondary,
-            fontSize: 10.0,
+            fontSize: 12.0,
           ),
           suffixIconColor: AppColors.foregroundSecondary,
         ),
