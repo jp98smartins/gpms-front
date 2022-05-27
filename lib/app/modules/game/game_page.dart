@@ -1,5 +1,6 @@
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter/material.dart';
+import 'package:gpms/app/modules/game/game_controller.dart';
 
 import '../../core/adapters/svg_image_adapter.dart';
 import '../../core/theme/app_assets.dart';
@@ -10,7 +11,6 @@ import 'domain/entities/knight_entity.dart';
 import 'domain/entities/queen_entity.dart';
 import 'domain/entities/rook_entity.dart';
 
-import 'bloc/game_bloc.dart';
 import 'domain/entities/pawn_entity.dart';
 
 class GamePage extends StatefulWidget {
@@ -58,7 +58,7 @@ var posicoesY = ['', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 var posicoesX = ['1', '2', '3', '4', '5', '6', '7', '8', ''];
 
 class GamePageState extends State<GamePage> {
-  final GameBloc bloc = Modular.get();
+  final controller = Modular.get<GameController>();
   late final double widthTile = MediaQuery.of(context).size.width / 9.5;
   var pecaAnterior = -1;
   var corClaro = Color.fromARGB(255, 164, 177, 214);
