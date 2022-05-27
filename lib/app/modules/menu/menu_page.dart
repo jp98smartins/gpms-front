@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../../core/adapters/svg_image_adapter.dart';
 import '../../core/routes/app_routes.dart';
 import '../../core/theme/app_assets.dart';
-import 'bloc/menu_bloc.dart';
+import 'menu_controller.dart';
 import 'widgets/dropdown_form_field_app.dart';
 
 class MenuPage extends StatefulWidget {
@@ -15,7 +15,7 @@ class MenuPage extends StatefulWidget {
 }
 
 class MenuPageState extends State<MenuPage> {
-  final MenuBloc bloc = Modular.get();
+  final controller = Modular.get<MenuController>();
 
   var itemsGameMode = <String>['PvP', 'PvE', 'EvE']
       .map<DropdownMenuItem<String>>((String value) {
