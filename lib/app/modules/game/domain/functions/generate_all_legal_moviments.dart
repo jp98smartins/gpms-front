@@ -192,13 +192,15 @@ class GenerateAllLegalMoviments {
           verificaPosX--;
           posivelPeca =
               findPiece(tabuleiro, Location(verificaPosX, verificaPosY));
-          if (posivelPeca != null) {
+          if (posivelPeca != null &&
+              posivelPeca.pieceColor != element.pieceColor) {
             element.addLegalMoviments(Location(verificaPosX, verificaPosY));
           }
           verificaPosX += 2;
           posivelPeca =
               findPiece(tabuleiro, Location(verificaPosX, verificaPosY));
-          if (posivelPeca != null) {
+          if (posivelPeca != null &&
+              posivelPeca.pieceColor != element.pieceColor) {
             element.addLegalMoviments(Location(verificaPosX, verificaPosY));
           }
 

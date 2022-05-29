@@ -70,7 +70,6 @@ class GamePageState extends State<GamePage> {
 
   @override
   Widget build(BuildContext context) {
-    controller.fetchMenuConfigs(context);
     return Scaffold(
       appBar: AppBar(
         leading: Padding(
@@ -196,11 +195,10 @@ class GamePageState extends State<GamePage> {
         },
         child: Center(
           child: findPiece(itensTabuleiro, Location(x, y)) == null
-              ? Text('$x $y')
+              ? Text('')
               : possivelPecaAtual!.image,
         ),
       ),
-      padding: const EdgeInsets.all(5),
     );
   }
 }
