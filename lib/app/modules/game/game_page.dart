@@ -1,5 +1,6 @@
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter/material.dart';
+import 'package:gpms/app/core/theme/app_colors.dart';
 import 'package:gpms/app/modules/game/game_controller.dart';
 
 import '../../core/adapters/svg_image_adapter.dart';
@@ -61,9 +62,6 @@ class GamePageState extends State<GamePage> {
   final controller = Modular.get<GameController>();
   late final double widthTile = MediaQuery.of(context).size.width / 9.5;
   var pecaAnterior = -1;
-  var corClaro = Color.fromARGB(255, 164, 177, 214);
-  var corEscuro = Color.fromARGB(255, 63, 97, 207);
-  var corFundoNormal = const Color.fromRGBO(52, 52, 52, 1);
   Location ultimo = Location(-1, -1);
 
   @override
@@ -96,9 +94,8 @@ class GamePageState extends State<GamePage> {
                     ...List.generate(
                       9,
                       (x) => Container(
-                        // ignore: prefer_const_constructors
                         decoration: BoxDecoration(
-                          color: escolheCor(x, y),
+                          color: pickBoardPositionColor(x, y),
                         ),
                         width: widthTile,
                         height: widthTile,
@@ -113,48 +110,55 @@ class GamePageState extends State<GamePage> {
           Container(),
         ],
         mainAxisAlignment: MainAxisAlignment.center,
-      ),
+      ),gi
     );
   }
 
-  Color escolheCor(int x, int y) {
-    if (x == 0 || y == 8) {
-      //Escolher cor da casa no tabuleiro
-      return corFundoNormal;
-    }
+  /// Method that picks the right color for the position on the board.
+  ///
+  /// @param [int x] position x of the board.
+  /// @param [int y] position y of the board.
+  ///
+  /// @return Color [ AppColors.backgroundPrimary, AppColors.lightBoardPosition, AppColors.darkBoardPosition ]
+  Color pickBoardPositionColor(int x, int y) {
+    // Cor das Letras/Números das casas do tabuleiro
+    if (x == 0 || y == 8) return AppColors.backgroundPrimary;
+
+    // Casas Claras do Tabuleiro
     if ((x.isEven && y.isOdd) || (x.isOdd && y.isEven)) {
-      return corClaro;
+      return AppColors.lightBoardPosition;
     }
-    return corEscuro;
+
+    // Casas Escuras do Tabuleiro
+    return AppColors.darkBoardPosition;
   }
 
-  Container escolheContainerFilho(int x, int y) {
+  Widget escolheContainerFilho(int x, int y) {
     //definição linha e coluna
     if (x == 0) {
-      return Container(
-        child: Center(
-            child: Text(
-          '${posicoesX[y]}',
-          style: Theme.of(context).textTheme.caption,
-        )),
-      );
+      return Center(
+          child: Text(
+        '$posicoesX[y]',
+        style: Theme.of(context).textTheme.caption,
+      ));
     }
     if (y == 8) {
-      return Container(
-        child: Center(
-            child: Text(
-          '${posicoesY[x]}',
-          style: Theme.of(context).textTheme.caption,
-        )),
-      );
+      return Center(
+          child: Text(
+        '$posicoesY[x]',
+        style: Theme.of(context).textTheme.caption,
+      ));
     }
 
     var possivelPecaAtual = encontraPeca(Location(x, y));
-    return Container(
-      child: FlatButton(
-        color: (ultimo.x == x && ultimo.y == y)
-            ? Colors.red.withOpacity(0.6)
-            : Colors.black.withOpacity(0.0),
+    return Padding(
+      child: TextButton(
+        style: ButtonStyle(
+            backgroundColor: MaterialStateColor.resolveWith(
+          (states) => (ultimo.x == x && ultimo.y == y)
+              ? Colors.red.withOpacity(0.6)
+              : Colors.black.withOpacity(0.0),
+        )),
         onPressed: () {
           if (ultimo.x == -1 && ultimo.y == -1 && possivelPecaAtual != null) {
             ultimo.x = x;
@@ -173,11 +177,11 @@ class GamePageState extends State<GamePage> {
         },
         child: Center(
           child: encontraPeca(Location(x, y)) == null
-              ? Text('${x} ${y}')
+              ? Text('$x $y')
               : possivelPecaAtual!.image,
         ),
-        padding: const EdgeInsets.all(5),
       ),
+      padding: const EdgeInsets.all(5),
     );
   }
 
