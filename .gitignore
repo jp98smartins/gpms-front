@@ -75,4 +75,5 @@ gpms.iml
 # End of https://www.toptal.com/developers/gitignore/api/flutter
 
 # App Specifics
+**/*.DS_Store
 lib/app/core/constants.dart

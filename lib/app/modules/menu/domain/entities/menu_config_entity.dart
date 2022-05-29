@@ -1,9 +1,9 @@
 import '../../../../core/enums/game_difficulty.dart';
-import '../../../../core/enums/game_type.dart';
+import '../../../../core/enums/game_mode.dart';
 
 class MenuConfigEntity {
-  final GameType gameType;
+  final GameMode gameMode;
   final GameDifficulty gameDifficulty;
 
-  MenuConfigEntity({required this.gameType, required this.gameDifficulty});
+  MenuConfigEntity({required this.gameMode, required this.gameDifficulty});
 }

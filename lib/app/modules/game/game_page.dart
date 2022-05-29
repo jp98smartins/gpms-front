@@ -1,5 +1,7 @@
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter/material.dart';
+import 'package:gpms/app/core/theme/app_colors.dart';
+import 'package:gpms/app/modules/game/game_controller.dart';
 
 import '../../core/adapters/svg_image_adapter.dart';
 import '../../core/theme/app_assets.dart';
@@ -10,7 +12,6 @@ import 'domain/entities/knight_entity.dart';
 import 'domain/entities/queen_entity.dart';
 import 'domain/entities/rook_entity.dart';
 
-import 'bloc/game_bloc.dart';
 import 'domain/entities/pawn_entity.dart';
 import 'domain/functions/find_piece.dart';
 import 'domain/functions/generate_all_legal_moviments.dart';
@@ -62,16 +63,14 @@ var posicoesX = ['1', '2', '3', '4', '5', '6', '7', '8', ''];
 List<Location>? posicoesPossiveisEscolha = null;
 
 class GamePageState extends State<GamePage> {
-  final GameBloc bloc = Modular.get();
+  final controller = Modular.get<GameController>();
   late final double widthTile = MediaQuery.of(context).size.width / 9.5;
   var pecaAnterior = -1;
-  var corClaro = Color.fromARGB(255, 164, 177, 214);
-  var corEscuro = Color.fromARGB(255, 63, 97, 207);
-  var corFundoNormal = const Color.fromRGBO(52, 52, 52, 1);
   Location ultimo = Location(-1, -1);
 
   @override
   Widget build(BuildContext context) {
+    controller.fetchMenuConfigs(context);
     return Scaffold(
       appBar: AppBar(
         leading: Padding(
@@ -99,9 +98,8 @@ class GamePageState extends State<GamePage> {
                     ...List.generate(
                       9,
                       (x) => Container(
-                        // ignore: prefer_const_constructors
                         decoration: BoxDecoration(
-                          color: escolheCor(x, y),
+                          color: pickBoardPositionColor(x, y),
                         ),
                         width: widthTile,
                         height: widthTile,
@@ -120,18 +118,26 @@ class GamePageState extends State<GamePage> {
     );
   }
 
-  Color escolheCor(int x, int y) {
-    if (x == 0 || y == 8) {
-      //Escolher cor da casa no tabuleiro
-      return corFundoNormal;
-    }
+  /// Method that picks the right color for the position on the board.
+  ///
+  /// @param [int x] position x of the board.
+  /// @param [int y] position y of the board.
+  ///
+  /// @return Color [ AppColors.backgroundPrimary, AppColors.lightBoardPosition, AppColors.darkBoardPosition ]
+  Color pickBoardPositionColor(int x, int y) {
+    // Cor das Letras/Números das casas do tabuleiro
+    if (x == 0 || y == 8) return AppColors.backgroundPrimary;
+
+    // Casas Claras do Tabuleiro
     if ((x.isEven && y.isOdd) || (x.isOdd && y.isEven)) {
-      return corClaro;
+      return AppColors.lightBoardPosition;
     }
-    return corEscuro;
+
+    // Casas Escuras do Tabuleiro
+    return AppColors.darkBoardPosition;
   }
 
-  Container escolheContainerFilho(int x, int y) {
+  Widget escolheContainerFilho(int x, int y) {
     //definição linha e coluna
     if (x == 0) {
       return Container(
@@ -156,11 +162,15 @@ class GamePageState extends State<GamePage> {
     GenerateAllLegalMoviments.gerarMovimentos(itensTabuleiro);
     return Container(
       // ignore: deprecated_member_use
-      child: FlatButton(
-        color: (ultimo.x == x && ultimo.y == y) ||
-                verifyLocationInList(posicoesPossiveisEscolha, Location(x, y))
-            ? Colors.red.withOpacity(0.6)
-            : Colors.black.withOpacity(0.0),
+      child: TextButton(
+        style: ButtonStyle(
+            backgroundColor: MaterialStateColor.resolveWith(
+          (states) => (ultimo.x == x && ultimo.y == y ||
+                  verifyLocationInList(
+                      posicoesPossiveisEscolha, Location(x, y)))
+              ? Colors.red.withOpacity(0.6)
+              : Colors.black.withOpacity(0.0),
+        )),
         onPressed: () {
           if (ultimo.x == -1 && ultimo.y == -1 && possivelPecaAtual != null) {
             ultimo.x = x;
@@ -189,8 +199,8 @@ class GamePageState extends State<GamePage> {
               ? Text('$x $y')
               : possivelPecaAtual!.image,
         ),
-        padding: const EdgeInsets.all(5),
       ),
+      padding: const EdgeInsets.all(5),
     );
   }
 }

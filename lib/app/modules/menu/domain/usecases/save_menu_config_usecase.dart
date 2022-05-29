@@ -1,5 +1,5 @@
-import '../../data/dtos/menu_config_dto.dart';
-import '../repositories/menu_config_repository.dart';
+import '../../../../core/data/dtos/menu_config_dto.dart';
+import '../../../../core/domain/repositories/menu_config_repository.dart';
 
 abstract class ISaveMenuConfigUseCase {
   Future<bool> call(MenuConfigDto menuConfigDto);

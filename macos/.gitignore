@@ -7,3 +7,5 @@ Podfile.lock
 # Xcode-related
 **/dgph
 **/xcuserdata/
+
+**/*.DS_Store
