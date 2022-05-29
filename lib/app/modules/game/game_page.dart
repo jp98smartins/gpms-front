@@ -12,6 +12,9 @@ import 'domain/entities/rook_entity.dart';
 
 import 'bloc/game_bloc.dart';
 import 'domain/entities/pawn_entity.dart';
+import 'domain/functions/find_piece.dart';
+import 'domain/functions/generate_all_legal_moviments.dart';
+import 'domain/functions/verify_location_in_list.dart';
 
 class GamePage extends StatefulWidget {
   const GamePage({Key? key}) : super(key: key);
@@ -56,6 +59,7 @@ List<ChessPiece> itensTabuleiro = [
 ];
 var posicoesY = ['', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 var posicoesX = ['1', '2', '3', '4', '5', '6', '7', '8', ''];
+List<Location>? posicoesPossiveisEscolha = null;
 
 class GamePageState extends State<GamePage> {
   final GameBloc bloc = Modular.get();
@@ -133,7 +137,7 @@ class GamePageState extends State<GamePage> {
       return Container(
         child: Center(
             child: Text(
-          '${posicoesX[y]}',
+          posicoesX[y],
           style: Theme.of(context).textTheme.caption,
         )),
       );
@@ -142,51 +146,51 @@ class GamePageState extends State<GamePage> {
       return Container(
         child: Center(
             child: Text(
-          '${posicoesY[x]}',
+          posicoesY[x],
           style: Theme.of(context).textTheme.caption,
         )),
       );
     }
 
-    var possivelPecaAtual = encontraPeca(Location(x, y));
+    var possivelPecaAtual = findPiece(itensTabuleiro, Location(x, y));
+    GenerateAllLegalMoviments.gerarMovimentos(itensTabuleiro);
     return Container(
+      // ignore: deprecated_member_use
       child: FlatButton(
-        color: (ultimo.x == x && ultimo.y == y)
+        color: (ultimo.x == x && ultimo.y == y) ||
+                verifyLocationInList(posicoesPossiveisEscolha, Location(x, y))
             ? Colors.red.withOpacity(0.6)
             : Colors.black.withOpacity(0.0),
         onPressed: () {
           if (ultimo.x == -1 && ultimo.y == -1 && possivelPecaAtual != null) {
             ultimo.x = x;
             ultimo.y = y;
+
+            posicoesPossiveisEscolha = possivelPecaAtual.legalMoviments;
           } else {
-            final possivelPecaAntiga = encontraPeca(ultimo);
+            // VERIFICA SE TEM PEÇA ANTIGA, CASO TENHA COLOCA NA NOVA POSICAO
+
+            final possivelPecaAntiga = findPiece(itensTabuleiro, ultimo);
             if (possivelPecaAntiga != null) {
               possivelPecaAntiga.location.x = x;
               possivelPecaAntiga.location.y = y;
+              possivelPecaAntiga.moved = true;
             }
 
+            // RESETA AS POSSIVEIS OPÇÕES DE ESCOLHA
+            posicoesPossiveisEscolha = null;
             ultimo.x = -1;
             ultimo.y = -1;
           }
           setState(() {});
         },
         child: Center(
-          child: encontraPeca(Location(x, y)) == null
-              ? Text('${x} ${y}')
+          child: findPiece(itensTabuleiro, Location(x, y)) == null
+              ? Text('$x $y')
               : possivelPecaAtual!.image,
         ),
         padding: const EdgeInsets.all(5),
       ),
     );
-  }
-
-  ChessPiece? encontraPeca(Location location) {
-    for (ChessPiece chessPiece in itensTabuleiro) {
-      if (chessPiece.location.x == location.x &&
-          chessPiece.location.y == location.y) {
-        return chessPiece;
-      }
-    }
-    return null;
   }
 }
