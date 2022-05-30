@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:get/get.dart';
 
 import '../../../core/adapters/svg_image_adapter.dart';
 import '../../../core/theme/app_assets.dart';
