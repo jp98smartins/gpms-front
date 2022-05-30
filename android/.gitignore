@@ -13,3 +13,5 @@ gpms_android.iml
 key.properties
 **/*.keystore
 **/*.jks
+
+**/*.DS_Store

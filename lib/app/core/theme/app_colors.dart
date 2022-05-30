@@ -23,4 +23,8 @@ abstract class AppColors {
   static const Color overlay = Color(0x99575656);
   static const Color transparent = Color(0x00FFFFFF);
   static const Color shadow = Color(0x80FFFFFF);
+
+  // Board Colors -----
+  static const Color lightBoardPosition = Color(0xFFCDD4D7);
+  static const Color darkBoardPosition = Color(0xFF7599BA);
 }

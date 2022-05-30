@@ -1,30 +1,32 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
-
-import '../../../../core/enums/game_difficulty.dart';
-import '../../../../core/enums/game_type.dart';
-import '../../domain/entities/menu_config_entity.dart';
+import '../../../modules/menu/domain/entities/menu_config_entity.dart';
+import '../../enums/game_difficulty.dart';
+import '../../enums/game_mode.dart';
 
 class MenuConfigDto extends MenuConfigEntity {
-  final GameType gameTypeDto;
+  final GameMode gameModeDto;
   final GameDifficulty gameDifficultyDto;
 
   MenuConfigDto({
-    required this.gameTypeDto,
+    required this.gameModeDto,
     required this.gameDifficultyDto,
-  }) : super(gameType: gameTypeDto, gameDifficulty: gameDifficultyDto);
+  }) : super(gameMode: gameModeDto, gameDifficulty: gameDifficultyDto);
 
   factory MenuConfigDto.fromMap(Map map) {
     return MenuConfigDto(
-      gameTypeDto: gameTypeFromIndex(map['game_type']),
-      gameDifficultyDto: gameDifficultyFromIndex(map['game_difficulty']),
+      gameModeDto: gameModeFromIndex(
+        int.tryParse(map['game_mode'].toString()) ?? 0,
+      ),
+      gameDifficultyDto: gameDifficultyFromIndex(
+        int.tryParse(map['game_difficulty'].toString()) ?? 0,
+      ),
     );
   }
 
   static Map toMap(MenuConfigDto menuConfigDto) {
     return {
-      'game_type': menuConfigDto.gameTypeDto.index,
+      'game_mode': menuConfigDto.gameModeDto.index,
       'game_difficulty': menuConfigDto.gameDifficultyDto.index,
     };
   }

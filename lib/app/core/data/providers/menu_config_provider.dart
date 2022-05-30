@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import '../../../../core/adapters/local_storage_adapter.dart';
+import '../../adapters/local_storage_adapter.dart';
 import '../../data/dtos/menu_config_dto.dart';
 
 abstract class IMenuConfigProvider {
@@ -9,10 +9,11 @@ abstract class IMenuConfigProvider {
 }
 
 class MenuConfigProvider implements IMenuConfigProvider {
-  final LocalStorageAdapter _storageAdapter;
-  static const menuConfigKey = 'menu_config';
-
   MenuConfigProvider(this._storageAdapter);
+
+  final ILocalStorage _storageAdapter;
+
+  static const menuConfigKey = 'menu_config';
 
   @override
   Future<MenuConfigDto?> fecht() async {

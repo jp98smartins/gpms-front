@@ -1,9 +1,7 @@
+import 'package:gpms/app/core/adapters/path_provider_adapter.dart';
 import 'package:hive/hive.dart';
 
 abstract class ILocalStorage {
-  // Method that creates the Local Storage Box.
-  set box(String boxName);
-
   /// Method that reads, by key, a single register inside a box.
   dynamic read(String key) {}
 
@@ -18,11 +16,17 @@ abstract class ILocalStorage {
 }
 
 class LocalStorageAdapter implements ILocalStorage {
-  late Box _box;
+  LocalStorageAdapter({required this.boxName}) {
+    initialize(boxName);
+  }
 
-  @override
-  set box(String boxName) {
-    _box = Hive.box(boxName);
+  late final Box _box;
+  final String boxName;
+  final IPathProvider _pathProvider = PathProviderAdapter();
+
+  void initialize(String boxName) async {
+    Hive.init(await _pathProvider.aplicationStorageDirectory);
+    _box = await Hive.openBox(boxName);
   }
 
   @override

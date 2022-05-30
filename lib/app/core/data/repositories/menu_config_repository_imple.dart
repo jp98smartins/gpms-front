@@ -1,7 +1,6 @@
-import 'package:gpms/app/modules/menu/data/providers/menu_config_provider.dart';
-import 'package:gpms/app/modules/menu/domain/repositories/menu_config_repository.dart';
-
-import '../../data/dtos/menu_config_dto.dart';
+import '../../domain/repositories/menu_config_repository.dart';
+import '../dtos/menu_config_dto.dart';
+import '../providers/menu_config_provider.dart';
 
 class MenuConfigRepository implements IMenuConfigRepository {
   final IMenuConfigProvider _provider;
