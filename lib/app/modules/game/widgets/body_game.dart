@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gpms/app/modules/game/widgets/player_card_black.dart';
-import 'package:gpms/app/modules/game/widgets/player_card_white.dart';
+import 'package:gpms/app/modules/game/domain/entities/chess_piece_entity.dart';
+import 'package:gpms/app/modules/game/widgets/player_card.dart';
 import 'package:gpms/app/modules/game/widgets/turn_card.dart';
 
 import '../game_controller.dart';
@@ -15,26 +15,36 @@ class BodyGame extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: const [
+      children: [
         // Card do Turno do Jogo
-        TurnCard(),
-        SizedBox(
+        const TurnCard(),
+        const SizedBox(
           height: 25,
         ),
         // Card do Jogador de Pretas
-        PlayerCardBlack(),
-        SizedBox(
-          height: 30,
+        PlayerCard(
+          pecasMortas: controller.pecasMortas,
+          color: "black",
+          itensTabuleiro: controller.itensTabuleiro,
+        ),
+        const SizedBox(
+          height: 25,
         ),
         // Tabuleiro
-        ChessBoard(),
-        SizedBox(
+        ChessBoard(
+            pecasMortas: controller.pecasMortas,
+            itensTabuleiro: controller.itensTabuleiro),
+        const SizedBox(
           height: 0,
         ),
         // Card do Jogador de Brancas
-        PlayerCardWhite(),
-        SizedBox(
-          height: 60,
+        PlayerCard(
+          pecasMortas: controller.pecasMortas,
+          color: "white",
+          itensTabuleiro: controller.itensTabuleiro,
+        ),
+        const SizedBox(
+          height: 55,
         ),
       ],
     );

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 import '../../core/adapters/svg_image_adapter.dart';
 import '../../core/theme/app_assets.dart';
+import 'domain/entities/chess_piece_entity.dart';
 import 'widgets/body_game.dart';
 import 'game_controller.dart';
 
