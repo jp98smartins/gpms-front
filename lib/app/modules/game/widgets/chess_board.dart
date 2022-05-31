@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gpms/app/core/theme/app_colors.dart';
+import 'package:gpms/app/modules/game/domain/functions/verify_moviment.dart';
 
 import '../domain/entities/bishop_entity.dart';
 import '../domain/entities/chess_piece_entity.dart';
@@ -59,6 +60,7 @@ class _ChessBoardState extends State<ChessBoard> {
     Knight(PieceColor.white, Location(7, 7)),
     Rook(PieceColor.white, Location(8, 7)),
   ];
+  List<ChessPiece> pecasMortas = [];
   var posicoesY = ['', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
   var posicoesX = ['1', '2', '3', '4', '5', '6', '7', '8', ''];
   List<Location>? posicoesPossiveisEscolha;
@@ -122,9 +124,12 @@ class _ChessBoardState extends State<ChessBoard> {
 
           final possivelPecaAntiga = findPiece(itensTabuleiro, ultimo);
           if (possivelPecaAntiga != null) {
-            possivelPecaAntiga.location.x = x;
-            possivelPecaAntiga.location.y = y;
-            possivelPecaAntiga.moved = true;
+            if (VerifyMoviment.verifyMoviment(possivelPecaAntiga.legalMoviments,
+                Location(x, y), itensTabuleiro, pecasMortas)) {
+              possivelPecaAntiga.location.x = x;
+              possivelPecaAntiga.location.y = y;
+              possivelPecaAntiga.moved = true;
+            }
           }
 
           // RESETA AS POSSIVEIS OPÇÕES DE ESCOLHA
