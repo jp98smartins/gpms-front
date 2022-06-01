@@ -1,7 +1,9 @@
 abstract class AppAssets {
   // AVATAR
-  static const String blackAvatar = "assets/images/avatar/black_avatar.svg";
-  static const String whiteAvatar = "assets/images/avatar/white_avatar.svg";
+  static const String blackAvatar =
+      "assets/images/avatars/black_pieces_avatar.svg";
+  static const String whiteAvatar =
+      "assets/images/avatars/white_pieces_avatar.svg";
   // AWARD
   static const String award = "assets/images/award/award.svg";
   // BISHOP

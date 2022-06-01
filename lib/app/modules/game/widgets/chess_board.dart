@@ -1,21 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:get/get.dart';
 import 'package:gpms/app/core/theme/app_colors.dart';
+import 'package:gpms/app/modules/game/domain/functions/verify_moviment.dart';
+import 'package:gpms/app/modules/game/game_controller.dart';
 
-import '../domain/entities/bishop_entity.dart';
 import '../domain/entities/chess_piece_entity.dart';
-import '../domain/entities/king_entity.dart';
-import '../domain/entities/knight_entity.dart';
-import '../domain/entities/pawn_entity.dart';
-import '../domain/entities/queen_entity.dart';
-import '../domain/entities/rook_entity.dart';
 import '../domain/functions/find_piece.dart';
 import '../domain/functions/generate_all_legal_moviments.dart';
 import '../domain/functions/verify_location_in_list.dart';
 import 'chess_board_tile.dart';
 
 class ChessBoard extends StatefulWidget {
-  const ChessBoard({Key? key}) : super(key: key);
+  const ChessBoard(
+      {Key? key, required this.pecasMortas, required this.itensTabuleiro})
+      : super(key: key);
+
+  final List<ChessPiece> pecasMortas;
+  final List<ChessPiece> itensTabuleiro;
+
+  List<ChessPiece>? getpecaMorta() {
+    return pecasMortas;
+  }
 
   @override
   State<ChessBoard> createState() => _ChessBoardState();
@@ -25,40 +31,6 @@ class _ChessBoardState extends State<ChessBoard> {
   var pecaAnterior = -1;
   Location ultimo = Location(-1, -1);
 
-  List<ChessPiece> itensTabuleiro = [
-    Rook(PieceColor.black, Location(1, 0)),
-    Knight(PieceColor.black, Location(2, 0)),
-    Bishop(PieceColor.black, Location(3, 0)),
-    Queen(PieceColor.black, Location(4, 0)),
-    King(PieceColor.black, Location(5, 0)),
-    Bishop(PieceColor.black, Location(6, 0)),
-    Knight(PieceColor.black, Location(7, 0)),
-    Rook(PieceColor.black, Location(8, 0)),
-    Pawn(PieceColor.black, Location(1, 1)),
-    Pawn(PieceColor.black, Location(3, 1)),
-    Pawn(PieceColor.black, Location(4, 1)),
-    Pawn(PieceColor.black, Location(5, 1)),
-    Pawn(PieceColor.black, Location(2, 1)),
-    Pawn(PieceColor.black, Location(6, 1)),
-    Pawn(PieceColor.black, Location(7, 1)),
-    Pawn(PieceColor.black, Location(8, 1)),
-    Pawn(PieceColor.white, Location(1, 6)),
-    Pawn(PieceColor.white, Location(2, 6)),
-    Pawn(PieceColor.white, Location(3, 6)),
-    Pawn(PieceColor.white, Location(4, 6)),
-    Pawn(PieceColor.white, Location(5, 6)),
-    Pawn(PieceColor.white, Location(6, 6)),
-    Pawn(PieceColor.white, Location(7, 6)),
-    Pawn(PieceColor.white, Location(8, 6)),
-    Rook(PieceColor.white, Location(1, 7)),
-    Knight(PieceColor.white, Location(2, 7)),
-    Bishop(PieceColor.white, Location(3, 7)),
-    Queen(PieceColor.white, Location(4, 7)),
-    King(PieceColor.white, Location(5, 7)),
-    Bishop(PieceColor.white, Location(6, 7)),
-    Knight(PieceColor.white, Location(7, 7)),
-    Rook(PieceColor.white, Location(8, 7)),
-  ];
   var posicoesY = ['', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
   var posicoesX = ['1', '2', '3', '4', '5', '6', '7', '8', ''];
   List<Location>? posicoesPossiveisEscolha;
@@ -101,8 +73,8 @@ class _ChessBoardState extends State<ChessBoard> {
       );
     }
 
-    var possivelPecaAtual = findPiece(itensTabuleiro, Location(x, y));
-    GenerateAllLegalMoviments.gerarMovimentos(itensTabuleiro);
+    var possivelPecaAtual = findPiece(widget.itensTabuleiro, Location(x, y));
+    GenerateAllLegalMoviments.gerarMovimentos(widget.itensTabuleiro);
     return TextButton(
       style: ButtonStyle(
           backgroundColor: MaterialStateColor.resolveWith(
@@ -120,11 +92,14 @@ class _ChessBoardState extends State<ChessBoard> {
         } else {
           // VERIFICA SE TEM PEÇA ANTIGA, CASO TENHA COLOCA NA NOVA POSICAO
 
-          final possivelPecaAntiga = findPiece(itensTabuleiro, ultimo);
+          final possivelPecaAntiga = findPiece(widget.itensTabuleiro, ultimo);
           if (possivelPecaAntiga != null) {
-            possivelPecaAntiga.location.x = x;
-            possivelPecaAntiga.location.y = y;
-            possivelPecaAntiga.moved = true;
+            if (VerifyMoviment.verifyMoviment(possivelPecaAntiga.legalMoviments,
+                Location(x, y), widget.itensTabuleiro, widget.pecasMortas)) {
+              possivelPecaAntiga.location.x = x;
+              possivelPecaAntiga.location.y = y;
+              possivelPecaAntiga.moved = true;
+            }
           }
 
           // RESETA AS POSSIVEIS OPÇÕES DE ESCOLHA
@@ -133,9 +108,10 @@ class _ChessBoardState extends State<ChessBoard> {
           ultimo.y = -1;
         }
         setState(() {});
+        Modular.get<GameController>().update();
       },
       child: Center(
-        child: findPiece(itensTabuleiro, Location(x, y)) == null
+        child: findPiece(widget.itensTabuleiro, Location(x, y)) == null
             ? null
             : possivelPecaAtual!.image,
       ),
