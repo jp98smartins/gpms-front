@@ -99,7 +99,6 @@ class _ChessBoardState extends State<ChessBoard> {
               possivelPecaAntiga.location.x = x;
               possivelPecaAntiga.location.y = y;
               possivelPecaAntiga.moved = true;
-              print(widget.pecasMortas);
             }
           }
 

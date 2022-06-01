@@ -40,7 +40,6 @@ class PlayerCard extends StatelessWidget {
         if (!apoio.contains(piece)) {
           if (piece.name != "king") {
             apoio.add(piece);
-            print(" Visibility ${piece.died}");
             return Visibility(
               visible: piece.died,
               child: SvgImageAdapter.fromAsset(
