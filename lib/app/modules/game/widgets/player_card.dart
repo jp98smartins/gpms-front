@@ -18,18 +18,42 @@ class PlayerCard extends StatelessWidget {
 
   final String color;
 
-  Widget getvisibility(List<ChessPiece> tabuleiro) {
+  Widget getvisibility(
+      List<ChessPiece> tabuleiro, List<ChessPiece> apoio, String color) {
+    PieceColor cor;
+    String inversoColor;
+
+    if (color == "black") {
+      cor = PieceColor.white;
+    } else {
+      cor = PieceColor.black;
+    }
+
+    if (color == "black") {
+      inversoColor = "white";
+    } else {
+      inversoColor = "black";
+    }
+
     for (ChessPiece piece in tabuleiro) {
-      return Visibility(
-        visible: !piece.died,
-        child: SvgImageAdapter.fromAsset(
-            "assets/images/${piece.name}/${color}_${piece.name}.svg",
-            alignment: Alignment.centerLeft,
-            width: 20),
-      );
+      if (piece.pieceColor == cor) {
+        if (!apoio.contains(piece)) {
+          if (piece.name != "king") {
+            apoio.add(piece);
+            print(" Visibility ${piece.died}");
+            return Visibility(
+              visible: piece.died,
+              child: SvgImageAdapter.fromAsset(
+                  "assets/images/${piece.name}/${inversoColor}_${piece.name}.svg",
+                  alignment: Alignment.centerLeft,
+                  width: 20),
+            );
+          }
+        }
+      }
     }
     return Visibility(
-      visible: true,
+      visible: false,
       child: SvgImageAdapter.fromAsset(AppAssets.whiteQueen,
           alignment: Alignment.centerLeft, width: 20),
     );
@@ -71,6 +95,7 @@ class PlayerCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<ChessPiece> listApoio = [];
     return Container(
       decoration: BoxDecoration(
           color: AppColors.backgroundSecondary,
@@ -86,80 +111,10 @@ class PlayerCard extends StatelessWidget {
               getName(color),
               Row(
                 children: [
-                  Visibility(
-                    visible: true,
-                    child: SvgImageAdapter.fromAsset(AppAssets.whiteQueen,
-                        alignment: Alignment.centerLeft, width: 20),
+                  ...List.generate(
+                    15,
+                    (x) => getvisibility(itensTabuleiro, listApoio, color),
                   ),
-                  Visibility(
-                    visible: true,
-                    child: SvgImageAdapter.fromAsset(AppAssets.whiteRook,
-                        alignment: Alignment.centerLeft, width: 20),
-                  ),
-                  Visibility(
-                    visible: true,
-                    child: SvgImageAdapter.fromAsset(AppAssets.whiteRook,
-                        alignment: Alignment.centerLeft, width: 20),
-                  ),
-                  Visibility(
-                    visible: true,
-                    child: SvgImageAdapter.fromAsset(AppAssets.whiteKnight,
-                        alignment: Alignment.centerLeft, width: 20),
-                  ),
-                  Visibility(
-                    visible: true,
-                    child: SvgImageAdapter.fromAsset(AppAssets.whiteKnight,
-                        alignment: Alignment.centerLeft, width: 20),
-                  ),
-                  Visibility(
-                    visible: true,
-                    child: SvgImageAdapter.fromAsset(AppAssets.whiteBishop,
-                        alignment: Alignment.centerLeft, width: 20),
-                  ),
-                  Visibility(
-                    visible: true,
-                    child: SvgImageAdapter.fromAsset(AppAssets.whiteBishop,
-                        alignment: Alignment.centerLeft, width: 20),
-                  ),
-                  Visibility(
-                    visible: true,
-                    child: SvgImageAdapter.fromAsset(AppAssets.whitePawn,
-                        alignment: Alignment.centerLeft, width: 20),
-                  ),
-                  Visibility(
-                    visible: true,
-                    child: SvgImageAdapter.fromAsset(AppAssets.whitePawn,
-                        alignment: Alignment.centerLeft, width: 20),
-                  ),
-                  Visibility(
-                    visible: true,
-                    child: SvgImageAdapter.fromAsset(AppAssets.whitePawn,
-                        alignment: Alignment.centerLeft, width: 20),
-                  ),
-                  Visibility(
-                    visible: true,
-                    child: SvgImageAdapter.fromAsset(AppAssets.whitePawn,
-                        alignment: Alignment.centerLeft, width: 20),
-                  ),
-                  Visibility(
-                    visible: true,
-                    child: SvgImageAdapter.fromAsset(AppAssets.whitePawn,
-                        alignment: Alignment.centerLeft, width: 20),
-                  ),
-                  Visibility(
-                    visible: true,
-                    child: SvgImageAdapter.fromAsset(AppAssets.whitePawn,
-                        alignment: Alignment.centerLeft, width: 20),
-                  ),
-                  Visibility(
-                    visible: true,
-                    child: SvgImageAdapter.fromAsset(AppAssets.whitePawn,
-                        alignment: Alignment.centerLeft, width: 20),
-                  ),
-                  Visibility(
-                      visible: true,
-                      child: SvgImageAdapter.fromAsset(AppAssets.whitePawn,
-                          alignment: Alignment.centerLeft, width: 20)),
                 ],
               )
             ],
