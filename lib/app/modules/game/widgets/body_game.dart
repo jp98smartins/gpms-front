@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gpms/app/modules/game/domain/entities/chess_piece_entity.dart';
 import 'package:gpms/app/modules/game/widgets/player_card.dart';
 import 'package:gpms/app/modules/game/widgets/turn_card.dart';
 
@@ -17,7 +16,9 @@ class BodyGame extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         // Card do Turno do Jogo
-        const TurnCard(),
+        TurnCard(
+          chessMatch: controller.chessMatch,
+        ),
         const SizedBox(
           height: 25,
         ),
@@ -32,8 +33,9 @@ class BodyGame extends StatelessWidget {
         ),
         // Tabuleiro
         ChessBoard(
-            pecasMortas: controller.pecasMortas,
-            itensTabuleiro: controller.itensTabuleiro),
+          chessMatch: controller.chessMatch,
+          itensTabuleiro: controller.itensTabuleiro,
+        ),
         const SizedBox(
           height: 0,
         ),
