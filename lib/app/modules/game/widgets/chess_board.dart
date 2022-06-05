@@ -7,6 +7,7 @@ import 'package:gpms/app/core/theme/app_colors.dart';
 import 'package:gpms/app/modules/game/domain/entities/chess/chess_match.dart';
 import 'package:gpms/app/modules/game/domain/functions/verify_moviment.dart';
 import 'package:gpms/app/modules/game/game_controller.dart';
+import 'package:gpms/app/modules/game/widgets/turn_card.dart';
 
 import '../domain/entities/chess_piece_entity.dart';
 import '../domain/functions/find_piece.dart';
@@ -19,9 +20,11 @@ class ChessBoard extends StatefulWidget {
     Key? key,
     required this.chessMatch,
     required this.itensTabuleiro,
+    required this.updateAll,
   }) : super(key: key);
   ChessMatch chessMatch;
   final List<ChessPiece> itensTabuleiro;
+  final VoidCallback updateAll;
 
   @override
   State<ChessBoard> createState() => _ChessBoardState();
@@ -111,6 +114,7 @@ class _ChessBoardState extends State<ChessBoard> {
               possivelPecaAntiga.moved = true;
               widget.chessMatch.addTurn();
               widget.chessMatch.changeCurrentPlayer();
+              widget.updateAll();
             }
           }
 
