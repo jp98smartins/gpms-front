@@ -1,18 +1,16 @@
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:get/get.dart';
-import 'package:gpms/app/core/theme/app_colors.dart';
-import 'package:gpms/app/modules/game/domain/entities/chess/chess_match.dart';
-import 'package:gpms/app/modules/game/domain/functions/verify_moviment.dart';
-import 'package:gpms/app/modules/game/game_controller.dart';
-import 'package:gpms/app/modules/game/widgets/turn_card.dart';
 
+import '../../../core/theme/app_colors.dart';
+import '../domain/entities/chess/chess_match.dart';
 import '../domain/entities/chess_piece_entity.dart';
 import '../domain/functions/find_piece.dart';
 import '../domain/functions/generate_all_legal_moviments.dart';
 import '../domain/functions/verify_location_in_list.dart';
+import '../domain/functions/verify_moviment.dart';
+import '../game_controller.dart';
 import 'chess_board_tile.dart';
 
 class ChessBoard extends StatefulWidget {

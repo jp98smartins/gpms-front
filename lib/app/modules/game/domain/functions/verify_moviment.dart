@@ -15,14 +15,6 @@ class VerifyMoviment {
               pecasMortas.add(piece);
             }
           }
-
-          if (pecasMortas.isNotEmpty) {
-            for (ChessPiece piece in pecasMortas) {
-              if (tabuleiro.contains(piece)) {
-                tabuleiro.remove(piece);
-              }
-            }
-          }
           return true;
         }
       }
