@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:get/get.dart';
+import 'package:gpms/app/modules/game/domain/entities/chess/chess_match.dart';
 
 import '../../core/data/dtos/menu_config_dto.dart';
 import 'domain/entities/bishop_entity.dart';
@@ -50,6 +51,13 @@ class GameController extends GetxController {
     Pawn(PieceColor.white, Location(8, 6)),
   ];
   List<ChessPiece> pecasMortas = [];
+  ChessMatch chessMatch = ChessMatch(
+    currentPlayer: 'Brancas',
+    inGame: true,
+    pecasMortas: [],
+    turn: 1,
+    pieceColor: PieceColor.white,
+  );
 
   GameController(this._fetchMenuConfigUseCase);
 

@@ -1,27 +1,28 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:get/get.dart';
-import 'package:gpms/app/core/theme/app_colors.dart';
-import 'package:gpms/app/modules/game/domain/functions/verify_moviment.dart';
-import 'package:gpms/app/modules/game/game_controller.dart';
 
+import '../../../core/theme/app_colors.dart';
+import '../domain/entities/chess/chess_match.dart';
 import '../domain/entities/chess_piece_entity.dart';
 import '../domain/functions/find_piece.dart';
 import '../domain/functions/generate_all_legal_moviments.dart';
 import '../domain/functions/verify_location_in_list.dart';
+import '../domain/functions/verify_moviment.dart';
+import '../game_controller.dart';
 import 'chess_board_tile.dart';
 
 class ChessBoard extends StatefulWidget {
-  const ChessBoard(
-      {Key? key, required this.pecasMortas, required this.itensTabuleiro})
-      : super(key: key);
-
-  final List<ChessPiece> pecasMortas;
+  ChessBoard({
+    Key? key,
+    required this.chessMatch,
+    required this.itensTabuleiro,
+    required this.updateAll,
+  }) : super(key: key);
+  ChessMatch chessMatch;
   final List<ChessPiece> itensTabuleiro;
-
-  List<ChessPiece>? getpecaMorta() {
-    return pecasMortas;
-  }
+  final VoidCallback updateAll;
 
   @override
   State<ChessBoard> createState() => _ChessBoardState();
@@ -84,7 +85,14 @@ class _ChessBoardState extends State<ChessBoard> {
             : Colors.black.withOpacity(0.0),
       )),
       onPressed: () {
-        if (ultimo.x == -1 && ultimo.y == -1 && possivelPecaAtual != null) {
+        var pieceCheck = widget.chessMatch.isValidColor(
+          possivelPecaAtual?.pieceColor,
+          widget.chessMatch.pieceColor,
+        );
+        if (ultimo.x == -1 &&
+            ultimo.y == -1 &&
+            possivelPecaAtual != null &&
+            pieceCheck == true) {
           ultimo.x = x;
           ultimo.y = y;
 
@@ -94,11 +102,17 @@ class _ChessBoardState extends State<ChessBoard> {
 
           final possivelPecaAntiga = findPiece(widget.itensTabuleiro, ultimo);
           if (possivelPecaAntiga != null) {
-            if (VerifyMoviment.verifyMoviment(possivelPecaAntiga.legalMoviments,
-                Location(x, y), widget.itensTabuleiro, widget.pecasMortas)) {
+            if (VerifyMoviment.verifyMoviment(
+                possivelPecaAntiga.legalMoviments,
+                Location(x, y),
+                widget.itensTabuleiro,
+                widget.chessMatch.pecasMortas)) {
               possivelPecaAntiga.location.x = x;
               possivelPecaAntiga.location.y = y;
               possivelPecaAntiga.moved = true;
+              widget.chessMatch.addTurn();
+              widget.chessMatch.changeCurrentPlayer();
+              widget.updateAll();
             }
           }
 
