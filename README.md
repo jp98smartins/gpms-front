@@ -12,6 +12,7 @@ Documentação sobre o planejamento do projeto
 - [Análise de riscos](https://docs.google.com/spreadsheets/d/1Q1c-4CqQvzvcd9F--tXvZ49dNrUkLgXFthFmxNCKGjs/edit?usp=sharing)
 - [Modelagem das telas](https://www.figma.com/file/MO43QVwkbHdHTgE9oK9BZI/Aplicativo-Xadrez?node-id=0%3A1)
 - [Monitoramento e controle](https://trello.com/b/TeGcImtt/gpms)
+- [Burndown](https://docs.google.com/spreadsheets/d/1fXsjkAxksysd5kizH0A6PJ9G7SUvn9PF13DjCyAR0_M/edit?usp=sharing)
 
 
 ## Participantes
