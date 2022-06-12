@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:get/get.dart';
@@ -14,21 +13,18 @@ import '../game_controller.dart';
 import 'chess_board_tile.dart';
 
 class ChessBoard extends StatefulWidget {
-  ChessBoard({
-    Key? key,
-    required this.chessMatch,
-    required this.itensTabuleiro,
-    required this.updateAll,
-  }) : super(key: key);
-  ChessMatch chessMatch;
-  final List<ChessPiece> itensTabuleiro;
-  final VoidCallback updateAll;
+  const ChessBoard({Key? key, required this.controller}) : super(key: key);
+
+  final GameController controller;
 
   @override
   State<ChessBoard> createState() => _ChessBoardState();
 }
 
 class _ChessBoardState extends State<ChessBoard> {
+  late final ChessMatch chessMatch;
+  late final List<ChessPiece> itensTabuleiro;
+
   var pecaAnterior = -1;
   Location ultimo = Location(-1, -1);
 
@@ -74,8 +70,8 @@ class _ChessBoardState extends State<ChessBoard> {
       );
     }
 
-    var possivelPecaAtual = findPiece(widget.itensTabuleiro, Location(x, y));
-    GenerateAllLegalMoviments.gerarMovimentos(widget.itensTabuleiro);
+    var possivelPecaAtual = findPiece(itensTabuleiro, Location(x, y));
+    GenerateAllLegalMoviments.gerarMovimentos(itensTabuleiro);
     return TextButton(
       style: ButtonStyle(
           backgroundColor: MaterialStateColor.resolveWith(
@@ -85,9 +81,9 @@ class _ChessBoardState extends State<ChessBoard> {
             : Colors.black.withOpacity(0.0),
       )),
       onPressed: () {
-        var pieceCheck = widget.chessMatch.isValidColor(
+        var pieceCheck = chessMatch.isValidColor(
           possivelPecaAtual?.pieceColor,
-          widget.chessMatch.pieceColor,
+          chessMatch.pieceColor,
         );
         if (ultimo.x == -1 &&
             ultimo.y == -1 &&
@@ -100,19 +96,20 @@ class _ChessBoardState extends State<ChessBoard> {
         } else {
           // VERIFICA SE TEM PEÇA ANTIGA, CASO TENHA COLOCA NA NOVA POSICAO
 
-          final possivelPecaAntiga = findPiece(widget.itensTabuleiro, ultimo);
+          final possivelPecaAntiga = findPiece(itensTabuleiro, ultimo);
           if (possivelPecaAntiga != null) {
             if (VerifyMoviment.verifyMoviment(
-                possivelPecaAntiga.legalMoviments,
-                Location(x, y),
-                widget.itensTabuleiro,
-                widget.chessMatch.pecasMortas)) {
+              possivelPecaAntiga.legalMoviments,
+              Location(x, y),
+              itensTabuleiro,
+              chessMatch.pecasMortas,
+            )) {
               possivelPecaAntiga.location.x = x;
               possivelPecaAntiga.location.y = y;
               possivelPecaAntiga.moved = true;
-              widget.chessMatch.addTurn();
-              widget.chessMatch.changeCurrentPlayer();
-              widget.updateAll();
+              chessMatch.addTurn();
+              chessMatch.changeCurrentPlayer();
+              widget.controller.update();
             }
           }
 
@@ -125,11 +122,18 @@ class _ChessBoardState extends State<ChessBoard> {
         Modular.get<GameController>().update();
       },
       child: Center(
-        child: findPiece(widget.itensTabuleiro, Location(x, y)) == null
+        child: findPiece(itensTabuleiro, Location(x, y)) == null
             ? null
             : possivelPecaAtual!.image,
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    chessMatch = widget.controller.chessMatch;
+    itensTabuleiro = widget.controller.itensTabuleiro;
   }
 
   @override

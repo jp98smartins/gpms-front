@@ -1,132 +1,94 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gpms/app/core/adapters/svg_image_adapter.dart';
-import 'package:gpms/app/core/theme/app_assets.dart';
-import 'package:gpms/app/core/theme/app_colors.dart';
-import 'package:gpms/app/modules/game/domain/entities/chess_piece_entity.dart';
 
-class PlayerCard extends StatefulWidget {
-  PlayerCard({
+import '../../../core/adapters/svg_image_adapter.dart';
+import '../../../core/theme/app_assets.dart';
+import '../../../core/theme/app_colors.dart';
+import '../domain/entities/chess_piece_entity.dart';
+
+class PlayerCard extends StatelessWidget {
+  const PlayerCard({
     Key? key,
-    required this.pecasMortas,
     required this.color,
-    required this.itensTabuleiro,
+    required this.diedPieces,
   }) : super(key: key);
 
-  List<ChessPiece> pecasMortas;
-  List<ChessPiece> itensTabuleiro;
-  String color;
+  final String color;
+  final List<ChessPiece> diedPieces;
 
-  @override
-  State<PlayerCard> createState() => _PlayerCardState();
-}
-
-class _PlayerCardState extends State<PlayerCard> {
-  Widget getName(String color) {
-    var texto = "";
-    Color cor;
-
-    if (color == "black") {
-      texto = "  JOGADOR DE PRETAS";
-      cor = Colors.black;
-    } else {
-      texto = "  JOGADOR DE BRANCAS";
-      cor = Colors.white;
-    }
-
+  Widget get playerName {
     return Text(
-      texto,
-      textDirection: TextDirection.ltr,
+      color == "black" ? "JOGADOR DE PRETAS" : "JOGADOR DE BRANCAS",
       style: TextStyle(
-        fontSize: 20,
-        color: cor,
+        color: color == "black"
+            ? AppColors.foregroundTertiary
+            : AppColors.foregroundPrimary,
       ),
     );
   }
 
-  Widget getIcon(String color) {
-    var path = "";
+  Widget get playerIcon {
+    return SvgImageAdapter.fromAsset(
+      color == "black" ? AppAssets.blackAvatar : AppAssets.whiteAvatar,
+      alignment: Alignment.centerLeft,
+      width: 50.0,
+    );
+  }
+
+  List<Widget> get diedPiecesWidgets {
     if (color == "black") {
-      path = "assets/images/avatars/black_pieces_avatar.svg";
-    } else {
-      path = "assets/images/avatars/white_pieces_avatar.svg";
+      return diedPieces.map((onePiece) {
+        if (onePiece.pieceColor == PieceColor.white) {
+          return SvgImageAdapter.fromAsset(
+            "assets/images/${onePiece.name}/white_${onePiece.name}.svg",
+            alignment: Alignment.centerLeft,
+            width: 16,
+          );
+        }
+
+        return Container();
+      }).toList();
     }
 
-    return SvgImageAdapter.fromAsset(path,
-        alignment: Alignment.centerLeft, width: 50);
+    return diedPieces.map((onePiece) {
+      if (onePiece.pieceColor == PieceColor.black) {
+        return SvgImageAdapter.fromAsset(
+          "assets/images/${onePiece.name}/black_${onePiece.name}.svg",
+          alignment: Alignment.centerLeft,
+          width: 16,
+        );
+      }
+
+      return Container();
+    }).toList();
   }
 
   @override
   Widget build(BuildContext context) {
-    List<ChessPiece> listApoio = [];
     return Container(
-      decoration: BoxDecoration(
-          color: AppColors.backgroundSecondary,
-          borderRadius: BorderRadius.circular(5)),
-      height: Get.width / 8,
-      width: Get.width - 10,
       child: Row(
         children: [
-          getIcon(widget.color),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              getName(widget.color),
-              Row(
-                children: [
-                  ...List.generate(
-                    15,
-                    (x) => getVisibility(
-                        widget.itensTabuleiro, listApoio, widget.color),
-                  ),
-                ],
-              )
-            ],
+          Expanded(flex: 2, child: playerIcon),
+          Expanded(
+            flex: 8,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(flex: 2, child: playerName),
+                Expanded(child: Row(children: diedPiecesWidgets))
+              ],
+            ),
           )
         ],
       ),
+      decoration: BoxDecoration(
+        color: AppColors.backgroundSecondary,
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      height: 70.0,
+      margin: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.all(10.0),
+      width: Get.width,
     );
   }
-}
-
-Widget getVisibility(
-    List<ChessPiece> tabuleiro, List<ChessPiece> apoio, String color) {
-  PieceColor cor;
-  String inversoColor;
-
-  if (color == "black") {
-    cor = PieceColor.white;
-  } else {
-    cor = PieceColor.black;
-  }
-
-  if (color == "black") {
-    inversoColor = "white";
-  } else {
-    inversoColor = "black";
-  }
-
-  for (ChessPiece piece in tabuleiro) {
-    if (piece.pieceColor == cor) {
-      if (!apoio.contains(piece)) {
-        if (piece.name != "king") {
-          apoio.add(piece);
-          return Visibility(
-            visible: piece.died,
-            child: SvgImageAdapter.fromAsset(
-                "assets/images/${piece.name}/${inversoColor}_${piece.name}.svg",
-                alignment: Alignment.centerLeft,
-                width: 20),
-          );
-        }
-      }
-    }
-  }
-  return Visibility(
-    visible: false,
-    child: SvgImageAdapter.fromAsset(AppAssets.whiteQueen,
-        alignment: Alignment.centerLeft, width: 20),
-  );
 }

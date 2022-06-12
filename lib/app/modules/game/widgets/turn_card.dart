@@ -1,44 +1,37 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'package:gpms/app/core/theme/app_colors.dart';
-
+import '../../../core/theme/app_colors.dart';
 import '../domain/entities/chess/chess_match.dart';
 
-class TurnCard extends StatefulWidget {
-  TurnCard({
-    Key? key,
-    required this.chessMatch,
-  }) : super(key: key);
-  ChessMatch chessMatch;
-  @override
-  State<TurnCard> createState() => _TurnCardState();
-}
+class TurnCard extends StatelessWidget {
+  const TurnCard({Key? key, required this.chessMatch}) : super(key: key);
 
-class _TurnCardState extends State<TurnCard> {
+  final ChessMatch chessMatch;
+
+  String get activeTurn => 'VEZ DAS ${chessMatch.currentPlayer.toUpperCase()}';
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-          color: AppColors.backgroundSecondary,
-          borderRadius: BorderRadius.circular(5)),
-      height: Get.width / 12,
-      width: Get.width - 10,
       child: Center(
         child: Text(
-          textCurrentColor(widget.chessMatch.currentPlayer),
-          textDirection: TextDirection.ltr,
-          style: const TextStyle(
-            fontSize: 20,
-            color: Colors.white,
+          activeTurn,
+          style: TextStyle(
+            color: chessMatch.currentPlayer.toUpperCase() == "PRETAS"
+                ? AppColors.foregroundTertiary
+                : AppColors.foregroundPrimary,
           ),
         ),
       ),
+      decoration: BoxDecoration(
+        color: AppColors.backgroundSecondary,
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      height: 40.0,
+      margin: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.all(5.0),
+      width: Get.width,
     );
-  }
-
-  String textCurrentColor(String currentColor) {
-    return 'Vez das ' + currentColor;
   }
 }
