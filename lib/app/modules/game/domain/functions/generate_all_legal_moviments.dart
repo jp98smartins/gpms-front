@@ -1,8 +1,8 @@
-import 'package:gpms/app/modules/game/domain/functions/find_piece.dart';
-
 import '../entities/chess_piece_entity.dart';
+import 'find_piece.dart';
 
 class GenerateAllLegalMoviments {
+  //RECEBE O TABULEIRO E GERA TODOS OS MOVIEMTOS DE CADA PEÇA, SEM VALIDAÇÕES DE XEQUE
   static void gerarMovimentos(List<ChessPiece> tabuleiro) {
     for (var element in tabuleiro) {
       int x = element.location.x;
@@ -184,23 +184,23 @@ class GenerateAllLegalMoviments {
           } else {
             verificaPosY--;
           }
-          var posivelPeca =
+          var possivelPeca =
               findPiece(tabuleiro, Location(verificaPosX, verificaPosY));
-          if (posivelPeca == null) {
+          if (possivelPeca == null) {
             element.addLegalMoviments(Location(verificaPosX, verificaPosY));
           }
           verificaPosX--;
-          posivelPeca =
+          possivelPeca =
               findPiece(tabuleiro, Location(verificaPosX, verificaPosY));
-          if (posivelPeca != null &&
-              posivelPeca.pieceColor != element.pieceColor) {
+          if (possivelPeca != null &&
+              possivelPeca.pieceColor != element.pieceColor) {
             element.addLegalMoviments(Location(verificaPosX, verificaPosY));
           }
           verificaPosX += 2;
-          posivelPeca =
+          possivelPeca =
               findPiece(tabuleiro, Location(verificaPosX, verificaPosY));
-          if (posivelPeca != null &&
-              posivelPeca.pieceColor != element.pieceColor) {
+          if (possivelPeca != null &&
+              possivelPeca.pieceColor != element.pieceColor) {
             element.addLegalMoviments(Location(verificaPosX, verificaPosY));
           }
 
@@ -212,9 +212,9 @@ class GenerateAllLegalMoviments {
             } else {
               verificaPosY -= 2;
             }
-            var posivelPeca =
+            var possivelPeca =
                 findPiece(tabuleiro, Location(verificaPosX, verificaPosY));
-            if (posivelPeca == null) {
+            if (possivelPeca == null) {
               element.addLegalMoviments(Location(verificaPosX, verificaPosY));
             }
           }

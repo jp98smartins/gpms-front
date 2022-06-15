@@ -7,6 +7,7 @@ import '../domain/entities/chess/chess_match.dart';
 import '../domain/entities/chess_piece_entity.dart';
 import '../domain/functions/find_piece.dart';
 import '../domain/functions/generate_all_legal_moviments.dart';
+import '../domain/functions/validate_legal_moviments.dart';
 import '../domain/functions/verify_location_in_list.dart';
 import '../domain/functions/verify_moviment.dart';
 import '../game_controller.dart';
@@ -24,7 +25,7 @@ class ChessBoard extends StatefulWidget {
 class _ChessBoardState extends State<ChessBoard> {
   late final ChessMatch chessMatch;
   late final List<ChessPiece> itensTabuleiro;
-
+  bool primeiraTurno = true;
   var pecaAnterior = -1;
   Location ultimo = Location(-1, -1);
 
@@ -113,6 +114,8 @@ class _ChessBoardState extends State<ChessBoard> {
             }
           }
 
+          GenerateAllLegalMoviments.gerarMovimentos(itensTabuleiro);
+          validate_legal_moviments.validateLegalMoviments(itensTabuleiro);
           // RESETA AS POSSIVEIS OPÇÕES DE ESCOLHA
           posicoesPossiveisEscolha = null;
           ultimo.x = -1;

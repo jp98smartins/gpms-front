@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 
 enum PieceColor { black, white }
@@ -35,5 +37,9 @@ abstract class ChessPiece {
     } else {
       legalMoviments?.add(location);
     }
+  }
+
+  void remLegalMoviments(Location location) {
+    legalMoviments!.remove(location);
   }
 }
