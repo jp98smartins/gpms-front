@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:get/get.dart';
@@ -72,7 +74,11 @@ class _ChessBoardState extends State<ChessBoard> {
     }
 
     var possivelPecaAtual = findPiece(itensTabuleiro, Location(x, y));
-    GenerateAllLegalMoviments.gerarMovimentos(itensTabuleiro);
+    if (primeiraTurno) {
+      GenerateAllLegalMoviments.gerarMovimentos(itensTabuleiro);
+      primeiraTurno = false;
+    }
+
     return TextButton(
       style: ButtonStyle(
           backgroundColor: MaterialStateColor.resolveWith(
@@ -108,19 +114,30 @@ class _ChessBoardState extends State<ChessBoard> {
               possivelPecaAntiga.location.x = x;
               possivelPecaAntiga.location.y = y;
               possivelPecaAntiga.moved = true;
+
               chessMatch.addTurn();
               chessMatch.changeCurrentPlayer();
+              GenerateAllLegalMoviments.gerarMovimentos(itensTabuleiro);
+              validate_legal_moviments.validateLegalMoviments(itensTabuleiro);
+              if (chessMatch.currentPlayer == "Pretas") {
+                validate_legal_moviments.validateWinner(
+                    itensTabuleiro, PieceColor.black);
+              } else {
+                validate_legal_moviments.validateWinner(
+                    itensTabuleiro, PieceColor.white);
+              }
               widget.controller.update();
             }
           }
 
-          GenerateAllLegalMoviments.gerarMovimentos(itensTabuleiro);
-          validate_legal_moviments.validateLegalMoviments(itensTabuleiro);
+          //GenerateAllLegalMoviments.gerarMovimentos(itensTabuleiro);
+          //log("Generate Moviment 2");
           // RESETA AS POSSIVEIS OPÇÕES DE ESCOLHA
           posicoesPossiveisEscolha = null;
           ultimo.x = -1;
           ultimo.y = -1;
         }
+
         setState(() {});
         Modular.get<GameController>().update();
       },
