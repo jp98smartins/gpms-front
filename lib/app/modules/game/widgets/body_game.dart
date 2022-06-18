@@ -15,25 +15,25 @@ class BodyGame extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const SizedBox(height: 20),
+        const SizedBox(height: 5),
         // Card do Turno do Jogo
         TurnCard(chessMatch: controller.chessMatch),
-        const SizedBox(height: 10),
+        const SizedBox(height: 5),
         // Card do Jogador de Pretas
         PlayerCard(
           color: "black",
           diedPieces: controller.chessMatch.pecasMortas,
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 5),
         // Tabuleiro
         ChessBoard(controller: controller),
-        const SizedBox(height: 10),
+        const SizedBox(height: 5),
         // Card do Jogador de Brancas
         PlayerCard(
           color: "white",
           diedPieces: controller.chessMatch.pecasMortas,
         ),
-        const SizedBox(height: 55),
+        const SizedBox(height: 5),
       ],
     );
   }

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 
 enum PieceColor { black, white }
@@ -18,6 +20,7 @@ abstract class ChessPiece {
   final PieceColor pieceColor;
   Location location;
   List<Location>? legalMoviments;
+  List<Location>? ilegalMoviments;
 
   ChessPiece({
     required this.died,
@@ -35,5 +38,21 @@ abstract class ChessPiece {
     } else {
       legalMoviments?.add(location);
     }
+  }
+
+  void remLegalMoviments(Location location) {
+    legalMoviments!.remove(location);
+  }
+
+  void addIlegalMoviments(Location location) {
+    if (ilegalMoviments == null) {
+      ilegalMoviments = [location];
+    } else {
+      ilegalMoviments?.add(location);
+    }
+  }
+
+  void remIlegalMoviments(Location location) {
+    ilegalMoviments!.remove(location);
   }
 }

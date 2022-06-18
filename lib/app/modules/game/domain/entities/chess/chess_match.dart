@@ -30,8 +30,8 @@ class ChessMatch {
       pieceColor = PieceColor.white;
     }
 
-    log(currentPlayer);
-    log('$turn');
+    // log(currentPlayer);
+    // log('$turn');
   }
 
   addPecasMortas(ChessPiece pecaMorta) {
