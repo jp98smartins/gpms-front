@@ -32,7 +32,7 @@ class _ChessBoardState extends State<ChessBoard> {
   Location ultimo = Location(-1, -1);
 
   var posicoesY = ['', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
-  var posicoesX = ['1', '2', '3', '4', '5', '6', '7', '8', ''];
+  var posicoesX = ['8', '7', '6', '5', '4', '3', '2', '1', ''];
   List<Location>? posicoesPossiveisEscolha;
 
   /// Method that picks the right color for the position on the board.
@@ -76,6 +76,7 @@ class _ChessBoardState extends State<ChessBoard> {
     var possivelPecaAtual = findPiece(itensTabuleiro, Location(x, y));
     if (primeiraTurno) {
       GenerateAllLegalMoviments.gerarMovimentos(itensTabuleiro);
+      validate_legal_moviments.validateLegalMoviments(itensTabuleiro);
       primeiraTurno = false;
     }
 

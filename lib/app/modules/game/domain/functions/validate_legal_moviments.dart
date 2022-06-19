@@ -11,8 +11,10 @@ class validate_legal_moviments {
   static void validateLegalMoviments(List<ChessPiece> tabuleiro) {
     List<Location> removeIlegalMoviments = [Location(-1, -1)];
     List<Location> removeLocations = [Location(-1, -1)];
-    if (is_xequed.isXequed(tabuleiro)) {
-      //AQUI A CRIANÇA CHORA E O PAI NÃO VÊ
+    GenerateAllLegalMoviments.gerarMovimentosNEW(tabuleiro, removeLocations);
+    ChessPiece? xequedKing = is_xequed.getXequed(tabuleiro);
+
+    if (xequedKing != null) {
       for (var piece in tabuleiro) {
         if (piece.legalMoviments != null) {
           for (var legalMoviment in piece.legalMoviments!) {
@@ -21,7 +23,6 @@ class validate_legal_moviments {
             ChessPiece? ult;
             Location? ultLocation;
 
-            //verificar se a nova localização, mata alguem
             for (ChessPiece piece in tabuleiro) {
               if (piece.location.x == legalMoviment.x &&
                   piece.location.y == legalMoviment.y) {
@@ -32,33 +33,121 @@ class validate_legal_moviments {
             }
             piece.location = legalMoviment;
 
-            GenerateAllLegalMoviments.gerarMovimentos(tabuleiro);
-            if (is_xequed.isXequed(tabuleiro)) {
+            List<ChessPiece> tmpTabuleiro = tabuleiro.toList();
+            //GenerateAllLegalMoviments.gerarMovimentos(tmpTabuleiro);
+            if (is_xequed.isXequed(tabuleiro) ||
+                is_xequed.isXequed(tmpTabuleiro))
               piece.addIlegalMoviments(legalMoviment);
-            }
 
             piece.location = oldLocation;
             ult?.location = ultLocation!;
-
-            //GenerateAllLegalMoviments.gerarMovimentos(tabuleiro);
           }
         }
       }
-
-      GenerateAllLegalMoviments.gerarMovimentosNEW(tabuleiro, removeLocations);
-      for (ChessPiece piece in tabuleiro) {
-        if (piece.ilegalMoviments != null) {
-          for (Location location in piece.ilegalMoviments!) {
-            removeIlegalMoviments.add(location);
-          }
-        }
-      }
-
-      limpailegalMoviments(tabuleiro, removeIlegalMoviments);
-      //log("New move");
     } else {
-      //AQUI A GENTE É FELIZ
+      for (var piece in tabuleiro) {
+        if (piece.legalMoviments != null) {
+          for (var legalMoviment in piece.legalMoviments!) {
+            var oldLocation = piece.location;
+            ChessPiece? ult;
+            Location? ultLocation;
+
+            for (ChessPiece piece in tabuleiro) {
+              if (piece.location.x == legalMoviment.x &&
+                  piece.location.y == legalMoviment.y) {
+                ult = piece;
+                ultLocation = piece.location;
+                piece.location = Location(-1, -1);
+              }
+            }
+            piece.location = legalMoviment;
+
+            List<ChessPiece> tmpTabuleiro = tabuleiro.toList();
+            //GenerateAllLegalMoviments.gerarMovimentos(tmpTabuleiro);
+            if (is_xequed.getXequed(tabuleiro)?.pieceColor ==
+                    piece.pieceColor ||
+                is_xequed.getXequed(tmpTabuleiro)?.pieceColor ==
+                    piece.pieceColor) piece.addIlegalMoviments(legalMoviment);
+
+            piece.location = oldLocation;
+            ult?.location = ultLocation!;
+          }
+        }
+      }
     }
+
+    if (xequedKing != null) {
+      for (var piece in tabuleiro) {
+        if (piece.legalMoviments != null) {
+          for (var legalMoviment in piece.legalMoviments!) {
+            var oldLocation = piece.location;
+
+            ChessPiece? ult;
+            Location? ultLocation;
+
+            for (ChessPiece piece in tabuleiro) {
+              if (piece.location.x == legalMoviment.x &&
+                  piece.location.y == legalMoviment.y) {
+                ult = piece;
+                ultLocation = piece.location;
+                piece.location = Location(-1, -1);
+              }
+            }
+            piece.location = legalMoviment;
+
+            List<ChessPiece> tmpTabuleiro = tabuleiro.toList();
+            GenerateAllLegalMoviments.gerarMovimentos(tmpTabuleiro);
+            if (is_xequed.isXequed(tabuleiro) ||
+                is_xequed.isXequed(tmpTabuleiro))
+              piece.addIlegalMoviments(legalMoviment);
+
+            piece.location = oldLocation;
+            ult?.location = ultLocation!;
+          }
+        }
+      }
+    } else {
+      for (var piece in tabuleiro) {
+        if (piece.legalMoviments != null) {
+          for (var legalMoviment in piece.legalMoviments!) {
+            var oldLocation = piece.location;
+            ChessPiece? ult;
+            Location? ultLocation;
+
+            for (ChessPiece piece in tabuleiro) {
+              if (piece.location.x == legalMoviment.x &&
+                  piece.location.y == legalMoviment.y) {
+                ult = piece;
+                ultLocation = piece.location;
+                piece.location = Location(-1, -1);
+              }
+            }
+            piece.location = legalMoviment;
+
+            List<ChessPiece> tmpTabuleiro = tabuleiro.toList();
+            GenerateAllLegalMoviments.gerarMovimentos(tmpTabuleiro);
+            if (is_xequed.getXequed(tabuleiro)?.pieceColor ==
+                    piece.pieceColor ||
+                is_xequed.getXequed(tmpTabuleiro)?.pieceColor ==
+                    piece.pieceColor) piece.addIlegalMoviments(legalMoviment);
+
+            piece.location = oldLocation;
+            ult?.location = ultLocation!;
+          }
+        }
+      }
+    }
+
+    GenerateAllLegalMoviments.gerarMovimentosNEW(tabuleiro, removeLocations);
+    for (ChessPiece piece in tabuleiro) {
+      if (piece.ilegalMoviments != null) {
+        for (Location location in piece.ilegalMoviments!) {
+          removeIlegalMoviments.add(location);
+        }
+      }
+    }
+
+    limpailegalMoviments(tabuleiro, removeIlegalMoviments);
   }
 
   static void limpailegalMoviments(
