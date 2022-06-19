@@ -159,6 +159,7 @@ class GenerateAllLegalMoviments {
         case 'pawn':
           verificaPosX = x;
           verificaPosY = y;
+          var blockingPiece = false;
           if (element.pieceColor == PieceColor.black) {
             verificaPosY++;
           } else {
@@ -168,6 +169,8 @@ class GenerateAllLegalMoviments {
               findPiece(tabuleiro, Location(verificaPosX, verificaPosY));
           if (possivelPeca == null) {
             element.addLegalMoviments(Location(verificaPosX, verificaPosY));
+          } else {
+            blockingPiece = true;
           }
           verificaPosX--;
           possivelPeca =
@@ -184,7 +187,7 @@ class GenerateAllLegalMoviments {
             element.addLegalMoviments(Location(verificaPosX, verificaPosY));
           }
 
-          if (element.moved == false) {
+          if (element.moved == false && !blockingPiece) {
             verificaPosX = x;
             verificaPosY = y;
             if (element.pieceColor == PieceColor.black) {
@@ -710,6 +713,7 @@ class GenerateAllLegalMoviments {
         case 'pawn':
           verificaPosX = x;
           verificaPosY = y;
+          var blockingPiece = false;
           if (element.pieceColor == PieceColor.black) {
             verificaPosY++;
           } else {
@@ -722,6 +726,8 @@ class GenerateAllLegalMoviments {
                 verifica(Location(verificaPosX, verificaPosY), element))) {
               element.addLegalMoviments(Location(verificaPosX, verificaPosY));
             }
+          } else {
+            blockingPiece = true;
           }
           verificaPosX--;
           possivelPeca =
@@ -744,7 +750,7 @@ class GenerateAllLegalMoviments {
             }
           }
 
-          if (element.moved == false) {
+          if (element.moved == false && !blockingPiece) {
             verificaPosX = x;
             verificaPosY = y;
             if (element.pieceColor == PieceColor.black) {
