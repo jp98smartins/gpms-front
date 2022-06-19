@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:get/get.dart';
 
+import '../../../core/data/dtos/menu_config_dto.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../../ai/ai.dart';
+import '../../../core/enums/game_mode.dart';
 import '../domain/entities/chess/chess_match.dart';
 import '../domain/entities/chess_piece_entity.dart';
 import '../domain/functions/find_piece.dart';
@@ -27,6 +30,8 @@ class ChessBoard extends StatefulWidget {
 class _ChessBoardState extends State<ChessBoard> {
   late final ChessMatch chessMatch;
   late final List<ChessPiece> itensTabuleiro;
+  MenuConfigDto? menuConfigDto;
+  PieceColor? winner;
   bool primeiraTurno = true;
   var pecaAnterior = -1;
   Location ultimo = Location(-1, -1);
@@ -80,6 +85,10 @@ class _ChessBoardState extends State<ChessBoard> {
       primeiraTurno = false;
     }
 
+    if (!(menuConfigDto != null)) {
+      menuConfigDto = widget.controller.menuConfigDto;
+    }
+
     return TextButton(
       style: ButtonStyle(
           backgroundColor: MaterialStateColor.resolveWith(
@@ -116,17 +125,40 @@ class _ChessBoardState extends State<ChessBoard> {
               possivelPecaAntiga.location.y = y;
               possivelPecaAntiga.moved = true;
 
-              chessMatch.addTurn();
-              chessMatch.changeCurrentPlayer();
-              GenerateAllLegalMoviments.gerarMovimentos(itensTabuleiro);
-              validate_legal_moviments.validateLegalMoviments(itensTabuleiro);
-              if (chessMatch.currentPlayer == "Pretas") {
-                validate_legal_moviments.validateWinner(
-                    itensTabuleiro, PieceColor.black);
-              } else {
-                validate_legal_moviments.validateWinner(
-                    itensTabuleiro, PieceColor.white);
+              winner = validate_legal_moviments.validateWinner(
+                  itensTabuleiro,
+                  chessMatch.currentPlayer == "Pretas"
+                      ? PieceColor.black
+                      : PieceColor.white);
+
+              if (winner == null) {
+                chessMatch.addTurn();
+                chessMatch.changeCurrentPlayer();
+                GenerateAllLegalMoviments.gerarMovimentosNEW(
+                    itensTabuleiro, [Location(-1, -1)]);
+                validate_legal_moviments.validateLegalMoviments(itensTabuleiro);
+
+                if (menuConfigDto?.gameModeDto != GameMode.pvp &&
+                    chessMatch.currentPlayer == 'Pretas') {
+                  ChessAI.doMove(
+                      itensTabuleiro,
+                      menuConfigDto?.gameDifficultyDto,
+                      PieceColor.black,
+                      chessMatch);
+                  chessMatch.addTurn();
+                  chessMatch.changeCurrentPlayer();
+                  GenerateAllLegalMoviments.gerarMovimentosNEW(
+                      itensTabuleiro, [Location(-1, -1)]);
+                  validate_legal_moviments
+                      .validateLegalMoviments(itensTabuleiro);
+                  winner = validate_legal_moviments.validateWinner(
+                      itensTabuleiro,
+                      chessMatch.currentPlayer == "Pretas"
+                          ? PieceColor.black
+                          : PieceColor.white);
+                }
               }
+
               widget.controller.update();
             }
           }
@@ -155,6 +187,7 @@ class _ChessBoardState extends State<ChessBoard> {
     super.initState();
     chessMatch = widget.controller.chessMatch;
     itensTabuleiro = widget.controller.itensTabuleiro;
+    winner = null;
   }
 
   @override

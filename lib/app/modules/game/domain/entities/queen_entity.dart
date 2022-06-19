@@ -11,6 +11,7 @@ class Queen extends ChessPiece {
           moved: false,
           name: 'queen',
           pieceColor: pieceColor,
+          value: 9,
           location: location,
         );
 

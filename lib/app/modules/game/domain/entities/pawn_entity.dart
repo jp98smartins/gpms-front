@@ -11,6 +11,7 @@ class Pawn extends ChessPiece {
           moved: false,
           name: 'pawn',
           pieceColor: pieceColor,
+          value: 1,
           location: location,
         );
 

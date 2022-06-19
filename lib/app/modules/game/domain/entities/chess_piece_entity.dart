@@ -18,6 +18,7 @@ abstract class ChessPiece {
   bool moved;
   final String name;
   final PieceColor pieceColor;
+  final int value;
   Location location;
   List<Location>? legalMoviments;
   List<Location>? ilegalMoviments;
@@ -27,6 +28,7 @@ abstract class ChessPiece {
     required this.moved,
     required this.name,
     required this.pieceColor,
+    required this.value,
     required this.location,
   });
 

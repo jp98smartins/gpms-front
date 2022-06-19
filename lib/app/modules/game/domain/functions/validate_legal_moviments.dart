@@ -23,24 +23,28 @@ class validate_legal_moviments {
             ChessPiece? ult;
             Location? ultLocation;
 
-            for (ChessPiece piece in tabuleiro) {
-              if (piece.location.x == legalMoviment.x &&
-                  piece.location.y == legalMoviment.y) {
-                ult = piece;
-                ultLocation = piece.location;
-                piece.location = Location(-1, -1);
+            for (ChessPiece killed in tabuleiro) {
+              if (killed.location.x == legalMoviment.x &&
+                  killed.location.y == legalMoviment.y &&
+                  !killed.died) {
+                ult = killed;
+                ultLocation = killed.location;
+                killed.location = Location(-1, -1);
+                killed.died = true;
               }
             }
             piece.location = legalMoviment;
 
             List<ChessPiece> tmpTabuleiro = tabuleiro.toList();
             //GenerateAllLegalMoviments.gerarMovimentos(tmpTabuleiro);
-            if (is_xequed.isXequed(tabuleiro) ||
-                is_xequed.isXequed(tmpTabuleiro))
-              piece.addIlegalMoviments(legalMoviment);
+            if (is_xequed.getXequed(tabuleiro)?.pieceColor ==
+                    piece.pieceColor ||
+                is_xequed.getXequed(tmpTabuleiro)?.pieceColor ==
+                    piece.pieceColor) piece.addIlegalMoviments(legalMoviment);
 
             piece.location = oldLocation;
             ult?.location = ultLocation!;
+            ult?.died = false;
           }
         }
       }
@@ -85,24 +89,28 @@ class validate_legal_moviments {
             ChessPiece? ult;
             Location? ultLocation;
 
-            for (ChessPiece piece in tabuleiro) {
-              if (piece.location.x == legalMoviment.x &&
-                  piece.location.y == legalMoviment.y) {
-                ult = piece;
-                ultLocation = piece.location;
-                piece.location = Location(-1, -1);
+            for (ChessPiece killed in tabuleiro) {
+              if (killed.location.x == legalMoviment.x &&
+                  killed.location.y == legalMoviment.y &&
+                  !killed.died) {
+                ult = killed;
+                ultLocation = killed.location;
+                killed.location = Location(-1, -1);
+                killed.died = true;
               }
             }
             piece.location = legalMoviment;
 
             List<ChessPiece> tmpTabuleiro = tabuleiro.toList();
             GenerateAllLegalMoviments.gerarMovimentos(tmpTabuleiro);
-            if (is_xequed.isXequed(tabuleiro) ||
-                is_xequed.isXequed(tmpTabuleiro))
-              piece.addIlegalMoviments(legalMoviment);
+            if (is_xequed.getXequed(tabuleiro)?.pieceColor ==
+                    piece.pieceColor ||
+                is_xequed.getXequed(tmpTabuleiro)?.pieceColor ==
+                    piece.pieceColor) piece.addIlegalMoviments(legalMoviment);
 
             piece.location = oldLocation;
             ult?.location = ultLocation!;
+            ult?.died = false;
           }
         }
       }
@@ -163,7 +171,8 @@ class validate_legal_moviments {
     }
   }
 
-  static void validateWinner(List<ChessPiece> tabuleiro, PieceColor color) {
+  static PieceColor? validateWinner(
+      List<ChessPiece> tabuleiro, PieceColor color) {
     int cont = 0;
     if (is_xequed.isXequed(tabuleiro)) {
       for (ChessPiece piece in tabuleiro) {
@@ -177,9 +186,12 @@ class validate_legal_moviments {
     if (cont >= 16) {
       if (color == PieceColor.black) {
         log("Brancas Win");
+        return null;
       } else {
         log("Pretas Win");
+        return null;
       }
     }
+    return null;
   }
 }

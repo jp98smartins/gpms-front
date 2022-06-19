@@ -11,7 +11,8 @@ class is_xequed {
           ChessPiece? piece2 = findPiece(tabuleiro, legalMoviment);
           if (piece2 != null) {
             if (piece2.name == 'king' &&
-                piece.pieceColor != piece2.pieceColor) {
+                piece.pieceColor != piece2.pieceColor &&
+                !piece.died) {
               log('xequed');
               return piece2;
             }
