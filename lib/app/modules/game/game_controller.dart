@@ -61,7 +61,7 @@ class GameController extends GetxController {
 
   GameController(this._fetchMenuConfigUseCase);
 
-  late final MenuConfigDto menuConfigDto;
+  MenuConfigDto? menuConfigDto;
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;

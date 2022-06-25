@@ -11,6 +11,7 @@ class King extends ChessPiece {
           moved: false,
           name: 'king',
           pieceColor: pieceColor,
+          value: 10,
           location: location,
         );
 
