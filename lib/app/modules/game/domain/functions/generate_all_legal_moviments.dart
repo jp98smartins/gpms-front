@@ -6,7 +6,10 @@ import 'is_xequed.dart';
 
 class GenerateAllLegalMoviments {
   //RECEBE O TABULEIRO E GERA TODOS OS MOVIEMTOS DE CADA PEÇA, SEM VALIDAÇÕES DE XEQUE
-  static void gerarMovimentos(List<ChessPiece> tabuleiro) async {
+  static void gerarMovimentos(List<ChessPiece> tabuleiro,
+      [ChessPiece? lastPiece,
+      Location? oldLocation,
+      Location? newLocation]) async {
     //removeLegalMoviments(tabuleiro);
     for (var element in tabuleiro) {
       int x = element.location.x;
@@ -194,6 +197,33 @@ class GenerateAllLegalMoviments {
           if (possivelPeca != null &&
               possivelPeca.pieceColor != element.pieceColor) {
             element.addLegalMoviments(Location(verificaPosX, verificaPosY));
+          }
+
+          //En passant
+          if ((element.pieceColor.name == 'white' && y == 3) ||
+              (element.pieceColor.name == 'black' && y == 4)) {
+            if (lastPiece != null &&
+                oldLocation != null &&
+                newLocation != null) {
+              if (element.pieceColor.name == 'white' &&
+                  oldLocation.y == 1 &&
+                  newLocation.y == 3 &&
+                  lastPiece.name == 'pawn') {
+                if (oldLocation.x == x + 1 || oldLocation.x == x - 1) {
+                  element.addLegalMoviments(Location(oldLocation.x, 2));
+                  element.addOpMoviments(Location(oldLocation.x, 2));
+                }
+              }
+              if (element.pieceColor.name == 'black' &&
+                  oldLocation.y == 6 &&
+                  newLocation.y == 4 &&
+                  lastPiece.name == 'pawn') {
+                if (oldLocation.x == x + 1 || oldLocation.x == x - 1) {
+                  element.addLegalMoviments(Location(oldLocation.x, 5));
+                  element.addOpMoviments(Location(oldLocation.x, 5));
+                }
+              }
+            }
           }
 
           if (element.moved == false && !blockingPiece) {
@@ -562,7 +592,8 @@ class GenerateAllLegalMoviments {
   }
 
   static void gerarMovimentosNEW(
-      List<ChessPiece> tabuleiro, List<Location> remove) {
+      List<ChessPiece> tabuleiro, List<Location> remove,
+      [ChessPiece? lastPiece, Location? oldLocation, Location? newLocation]) {
     //removeLegalMoviments(tabuleiro);
     for (var element in tabuleiro) {
       int x = element.location.x;
@@ -852,6 +883,33 @@ class GenerateAllLegalMoviments {
             if (!remove.any((elements) =>
                 verifica(Location(verificaPosX, verificaPosY), element))) {
               element.addLegalMoviments(Location(verificaPosX, verificaPosY));
+            }
+          }
+
+          //En passant
+          if ((element.pieceColor.name == 'white' && y == 3) ||
+              (element.pieceColor.name == 'black' && y == 4)) {
+            if (lastPiece != null &&
+                oldLocation != null &&
+                newLocation != null) {
+              if (element.pieceColor.name == 'white' &&
+                  oldLocation.y == 1 &&
+                  newLocation.y == 3 &&
+                  lastPiece.name == 'pawn') {
+                if (oldLocation.x == x + 1 || oldLocation.x == x - 1) {
+                  element.addLegalMoviments(Location(oldLocation.x, 2));
+                  element.addOpMoviments(Location(oldLocation.x, 2));
+                }
+              }
+              if (element.pieceColor.name == 'black' &&
+                  oldLocation.y == 6 &&
+                  newLocation.y == 4 &&
+                  lastPiece.name == 'pawn') {
+                if (oldLocation.x == x + 1 || oldLocation.x == x - 1) {
+                  element.addLegalMoviments(Location(oldLocation.x, 5));
+                  element.addOpMoviments(Location(oldLocation.x, 5));
+                }
+              }
             }
           }
 

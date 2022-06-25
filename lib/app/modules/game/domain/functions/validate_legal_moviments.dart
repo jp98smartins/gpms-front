@@ -8,10 +8,12 @@ import 'is_xequed.dart';
 import '../entities/chess_piece_entity.dart';
 
 class validate_legal_moviments {
-  static void validateLegalMoviments(List<ChessPiece> tabuleiro) {
+  static void validateLegalMoviments(List<ChessPiece> tabuleiro,
+      [ChessPiece? lastPiece, Location? oldLocation, Location? newLocation]) {
     List<Location> removeIlegalMoviments = [Location(-1, -1)];
     List<Location> removeLocations = [Location(-1, -1)];
-    GenerateAllLegalMoviments.gerarMovimentosNEW(tabuleiro, removeLocations);
+    GenerateAllLegalMoviments.gerarMovimentosNEW(
+        tabuleiro, removeLocations, lastPiece, oldLocation, newLocation);
     ChessPiece? xequedKing = is_xequed.getXequed(tabuleiro);
 
     if (xequedKing != null) {
@@ -36,7 +38,6 @@ class validate_legal_moviments {
             piece.location = legalMoviment;
 
             List<ChessPiece> tmpTabuleiro = tabuleiro.toList();
-            //GenerateAllLegalMoviments.gerarMovimentos(tmpTabuleiro);
             if (is_xequed.getXequed(tabuleiro)?.pieceColor ==
                     piece.pieceColor ||
                 is_xequed.getXequed(tmpTabuleiro)?.pieceColor ==
@@ -67,7 +68,6 @@ class validate_legal_moviments {
             piece.location = legalMoviment;
 
             List<ChessPiece> tmpTabuleiro = tabuleiro.toList();
-            //GenerateAllLegalMoviments.gerarMovimentos(tmpTabuleiro);
             if (is_xequed.getXequed(tabuleiro)?.pieceColor ==
                     piece.pieceColor ||
                 is_xequed.getXequed(tmpTabuleiro)?.pieceColor ==
@@ -102,7 +102,8 @@ class validate_legal_moviments {
             piece.location = legalMoviment;
 
             List<ChessPiece> tmpTabuleiro = tabuleiro.toList();
-            GenerateAllLegalMoviments.gerarMovimentos(tmpTabuleiro);
+            GenerateAllLegalMoviments.gerarMovimentos(
+                tmpTabuleiro, lastPiece, oldLocation, newLocation);
             if (is_xequed.getXequed(tabuleiro)?.pieceColor ==
                     piece.pieceColor ||
                 is_xequed.getXequed(tmpTabuleiro)?.pieceColor ==
@@ -133,7 +134,8 @@ class validate_legal_moviments {
             piece.location = legalMoviment;
 
             List<ChessPiece> tmpTabuleiro = tabuleiro.toList();
-            GenerateAllLegalMoviments.gerarMovimentos(tmpTabuleiro);
+            GenerateAllLegalMoviments.gerarMovimentos(
+                tmpTabuleiro, lastPiece, oldLocation, newLocation);
             if (is_xequed.getXequed(tabuleiro)?.pieceColor ==
                     piece.pieceColor ||
                 is_xequed.getXequed(tmpTabuleiro)?.pieceColor ==
@@ -146,7 +148,8 @@ class validate_legal_moviments {
       }
     }
 
-    GenerateAllLegalMoviments.gerarMovimentosNEW(tabuleiro, removeLocations);
+    GenerateAllLegalMoviments.gerarMovimentosNEW(
+        tabuleiro, removeLocations, lastPiece, oldLocation, newLocation);
     for (ChessPiece piece in tabuleiro) {
       if (piece.ilegalMoviments != null) {
         for (Location location in piece.ilegalMoviments!) {

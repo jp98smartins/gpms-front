@@ -14,6 +14,29 @@ bool moveTo(ChessMatch chessMatch, List<ChessPiece> boardPieces,
     return false;
   }
 
+  if (piece.name == 'pawn' &&
+      piece.location.x != location.x &&
+      findPiece(boardPieces, location) == null) {
+    ChessPiece? toKill = findPiece(
+        boardPieces,
+        Location(
+            location.x,
+            piece.pieceColor.name == 'white'
+                ? location.y + 1
+                : location.y - 1));
+    if (toKill != null) {
+      toKill.location = Location(-1, -1);
+      toKill.died = true;
+      chessMatch.addPecasMortas(toKill);
+      piece.location.x = location.x;
+      piece.location.y = location.y;
+      piece.moved = true;
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   if (piece.name == 'king' &&
       !piece.moved &&
       ((location.x == 3 && location.y == 0) ||
@@ -93,9 +116,6 @@ bool moveTo(ChessMatch chessMatch, List<ChessPiece> boardPieces,
     piece.location.x = location.x;
     piece.location.y = location.y;
     piece.moved = true;
-    print("${toKill.pieceColor.name} ${toKill.name} captured");
-    print(
-        "${piece.pieceColor.name} ${piece.name} moved to x: ${piece.location.x} y: ${piece.location.y}");
     return true;
   } else if (hasPiece && !hasAdPiece) {
     return false;
@@ -103,8 +123,6 @@ bool moveTo(ChessMatch chessMatch, List<ChessPiece> boardPieces,
     piece.location.x = location.x;
     piece.location.y = location.y;
     piece.moved = true;
-    print(
-        "${piece.pieceColor.name} ${piece.name} moved to x: ${piece.location.x} y: ${piece.location.y}");
     return true;
   }
 }

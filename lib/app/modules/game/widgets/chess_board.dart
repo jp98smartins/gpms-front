@@ -37,6 +37,10 @@ class _ChessBoardState extends State<ChessBoard> {
   var pecaAnterior = -1;
   Location ultimo = Location(-1, -1);
 
+  ChessPiece? lastPieceMoved;
+  Location? lastPieceOldLocation;
+  Location? lastPieceNewLocation;
+
   var posicoesY = ['', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
   var posicoesX = ['8', '7', '6', '5', '4', '3', '2', '1', ''];
   List<Location>? posicoesPossiveisEscolha;
@@ -122,8 +126,13 @@ class _ChessBoardState extends State<ChessBoard> {
               itensTabuleiro,
               chessMatch.pecasMortas,
             )) {
-              moveTo(chessMatch, itensTabuleiro, possivelPecaAntiga,
-                  Location(x, y));
+              lastPieceOldLocation = Location(
+                  possivelPecaAntiga.location.x, possivelPecaAntiga.location.y);
+              if (moveTo(chessMatch, itensTabuleiro, possivelPecaAntiga,
+                  Location(x, y))) {
+                lastPieceMoved = possivelPecaAntiga;
+                lastPieceNewLocation = Location(x, y);
+              }
 
               winner = validate_legal_moviments.validateWinner(
                   itensTabuleiro,
@@ -135,8 +144,13 @@ class _ChessBoardState extends State<ChessBoard> {
                 chessMatch.addTurn();
                 chessMatch.changeCurrentPlayer();
                 GenerateAllLegalMoviments.gerarMovimentosNEW(
-                    itensTabuleiro, [Location(-1, -1)]);
-                validate_legal_moviments.validateLegalMoviments(itensTabuleiro);
+                    itensTabuleiro,
+                    [Location(-1, -1)],
+                    lastPieceMoved,
+                    lastPieceOldLocation,
+                    lastPieceNewLocation);
+                validate_legal_moviments.validateLegalMoviments(itensTabuleiro,
+                    lastPieceMoved, lastPieceOldLocation, lastPieceNewLocation);
 
                 if (menuConfigDto?.gameModeDto != GameMode.pvp &&
                     chessMatch.currentPlayer == 'Pretas') {
@@ -148,9 +162,16 @@ class _ChessBoardState extends State<ChessBoard> {
                   chessMatch.addTurn();
                   chessMatch.changeCurrentPlayer();
                   GenerateAllLegalMoviments.gerarMovimentosNEW(
-                      itensTabuleiro, [Location(-1, -1)]);
-                  validate_legal_moviments
-                      .validateLegalMoviments(itensTabuleiro);
+                      itensTabuleiro,
+                      [Location(-1, -1)],
+                      lastPieceMoved,
+                      lastPieceOldLocation,
+                      lastPieceNewLocation);
+                  validate_legal_moviments.validateLegalMoviments(
+                      itensTabuleiro,
+                      lastPieceMoved,
+                      lastPieceOldLocation,
+                      lastPieceNewLocation);
                   winner = validate_legal_moviments.validateWinner(
                       itensTabuleiro,
                       chessMatch.currentPlayer == "Pretas"
