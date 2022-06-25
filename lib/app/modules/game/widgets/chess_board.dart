@@ -11,6 +11,7 @@ import '../../../core/enums/game_mode.dart';
 import '../domain/entities/chess/chess_match.dart';
 import '../domain/entities/chess_piece_entity.dart';
 import '../domain/functions/find_piece.dart';
+import '../domain/functions/move.dart';
 import '../domain/functions/generate_all_legal_moviments.dart';
 import '../domain/functions/validate_legal_moviments.dart';
 import '../domain/functions/verify_location_in_list.dart';
@@ -121,9 +122,8 @@ class _ChessBoardState extends State<ChessBoard> {
               itensTabuleiro,
               chessMatch.pecasMortas,
             )) {
-              possivelPecaAntiga.location.x = x;
-              possivelPecaAntiga.location.y = y;
-              possivelPecaAntiga.moved = true;
+              moveTo(chessMatch, itensTabuleiro, possivelPecaAntiga,
+                  Location(x, y));
 
               winner = validate_legal_moviments.validateWinner(
                   itensTabuleiro,

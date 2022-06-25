@@ -20,6 +20,7 @@ abstract class ChessPiece {
   final PieceColor pieceColor;
   final int value;
   Location location;
+  List<Location>? opMoviments;
   List<Location>? legalMoviments;
   List<Location>? ilegalMoviments;
 
@@ -33,6 +34,18 @@ abstract class ChessPiece {
   });
 
   Widget get image;
+
+  void addOpMoviments(Location location) {
+    if (opMoviments == null) {
+      opMoviments = [location];
+    } else {
+      opMoviments?.add(location);
+    }
+  }
+
+  void remOpMoviments(Location location) {
+    opMoviments!.remove(location);
+  }
 
   void addLegalMoviments(Location location) {
     if (legalMoviments == null) {

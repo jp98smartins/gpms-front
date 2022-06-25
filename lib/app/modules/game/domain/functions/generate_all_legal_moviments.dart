@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import '../entities/chess_piece_entity.dart';
 import 'find_piece.dart';
+import 'is_xequed.dart';
 
 class GenerateAllLegalMoviments {
   //RECEBE O TABULEIRO E GERA TODOS OS MOVIEMTOS DE CADA PEÇA, SEM VALIDAÇÕES DE XEQUE
@@ -11,6 +12,7 @@ class GenerateAllLegalMoviments {
       int x = element.location.x;
       int y = element.location.y;
       element.legalMoviments = null;
+      element.opMoviments = null;
       int verificaPosX = 0;
       int verificaPosY = 0;
       switch (element.name) {
@@ -23,6 +25,7 @@ class GenerateAllLegalMoviments {
 
           //VERIFICA SETOR NEGATIVO X E SETOR NEGATIVO Y
           while (verificaPosX >= 1 && verificaPosY >= 0) {
+            element.addOpMoviments(Location(verificaPosX, verificaPosY));
             var possivelPeca =
                 findPiece(tabuleiro, Location(verificaPosX, verificaPosY));
             if (possivelPeca == null) {
@@ -45,6 +48,7 @@ class GenerateAllLegalMoviments {
           verificaPosY++;
 
           while (verificaPosX >= 1 && verificaPosY <= 7) {
+            element.addOpMoviments(Location(verificaPosX, verificaPosY));
             var possivelPeca =
                 findPiece(tabuleiro, Location(verificaPosX, verificaPosY));
             if (possivelPeca == null) {
@@ -67,6 +71,7 @@ class GenerateAllLegalMoviments {
           verificaPosY--;
 
           while (verificaPosX <= 8 && verificaPosY >= 0) {
+            element.addOpMoviments(Location(verificaPosX, verificaPosY));
             var possivelPeca =
                 findPiece(tabuleiro, Location(verificaPosX, verificaPosY));
             if (possivelPeca == null) {
@@ -89,6 +94,7 @@ class GenerateAllLegalMoviments {
           verificaPosY++;
 
           while (verificaPosX <= 8 && verificaPosY <= 7) {
+            element.addOpMoviments(Location(verificaPosX, verificaPosY));
             var possivelPeca =
                 findPiece(tabuleiro, Location(verificaPosX, verificaPosY));
             if (possivelPeca == null) {
@@ -109,6 +115,7 @@ class GenerateAllLegalMoviments {
           void verificaAddPosicaoCavalo(int verificaPosX, int verificaPosY) {
             var possivelPeca =
                 findPiece(tabuleiro, Location(verificaPosX, verificaPosY));
+            element.addOpMoviments(Location(verificaPosX, verificaPosY));
             if (possivelPeca == null ||
                 possivelPeca.pieceColor != element.pieceColor) {
               element.addLegalMoviments(Location(verificaPosX, verificaPosY));
@@ -175,6 +182,7 @@ class GenerateAllLegalMoviments {
           verificaPosX--;
           possivelPeca =
               findPiece(tabuleiro, Location(verificaPosX, verificaPosY));
+          element.addOpMoviments(Location(verificaPosX, verificaPosY));
           if (possivelPeca != null &&
               possivelPeca.pieceColor != element.pieceColor) {
             element.addLegalMoviments(Location(verificaPosX, verificaPosY));
@@ -182,6 +190,7 @@ class GenerateAllLegalMoviments {
           verificaPosX += 2;
           possivelPeca =
               findPiece(tabuleiro, Location(verificaPosX, verificaPosY));
+          element.addOpMoviments(Location(verificaPosX, verificaPosY));
           if (possivelPeca != null &&
               possivelPeca.pieceColor != element.pieceColor) {
             element.addLegalMoviments(Location(verificaPosX, verificaPosY));
@@ -213,6 +222,7 @@ class GenerateAllLegalMoviments {
           while (verificaPosX >= 1 && verificaPosY >= 0) {
             var possivelPeca =
                 findPiece(tabuleiro, Location(verificaPosX, verificaPosY));
+            element.addOpMoviments(Location(verificaPosX, verificaPosY));
             if (possivelPeca == null) {
               element.addLegalMoviments(Location(verificaPosX, verificaPosY));
             } else if (possivelPeca.pieceColor != element.pieceColor) {
@@ -235,6 +245,7 @@ class GenerateAllLegalMoviments {
           while (verificaPosX >= 1 && verificaPosY <= 7) {
             var possivelPeca =
                 findPiece(tabuleiro, Location(verificaPosX, verificaPosY));
+            element.addOpMoviments(Location(verificaPosX, verificaPosY));
             if (possivelPeca == null) {
               element.addLegalMoviments(Location(verificaPosX, verificaPosY));
             } else if (possivelPeca.pieceColor != element.pieceColor) {
@@ -257,6 +268,7 @@ class GenerateAllLegalMoviments {
           while (verificaPosX <= 8 && verificaPosY >= 0) {
             var possivelPeca =
                 findPiece(tabuleiro, Location(verificaPosX, verificaPosY));
+            element.addOpMoviments(Location(verificaPosX, verificaPosY));
             if (possivelPeca == null) {
               element.addLegalMoviments(Location(verificaPosX, verificaPosY));
             } else if (possivelPeca.pieceColor != element.pieceColor) {
@@ -279,6 +291,7 @@ class GenerateAllLegalMoviments {
           while (verificaPosX <= 8 && verificaPosY <= 7) {
             var possivelPeca =
                 findPiece(tabuleiro, Location(verificaPosX, verificaPosY));
+            element.addOpMoviments(Location(verificaPosX, verificaPosY));
             if (possivelPeca == null) {
               element.addLegalMoviments(Location(verificaPosX, verificaPosY));
             } else if (possivelPeca.pieceColor != element.pieceColor) {
@@ -300,6 +313,7 @@ class GenerateAllLegalMoviments {
           while (verificaPosX >= 1) {
             var possivelPeca =
                 findPiece(tabuleiro, Location(verificaPosX, verificaPosY));
+            element.addOpMoviments(Location(verificaPosX, verificaPosY));
             if (possivelPeca == null) {
               element.addLegalMoviments(Location(verificaPosX, verificaPosY));
             } else if (possivelPeca.pieceColor != element.pieceColor) {
@@ -320,6 +334,7 @@ class GenerateAllLegalMoviments {
           while (verificaPosX <= 8) {
             var possivelPeca =
                 findPiece(tabuleiro, Location(verificaPosX, verificaPosY));
+            element.addOpMoviments(Location(verificaPosX, verificaPosY));
             if (possivelPeca == null) {
               element.addLegalMoviments(Location(verificaPosX, verificaPosY));
             } else if (possivelPeca.pieceColor != element.pieceColor) {
@@ -340,6 +355,7 @@ class GenerateAllLegalMoviments {
           while (verificaPosY >= 0) {
             var possivelPeca =
                 findPiece(tabuleiro, Location(verificaPosX, verificaPosY));
+            element.addOpMoviments(Location(verificaPosX, verificaPosY));
             if (possivelPeca == null) {
               element.addLegalMoviments(Location(verificaPosX, verificaPosY));
             } else if (possivelPeca.pieceColor != element.pieceColor) {
@@ -360,6 +376,7 @@ class GenerateAllLegalMoviments {
           while (verificaPosY <= 7) {
             var possivelPeca =
                 findPiece(tabuleiro, Location(verificaPosX, verificaPosY));
+            element.addOpMoviments(Location(verificaPosX, verificaPosY));
             if (possivelPeca == null) {
               element.addLegalMoviments(Location(verificaPosX, verificaPosY));
             } else if (possivelPeca.pieceColor != element.pieceColor) {
@@ -383,6 +400,7 @@ class GenerateAllLegalMoviments {
           while (verificaPosX >= 1) {
             var possivelPeca =
                 findPiece(tabuleiro, Location(verificaPosX, verificaPosY));
+            element.addOpMoviments(Location(verificaPosX, verificaPosY));
             if (possivelPeca == null) {
               element.addLegalMoviments(Location(verificaPosX, verificaPosY));
             } else if (possivelPeca.pieceColor != element.pieceColor) {
@@ -403,6 +421,7 @@ class GenerateAllLegalMoviments {
           while (verificaPosX <= 8) {
             var possivelPeca =
                 findPiece(tabuleiro, Location(verificaPosX, verificaPosY));
+            element.addOpMoviments(Location(verificaPosX, verificaPosY));
             if (possivelPeca == null) {
               element.addLegalMoviments(Location(verificaPosX, verificaPosY));
             } else if (possivelPeca.pieceColor != element.pieceColor) {
@@ -423,6 +442,7 @@ class GenerateAllLegalMoviments {
           while (verificaPosY >= 0) {
             var possivelPeca =
                 findPiece(tabuleiro, Location(verificaPosX, verificaPosY));
+            element.addOpMoviments(Location(verificaPosX, verificaPosY));
             if (possivelPeca == null) {
               element.addLegalMoviments(Location(verificaPosX, verificaPosY));
             } else if (possivelPeca.pieceColor != element.pieceColor) {
@@ -443,6 +463,7 @@ class GenerateAllLegalMoviments {
           while (verificaPosY <= 7) {
             var possivelPeca =
                 findPiece(tabuleiro, Location(verificaPosX, verificaPosY));
+            element.addOpMoviments(Location(verificaPosX, verificaPosY));
             if (possivelPeca == null) {
               element.addLegalMoviments(Location(verificaPosX, verificaPosY));
             } else if (possivelPeca.pieceColor != element.pieceColor) {
@@ -469,6 +490,7 @@ class GenerateAllLegalMoviments {
             while (county < 3) {
               var possivelPeca =
                   findPiece(tabuleiro, Location(verificaPosX, verificaPosY));
+              element.addOpMoviments(Location(verificaPosX, verificaPosY));
               if (possivelPeca == null ||
                   possivelPeca.pieceColor != element.pieceColor) {
                 for (ChessPiece piece in tabuleiro) {
@@ -495,14 +517,49 @@ class GenerateAllLegalMoviments {
             verificaPosX++;
             countx++;
           }
+
+          // Castling
+          bool kingSideCastling = false;
+          bool queenSideCastling = false;
+          ChessPiece? checkedKing = is_xequed.getXequed(tabuleiro);
+          int line = element.pieceColor.name == 'white' ? 7 : 0;
+
+          ChessPiece? kingSideRook = findPiece(tabuleiro, Location(8, line));
+          ChessPiece? queenSideRook = findPiece(tabuleiro, Location(1, line));
+
+          // King side castling
+          if (kingSideRook != null &&
+              (checkedKing?.pieceColor.name != element.pieceColor.name ||
+                  checkedKing == null)) {
+            kingSideCastling = ((!element.moved) &&
+                (!kingSideRook.moved) &&
+                (findPiece(tabuleiro, Location(6, line)) == null) &&
+                (findPiece(tabuleiro, Location(7, line)) == null));
+          }
+
+          // Queen side castling
+          if (queenSideRook != null &&
+              (checkedKing?.pieceColor.name != element.pieceColor.name ||
+                  checkedKing == null)) {
+            queenSideCastling = ((!element.moved) &&
+                (!queenSideRook.moved) &&
+                (findPiece(tabuleiro, Location(4, line)) == null) &&
+                (findPiece(tabuleiro, Location(3, line)) == null) &&
+                (findPiece(tabuleiro, Location(2, line)) == null));
+          }
+
+          if (kingSideCastling) {
+            element.addLegalMoviments(Location(7, line));
+          }
+
+          if (queenSideCastling) {
+            element.addLegalMoviments(Location(3, line));
+          }
+
           break;
       }
     }
   }
-  //
-  //
-
-  //
 
   static void gerarMovimentosNEW(
       List<ChessPiece> tabuleiro, List<Location> remove) {
@@ -511,6 +568,7 @@ class GenerateAllLegalMoviments {
       int x = element.location.x;
       int y = element.location.y;
       element.legalMoviments = null;
+      element.opMoviments = null;
       int verificaPosX = 0;
       int verificaPosY = 0;
       switch (element.name) {
@@ -525,6 +583,7 @@ class GenerateAllLegalMoviments {
           while (verificaPosX >= 1 && verificaPosY >= 0) {
             var possivelPeca =
                 findPiece(tabuleiro, Location(verificaPosX, verificaPosY));
+            element.addOpMoviments(Location(verificaPosX, verificaPosY));
             if (possivelPeca == null) {
               if (!remove.any((elements) =>
                   verifica(Location(verificaPosX, verificaPosY), element))) {
@@ -553,6 +612,7 @@ class GenerateAllLegalMoviments {
           while (verificaPosX >= 1 && verificaPosY <= 7) {
             var possivelPeca =
                 findPiece(tabuleiro, Location(verificaPosX, verificaPosY));
+            element.addOpMoviments(Location(verificaPosX, verificaPosY));
             if (possivelPeca == null) {
               if (!remove.any((elements) =>
                   verifica(Location(verificaPosX, verificaPosY), element))) {
@@ -581,6 +641,7 @@ class GenerateAllLegalMoviments {
           while (verificaPosX <= 8 && verificaPosY >= 0) {
             var possivelPeca =
                 findPiece(tabuleiro, Location(verificaPosX, verificaPosY));
+            element.addOpMoviments(Location(verificaPosX, verificaPosY));
             if (possivelPeca == null) {
               if (!remove.any((elements) =>
                   verifica(Location(verificaPosX, verificaPosY), element))) {
@@ -609,6 +670,7 @@ class GenerateAllLegalMoviments {
           while (verificaPosX <= 8 && verificaPosY <= 7) {
             var possivelPeca =
                 findPiece(tabuleiro, Location(verificaPosX, verificaPosY));
+            element.addOpMoviments(Location(verificaPosX, verificaPosY));
             if (possivelPeca == null) {
               if (!remove.any((elements) =>
                   verifica(Location(verificaPosX, verificaPosY), element))) {
@@ -640,6 +702,7 @@ class GenerateAllLegalMoviments {
             while (county < 3) {
               var possivelPeca =
                   findPiece(tabuleiro, Location(verificaPosX, verificaPosY));
+              element.addOpMoviments(Location(verificaPosX, verificaPosY));
               if (possivelPeca == null ||
                   possivelPeca.pieceColor != element.pieceColor) {
                 if (!remove.any((elements) =>
@@ -654,12 +717,52 @@ class GenerateAllLegalMoviments {
             verificaPosX++;
             countx++;
           }
+
+          // Castling
+          bool kingSideCastling = false;
+          bool queenSideCastling = false;
+          ChessPiece? checkedKing = is_xequed.getXequed(tabuleiro);
+          int line = element.pieceColor.name == 'white' ? 7 : 0;
+
+          ChessPiece? kingSideRook = findPiece(tabuleiro, Location(8, line));
+          ChessPiece? queenSideRook = findPiece(tabuleiro, Location(1, line));
+
+          // King side castling
+          if (kingSideRook != null &&
+              (checkedKing?.pieceColor.name != element.pieceColor.name ||
+                  checkedKing == null)) {
+            kingSideCastling = ((!element.moved) &&
+                (!kingSideRook.moved) &&
+                (findPiece(tabuleiro, Location(6, line)) == null) &&
+                (findPiece(tabuleiro, Location(7, line)) == null));
+          }
+
+          // Queen side castling
+          if (queenSideRook != null &&
+              (checkedKing?.pieceColor.name != element.pieceColor.name ||
+                  checkedKing == null)) {
+            queenSideCastling = ((!element.moved) &&
+                (!queenSideRook.moved) &&
+                (findPiece(tabuleiro, Location(4, line)) == null) &&
+                (findPiece(tabuleiro, Location(3, line)) == null) &&
+                (findPiece(tabuleiro, Location(2, line)) == null));
+          }
+
+          if (kingSideCastling) {
+            element.addLegalMoviments(Location(7, line));
+          }
+
+          if (queenSideCastling) {
+            element.addLegalMoviments(Location(3, line));
+          }
+
           break;
 
         case 'knight':
           void verificaAddPosicaoCavalo(int verificaPosX, int verificaPosY) {
             var possivelPeca =
                 findPiece(tabuleiro, Location(verificaPosX, verificaPosY));
+            element.addOpMoviments(Location(verificaPosX, verificaPosY));
             if (possivelPeca == null ||
                 possivelPeca.pieceColor != element.pieceColor) {
               if (!remove.any((elements) =>
@@ -732,6 +835,7 @@ class GenerateAllLegalMoviments {
           verificaPosX--;
           possivelPeca =
               findPiece(tabuleiro, Location(verificaPosX, verificaPosY));
+          element.addOpMoviments(Location(verificaPosX, verificaPosY));
           if (possivelPeca != null &&
               possivelPeca.pieceColor != element.pieceColor) {
             if (!remove.any((elements) =>
@@ -742,6 +846,7 @@ class GenerateAllLegalMoviments {
           verificaPosX += 2;
           possivelPeca =
               findPiece(tabuleiro, Location(verificaPosX, verificaPosY));
+          element.addOpMoviments(Location(verificaPosX, verificaPosY));
           if (possivelPeca != null &&
               possivelPeca.pieceColor != element.pieceColor) {
             if (!remove.any((elements) =>
@@ -779,6 +884,7 @@ class GenerateAllLegalMoviments {
           while (verificaPosX >= 1 && verificaPosY >= 0) {
             var possivelPeca =
                 findPiece(tabuleiro, Location(verificaPosX, verificaPosY));
+            element.addOpMoviments(Location(verificaPosX, verificaPosY));
             if (possivelPeca == null) {
               if (!remove.any((elements) =>
                   verifica(Location(verificaPosX, verificaPosY), element))) {
@@ -807,6 +913,7 @@ class GenerateAllLegalMoviments {
           while (verificaPosX >= 1 && verificaPosY <= 7) {
             var possivelPeca =
                 findPiece(tabuleiro, Location(verificaPosX, verificaPosY));
+            element.addOpMoviments(Location(verificaPosX, verificaPosY));
             if (possivelPeca == null) {
               if (!remove.any((elements) =>
                   verifica(Location(verificaPosX, verificaPosY), element))) {
@@ -835,6 +942,7 @@ class GenerateAllLegalMoviments {
           while (verificaPosX <= 8 && verificaPosY >= 0) {
             var possivelPeca =
                 findPiece(tabuleiro, Location(verificaPosX, verificaPosY));
+            element.addOpMoviments(Location(verificaPosX, verificaPosY));
             if (possivelPeca == null) {
               if (!remove.any((elements) =>
                   verifica(Location(verificaPosX, verificaPosY), element))) {
@@ -863,6 +971,7 @@ class GenerateAllLegalMoviments {
           while (verificaPosX <= 8 && verificaPosY <= 7) {
             var possivelPeca =
                 findPiece(tabuleiro, Location(verificaPosX, verificaPosY));
+            element.addOpMoviments(Location(verificaPosX, verificaPosY));
             if (possivelPeca == null) {
               if (!remove.any((elements) =>
                   verifica(Location(verificaPosX, verificaPosY), element))) {
@@ -891,6 +1000,7 @@ class GenerateAllLegalMoviments {
           while (verificaPosX >= 1) {
             var possivelPeca =
                 findPiece(tabuleiro, Location(verificaPosX, verificaPosY));
+            element.addOpMoviments(Location(verificaPosX, verificaPosY));
             if (possivelPeca == null) {
               if (!remove.any((elements) =>
                   verifica(Location(verificaPosX, verificaPosY), element))) {
@@ -917,6 +1027,7 @@ class GenerateAllLegalMoviments {
           while (verificaPosX <= 8) {
             var possivelPeca =
                 findPiece(tabuleiro, Location(verificaPosX, verificaPosY));
+            element.addOpMoviments(Location(verificaPosX, verificaPosY));
             if (possivelPeca == null) {
               if (!remove.any((elements) =>
                   verifica(Location(verificaPosX, verificaPosY), element))) {
@@ -943,6 +1054,7 @@ class GenerateAllLegalMoviments {
           while (verificaPosY >= 0) {
             var possivelPeca =
                 findPiece(tabuleiro, Location(verificaPosX, verificaPosY));
+            element.addOpMoviments(Location(verificaPosX, verificaPosY));
             if (possivelPeca == null) {
               if (!remove.any((elements) =>
                   verifica(Location(verificaPosX, verificaPosY), element))) {
@@ -969,6 +1081,7 @@ class GenerateAllLegalMoviments {
           while (verificaPosY <= 7) {
             var possivelPeca =
                 findPiece(tabuleiro, Location(verificaPosX, verificaPosY));
+            element.addOpMoviments(Location(verificaPosX, verificaPosY));
             if (possivelPeca == null) {
               if (!remove.any((elements) =>
                   verifica(Location(verificaPosX, verificaPosY), element))) {
@@ -998,6 +1111,7 @@ class GenerateAllLegalMoviments {
           while (verificaPosX >= 1) {
             var possivelPeca =
                 findPiece(tabuleiro, Location(verificaPosX, verificaPosY));
+            element.addOpMoviments(Location(verificaPosX, verificaPosY));
             if (possivelPeca == null) {
               if (!remove.any((elements) =>
                   verifica(Location(verificaPosX, verificaPosY), element))) {
@@ -1024,6 +1138,7 @@ class GenerateAllLegalMoviments {
           while (verificaPosX <= 8) {
             var possivelPeca =
                 findPiece(tabuleiro, Location(verificaPosX, verificaPosY));
+            element.addOpMoviments(Location(verificaPosX, verificaPosY));
             if (possivelPeca == null) {
               if (!remove.any((elements) =>
                   verifica(Location(verificaPosX, verificaPosY), element))) {
@@ -1050,6 +1165,7 @@ class GenerateAllLegalMoviments {
           while (verificaPosY >= 0) {
             var possivelPeca =
                 findPiece(tabuleiro, Location(verificaPosX, verificaPosY));
+            element.addOpMoviments(Location(verificaPosX, verificaPosY));
             if (possivelPeca == null) {
               if (!remove.any((elements) =>
                   verifica(Location(verificaPosX, verificaPosY), element))) {
@@ -1076,6 +1192,7 @@ class GenerateAllLegalMoviments {
           while (verificaPosY <= 7) {
             var possivelPeca =
                 findPiece(tabuleiro, Location(verificaPosX, verificaPosY));
+            element.addOpMoviments(Location(verificaPosX, verificaPosY));
             if (possivelPeca == null) {
               if (!remove.any((elements) =>
                   verifica(Location(verificaPosX, verificaPosY), element))) {

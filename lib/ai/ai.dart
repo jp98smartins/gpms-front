@@ -5,6 +5,7 @@ import 'package:meta/meta.dart';
 import '../app/core/enums/game_difficulty.dart';
 import '../app/modules/game/domain/entities/chess_piece_entity.dart';
 import '../app/modules/game/domain/functions/find_piece.dart';
+import '../app/modules/game/domain/functions/move.dart';
 import '../app/modules/game/domain/functions/verify_moviment.dart';
 
 class ChessAI {
@@ -39,21 +40,10 @@ class ChessAI {
             if (x >= 0 &&
                 y >= 0 &&
                 ((onlyNotMoved && !piece.moved) || !onlyNotMoved)) {
-              for (ChessPiece killed in tabuleiro) {
-                if (killed.location.x == x &&
-                    killed.location.y == y &&
-                    killed != piece) {
-                  killed.location = Location(-1, -1);
-                  killed.died = true;
-                  chessMatch.pecasMortas.add(killed);
-                  break;
-                }
+              if (moveTo(chessMatch, tabuleiro, piece, legalMoviment)) {
+                moved = true;
+                break;
               }
-              piece.location.x = x;
-              piece.location.y = y;
-              piece.moved = true;
-              moved = true;
-              break;
             }
           }
         }
@@ -118,22 +108,17 @@ class ChessAI {
       for (var piece in tabuleiro) {
         if (piece.legalMoviments != null && pieceColor == piece.pieceColor) {
           for (var legalMoviment in piece.legalMoviments!) {
-            var x = legalMoviment.x;
-            var y = legalMoviment.y;
-            if (x >= 0 && y >= 0) {
+            if (legalMoviment.x >= 0 && legalMoviment.y >= 0) {
               if (!(attackerToKill == null)) {
-                if (attackerToKill.location.x == x &&
-                    attackerToKill.location.y == y &&
+                if (attackerToKill.location.x == legalMoviment.x &&
+                    attackerToKill.location.y == legalMoviment.y &&
                     attackerToKill != piece) {
                   if (piece.value <= attackerToKill.value) {
-                    attackerToKill.location = Location(-1, -1);
-                    attackerToKill.died = true;
-                    chessMatch.pecasMortas.add(attackerToKill);
-                    piece.location.x = x;
-                    piece.location.y = y;
-                    piece.moved = true;
-                    moved = true;
-                    break;
+                    if (moveTo(chessMatch, tabuleiro, piece,
+                        attackerToKill.location)) {
+                      moved = true;
+                      break;
+                    }
                   }
                 }
               }
@@ -152,9 +137,8 @@ class ChessAI {
               if (attacker.legalMoviments != null &&
                   pieceColor != attacker.pieceColor) {
                 for (var attackerMoviment in attacker.legalMoviments!) {
-                  var x = attackerMoviment.x;
-                  var y = attackerMoviment.y;
-                  if (x == legalMoviment.x && y == legalMoviment.y) {
+                  if (attackerMoviment.x == legalMoviment.x &&
+                      attackerMoviment.y == legalMoviment.y) {
                     isSafe = false;
                     break;
                   }
@@ -162,26 +146,11 @@ class ChessAI {
               }
             }
             if (isSafe) {
-              var x = legalMoviment.x;
-              var y = legalMoviment.y;
-              var hasToKill = false;
-              for (ChessPiece killed in tabuleiro) {
-                if (killed.location.x == x && killed.location.y == y) {
-                  if (killed.value >= attackedToMove.value &&
-                      killed != attackedToMove) {
-                    hasToKill = true;
-                    killed.location = Location(-1, -1);
-                    killed.died = true;
-                    chessMatch.pecasMortas.add(killed);
-                    break;
-                  }
-                }
+              if (moveTo(
+                  chessMatch, tabuleiro, attackedToMove, legalMoviment)) {
+                moved = true;
+                break;
               }
-              attackedToMove.location.x = x;
-              attackedToMove.location.y = y;
-              attackedToMove.moved = true;
-              moved = true;
-              break;
             }
             if (moved) break;
           }
@@ -194,18 +163,12 @@ class ChessAI {
             for (var legalMoviment in piece.legalMoviments!) {
               var x = legalMoviment.x;
               var y = legalMoviment.y;
-              if (x >= 0 && y >= 0) {
-                if (!(attackerToKill == null)) {
-                  if (attackerToKill.location.x == x &&
-                      attackerToKill.location.y == y &&
-                      attackerToKill != piece) {
-                    if (piece.value < attackedToMove.value) {
-                      attackerToKill.location = Location(-1, -1);
-                      attackerToKill.died = true;
-                      chessMatch.pecasMortas.add(attackerToKill);
-                      piece.location.x = x;
-                      piece.location.y = y;
-                      piece.moved = true;
+              if (!(attackerToKill == null)) {
+                if (attackerToKill.location.x == x &&
+                    attackerToKill.location.y == y &&
+                    attackerToKill != piece) {
+                  if (piece.value < attackedToMove.value) {
+                    if (moveTo(chessMatch, tabuleiro, piece, legalMoviment)) {
                       moved = true;
                       break;
                     }
@@ -231,14 +194,10 @@ class ChessAI {
               for (ChessPiece killed in tabuleiro) {
                 if (killed.location.x == x && killed.location.y == y) {
                   if (killed.value >= piece.value) {
-                    killed.location = Location(-1, -1);
-                    killed.died = true;
-                    chessMatch.pecasMortas.add(killed);
-                    piece.location.x = x;
-                    piece.location.y = y;
-                    piece.moved = true;
-                    moved = true;
-                    break;
+                    if (moveTo(chessMatch, tabuleiro, piece, legalMoviment)) {
+                      moved = true;
+                      break;
+                    }
                   }
                 }
               }
@@ -261,14 +220,10 @@ class ChessAI {
               for (ChessPiece killed in tabuleiro) {
                 if (killed.location.x == x && killed.location.y == y) {
                   if (killed.value == piece.value) {
-                    killed.location = Location(-1, -1);
-                    killed.died = true;
-                    chessMatch.pecasMortas.add(killed);
-                    piece.location.x = x;
-                    piece.location.y = y;
-                    piece.moved = true;
-                    moved = true;
-                    break;
+                    if (moveTo(chessMatch, tabuleiro, piece, legalMoviment)) {
+                      moved = true;
+                      break;
+                    }
                   }
                 }
               }
@@ -279,9 +234,11 @@ class ChessAI {
         if (moved) break;
       }
     }
+
     if (!moved) {
       moved = easy(tabuleiro, gameDifficulty, pieceColor, chessMatch);
     }
+
     return moved;
   }
 
@@ -299,14 +256,14 @@ class ChessAI {
     List<ChessPiece> attackerListForAdNotDefended = [];
     // Define as pecas atacadas do jogador
     for (var piece in tabuleiro) {
-      if (piece.legalMoviments != null && pieceColor != piece.pieceColor) {
+      if (piece.opMoviments != null && pieceColor != piece.pieceColor) {
         // Apenas pecas de cor oposta
-        for (var legalMoviment in piece.legalMoviments!) {
-          var x = legalMoviment.x;
-          var y = legalMoviment.y;
-          if (x >= 0 && y >= 0) {
+        for (var legalMoviment in piece.opMoviments!) {
+          if (legalMoviment.x >= 0 && legalMoviment.y >= 0) {
             for (ChessPiece killed in tabuleiro) {
-              if (killed.location.x == x && killed.location.y == y) {
+              if (killed.location.x == legalMoviment.x &&
+                  killed.location.y == legalMoviment.y &&
+                  killed.pieceColor != piece.pieceColor) {
                 myAttackedList.add(killed);
                 attackerListForMy.add(piece);
               }
@@ -317,14 +274,14 @@ class ChessAI {
     }
     // Define as pecas atacadas do adversario
     for (var piece in tabuleiro) {
-      if (piece.legalMoviments != null && pieceColor == piece.pieceColor) {
+      if (piece.opMoviments != null && pieceColor == piece.pieceColor) {
         // Apenas pecas da mesma cor
-        for (var legalMoviment in piece.legalMoviments!) {
-          var x = legalMoviment.x;
-          var y = legalMoviment.y;
-          if (x >= 0 && y >= 0) {
+        for (var legalMoviment in piece.opMoviments!) {
+          if (legalMoviment.x >= 0 && legalMoviment.y >= 0) {
             for (ChessPiece killed in tabuleiro) {
-              if (killed.location.x == x && killed.location.y == y) {
+              if (killed.location.x == legalMoviment.x &&
+                  killed.location.y == legalMoviment.y &&
+                  killed.pieceColor != piece.pieceColor) {
                 adAttackedList.add(killed);
                 attackerListForAd.add(piece);
               }
@@ -338,19 +295,18 @@ class ChessAI {
       for (ChessPiece attacked in myAttackedList) {
         bool defended = false;
         for (var piece in tabuleiro) {
-          if (piece.legalMoviments != null &&
-              attacked.pieceColor != piece.pieceColor) {
-            for (var legalMoviment in piece.legalMoviments!) {
-              var x = legalMoviment.x;
-              var y = legalMoviment.y;
-              if (x >= 0 &&
-                  y >= 0 &&
-                  attacked.location.x == x &&
-                  attacked.location.y == y &&
+          if (piece.opMoviments != null &&
+              attacked.pieceColor == piece.pieceColor) {
+            for (var legalMoviment in piece.opMoviments!) {
+              if (attacked.location.x == legalMoviment.x &&
+                  attacked.location.y == legalMoviment.y &&
                   attacked != piece) {
                 defended = true;
                 break;
               }
+            }
+            if (defended) {
+              break;
             }
           }
         }
@@ -367,19 +323,18 @@ class ChessAI {
       for (ChessPiece attacked in adAttackedList) {
         bool defended = false;
         for (var piece in tabuleiro) {
-          if (piece.legalMoviments != null &&
-              attacked.pieceColor != piece.pieceColor) {
-            for (var legalMoviment in piece.legalMoviments!) {
-              var x = legalMoviment.x;
-              var y = legalMoviment.y;
-              if (x >= 0 &&
-                  y >= 0 &&
-                  attacked.location.x == x &&
-                  attacked.location.y == y &&
+          if (piece.opMoviments != null &&
+              attacked.pieceColor == piece.pieceColor) {
+            for (var legalMoviment in piece.opMoviments!) {
+              if (attacked.location.x == legalMoviment.x &&
+                  attacked.location.y == legalMoviment.y &&
                   attacked != piece) {
                 defended = true;
                 break;
               }
+            }
+            if (defended) {
+              break;
             }
           }
         }
@@ -403,14 +358,10 @@ class ChessAI {
 
     for (var i = 0; i < adAttackedList.length; i++) {
       int value;
-      int indexNotDefended =
-          adNotDefendedAttackedList.indexOf(adAttackedList[i]);
 
-      if (indexNotDefended == -1) {
+      if (adNotDefendedAttackedList.contains(adAttackedList[i])) {
         value = adAttackedList[i].value;
       } else {
-        print(
-            "${adAttackedList[i]} ${adAttackedList[i].pieceColor.name} esta protegida");
         value = adAttackedList[i].value - attackerListForAd[i].value;
       }
 
@@ -418,8 +369,9 @@ class ChessAI {
         bestCaseMy = value;
         bestCaseMyAttacked = adAttackedList[i];
         bestCaseMyAttacker = attackerListForAd[i];
+        fExec = false;
       }
-      if (value > bestCaseMy) {
+      if (value > bestCaseMy!) {
         bestCaseMy = value;
         bestCaseMyAttacked = adAttackedList[i];
         bestCaseMyAttacker = attackerListForAd[i];
@@ -429,14 +381,10 @@ class ChessAI {
     fExec = true;
     for (var i = 0; i < myAttackedList.length; i++) {
       int value;
-      int indexNotDefended =
-          myNotDefendedAttackedList.indexOf(myAttackedList[i]);
 
-      if (indexNotDefended == -1) {
+      if (myNotDefendedAttackedList.contains(myAttackedList[i])) {
         value = myAttackedList[i].value;
       } else {
-        print(
-            "${myAttackedList[i]} ${myAttackedList[i].pieceColor.name} esta protegida");
         value = myAttackedList[i].value - attackerListForMy[i].value;
       }
 
@@ -444,8 +392,9 @@ class ChessAI {
         bestCaseAd = value;
         bestCaseAdAttacked = myAttackedList[i];
         bestCaseAdAttacker = attackerListForMy[i];
+        fExec = false;
       }
-      if (value > bestCaseAd) {
+      if (value > bestCaseAd!) {
         bestCaseAd = value;
         bestCaseAdAttacked = myAttackedList[i];
         bestCaseAdAttacker = attackerListForMy[i];
@@ -455,10 +404,8 @@ class ChessAI {
     bool defense = false;
     bool capture = false;
 
-    print("| bestCaseMy: $bestCaseMy | bestCaseAd: $bestCaseAd |");
-
     if (!(bestCaseMy == null) && !(bestCaseAd == null)) {
-      if (bestCaseMy >= bestCaseAd && bestCaseMy > 0) {
+      if (bestCaseMy >= bestCaseAd && bestCaseMy >= 0) {
         capture = true;
       } else {
         defense = true;
@@ -466,8 +413,6 @@ class ChessAI {
     } else if (!(bestCaseMy == null)) {
       if (bestCaseMy > 0) {
         capture = true;
-      } else {
-        defense = true;
       }
     } else if (!(bestCaseAd == null)) {
       if (bestCaseAd > 0) {
@@ -476,30 +421,20 @@ class ChessAI {
     }
 
     if (capture) {
-      var x = bestCaseMyAttacked!.location.x;
-      var y = bestCaseMyAttacked.location.y;
-      bestCaseMyAttacked.location = Location(-1, -1);
-      bestCaseMyAttacked.died = true;
-      chessMatch.pecasMortas.add(bestCaseMyAttacked);
-      bestCaseMyAttacker!.location.x = x;
-      bestCaseMyAttacker.location.y = y;
-      bestCaseMyAttacker.moved = true;
-      moved = true;
+      if (moveTo(chessMatch, tabuleiro, bestCaseMyAttacker!,
+          bestCaseMyAttacked!.location)) {
+        moved = true;
+      }
     } else if (defense) {
       if (!(bestCaseAdAttacker == null)) {
-// Verifica se o atacante nao esta defendido e esta atacado
+        // Verifica se o atacante nao esta defendido e esta atacado
         if (adNotDefendedAttackedList.contains(bestCaseAdAttacker)) {
           int index = adNotDefendedAttackedList.indexOf(bestCaseAdAttacker);
           ChessPiece myAttacker = attackerListForAdNotDefended[index];
-          var x = bestCaseAdAttacker.location.x;
-          var y = bestCaseAdAttacker.location.y;
-          bestCaseAdAttacker.location = Location(-1, -1);
-          bestCaseAdAttacker.died = true;
-          chessMatch.pecasMortas.add(bestCaseAdAttacker);
-          myAttacker.location.x = x;
-          myAttacker.location.y = y;
-          myAttacker.moved = true;
-          moved = true;
+          if (moveTo(
+              chessMatch, tabuleiro, myAttacker, bestCaseAdAttacker.location)) {
+            moved = true;
+          }
         }
         // Verifica se o atacante esta atacado por uma peca de menor valor
         // que a a peca atacante
@@ -508,16 +443,10 @@ class ChessAI {
             int index = adAttackedList.indexOf(bestCaseAdAttacker);
             ChessPiece myAttacker = attackerListForAd[index];
             if (myAttacker.value <= bestCaseAdAttacker.value) {
-              ChessPiece myAttacker = attackerListForAdNotDefended[index];
-              var x = bestCaseAdAttacker.location.x;
-              var y = bestCaseAdAttacker.location.y;
-              bestCaseAdAttacker.location = Location(-1, -1);
-              bestCaseAdAttacker.died = true;
-              chessMatch.pecasMortas.add(bestCaseAdAttacker);
-              myAttacker.location.x = x;
-              myAttacker.location.y = y;
-              myAttacker.moved = true;
-              moved = true;
+              if (moveTo(chessMatch, tabuleiro, myAttacker,
+                  bestCaseAdAttacker.location)) {
+                moved = true;
+              }
             }
           }
         }
@@ -527,25 +456,19 @@ class ChessAI {
           if (adAttackedList.contains(bestCaseAdAttacker)) {
             int index = adAttackedList.indexOf(bestCaseAdAttacker);
             ChessPiece myAttacker = attackerListForAd[index];
-            if (myAttacker.value <= bestCaseAdAttacked!.value) {
-              ChessPiece myAttacker = attackerListForAdNotDefended[index];
-              var x = bestCaseAdAttacker.location.x;
-              var y = bestCaseAdAttacker.location.y;
-              bestCaseAdAttacker.location = Location(-1, -1);
-              bestCaseAdAttacker.died = true;
-              chessMatch.pecasMortas.add(bestCaseAdAttacker);
-              myAttacker.location.x = x;
-              myAttacker.location.y = y;
-              myAttacker.moved = true;
-              moved = true;
+            if (myAttacker.value < bestCaseAdAttacked!.value &&
+                myAttacker != bestCaseAdAttacked) {
+              if (moveTo(chessMatch, tabuleiro, myAttacker,
+                  bestCaseAdAttacker.location)) {
+                moved = true;
+              }
             }
           }
         }
       }
       // Tenta mover a peca para uma posicao nao atacada
       if (!moved) {
-        if (bestCaseAdAttacked!.legalMoviments != null &&
-            bestCaseAdAttacked.name != 'king') {
+        if (bestCaseAdAttacked!.legalMoviments != null) {
           for (var attackedLegalMoviment
               in bestCaseAdAttacked.legalMoviments!) {
             if (!(findPiece(tabuleiro, attackedLegalMoviment) == null)) {
@@ -553,9 +476,9 @@ class ChessAI {
             }
             bool validLocation = true;
             for (var piece in tabuleiro) {
-              if (piece.legalMoviments != null &&
-                  pieceColor != piece.pieceColor) {
-                for (var legalMoviment in piece.legalMoviments!) {
+              if (piece.opMoviments != null &&
+                  bestCaseAdAttacked.pieceColor != piece.pieceColor) {
+                for (var legalMoviment in piece.opMoviments!) {
                   if (legalMoviment.x == attackedLegalMoviment.x &&
                       legalMoviment.y == attackedLegalMoviment.y &&
                       attackedLegalMoviment.x >= 0 &&
@@ -567,11 +490,11 @@ class ChessAI {
               }
             }
             if (validLocation) {
-              bestCaseAdAttacked.location.x = attackedLegalMoviment.x;
-              bestCaseAdAttacked.location.y = attackedLegalMoviment.y;
-              bestCaseAdAttacked.moved = true;
-              moved = true;
-              break;
+              if (moveTo(chessMatch, tabuleiro, bestCaseAdAttacked,
+                  attackedLegalMoviment)) {
+                moved = true;
+                break;
+              }
             }
           }
         }
@@ -587,13 +510,14 @@ class ChessAI {
             }
             bool validLocation = false;
             for (var piece in tabuleiro) {
-              if (piece.legalMoviments != null &&
-                  pieceColor == piece.pieceColor) {
-                for (var legalMoviment in piece.legalMoviments!) {
+              if (piece.opMoviments != null &&
+                  bestCaseAdAttacked.pieceColor == piece.pieceColor) {
+                for (var legalMoviment in piece.opMoviments!) {
                   if (legalMoviment.x == attackedLegalMoviment.x &&
                       legalMoviment.y == attackedLegalMoviment.y &&
                       attackedLegalMoviment.x >= 0 &&
-                      attackedLegalMoviment.y >= 0) {
+                      attackedLegalMoviment.y >= 0 &&
+                      bestCaseAdAttacked != piece) {
                     validLocation = true;
                     break;
                   }
@@ -601,24 +525,66 @@ class ChessAI {
               }
             }
             if (validLocation) {
-              bestCaseAdAttacked.location.x = attackedLegalMoviment.x;
-              bestCaseAdAttacked.location.y = attackedLegalMoviment.y;
-              bestCaseAdAttacked.moved = true;
-              moved = true;
-              break;
+              if (moveTo(chessMatch, tabuleiro, bestCaseAdAttacked,
+                  attackedLegalMoviment)) {
+                moved = true;
+                break;
+              }
             }
           }
         }
       }
     }
 
+    // Faz um movimento aleatorio e bom
     if (!moved) {
-      moved = medium(tabuleiro, gameDifficulty, pieceColor, chessMatch);
+      tabuleiro.shuffle(Random());
+      for (var onlyNotMoved in [true, false]) {
+        for (var myPiece in tabuleiro) {
+          if (myPiece.legalMoviments != null &&
+              pieceColor == myPiece.pieceColor) {
+            if (myPiece.moved && onlyNotMoved) {
+              continue;
+            }
+            for (var legalMoviment in myPiece.legalMoviments!) {
+              var safePosition = false;
+              for (var adPiece in tabuleiro) {
+                if (adPiece.legalMoviments != null &&
+                    pieceColor != adPiece.pieceColor) {
+                  for (var adLegalMoviment in myPiece.legalMoviments!) {
+                    if (adLegalMoviment.x == legalMoviment.x &&
+                        adLegalMoviment.y == legalMoviment.y) {
+                      safePosition = true;
+                      break;
+                    }
+                  }
+                  if (safePosition) {
+                    break;
+                  }
+                }
+              }
+              if (safePosition) {
+                if (moveTo(chessMatch, tabuleiro, myPiece, legalMoviment)) {
+                  moved = true;
+                  break;
+                }
+              }
+            }
+          }
+          if (moved) {
+            break;
+          }
+        }
+        if (moved) {
+          break;
+        }
+      }
     }
 
     if (!moved) {
       moved = easy(tabuleiro, gameDifficulty, pieceColor, chessMatch);
     }
+
     return moved;
   }
 }
