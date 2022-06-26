@@ -32,7 +32,7 @@ class _ChessBoardState extends State<ChessBoard> {
   late final ChessMatch chessMatch;
   late final List<ChessPiece> itensTabuleiro;
   MenuConfigDto? menuConfigDto;
-  PieceColor? winner;
+  MatchResult? winner;
   bool primeiraTurno = true;
   var pecaAnterior = -1;
   Location ultimo = Location(-1, -1);
@@ -122,11 +122,8 @@ class _ChessBoardState extends State<ChessBoard> {
           if (possivelPecaAntiga != null) {
             if (Move.moveTo(chessMatch, itensTabuleiro, possivelPecaAntiga,
                 Location(x, y))) {
-              winner = validate_legal_moviments.validateWinner(
-                  itensTabuleiro,
-                  chessMatch.currentPlayer == "Pretas"
-                      ? PieceColor.black
-                      : PieceColor.white);
+              winner = validate_legal_moviments.getMatchResult(
+                  itensTabuleiro, chessMatch);
 
               if (winner == null) {
                 chessMatch.addTurn();
@@ -140,8 +137,12 @@ class _ChessBoardState extends State<ChessBoard> {
                 validate_legal_moviments.validateLegalMoviments(itensTabuleiro,
                     lastPieceMoved, lastPieceOldLocation, lastPieceNewLocation);
 
+                winner = validate_legal_moviments.getMatchResult(
+                    itensTabuleiro, chessMatch);
+
                 if (menuConfigDto?.gameModeDto != GameMode.pvp &&
-                    chessMatch.currentPlayer == 'Pretas') {
+                    chessMatch.currentPlayer == 'Pretas' &&
+                    winner == null) {
                   ChessAI.doMove(
                       itensTabuleiro,
                       menuConfigDto?.gameDifficultyDto,
@@ -149,6 +150,8 @@ class _ChessBoardState extends State<ChessBoard> {
                       chessMatch);
                   chessMatch.addTurn();
                   chessMatch.changeCurrentPlayer();
+                  winner = validate_legal_moviments.getMatchResult(
+                      itensTabuleiro, chessMatch);
                   GenerateAllLegalMoviments.gerarMovimentosNEW(
                       itensTabuleiro,
                       [Location(-1, -1)],
@@ -160,11 +163,8 @@ class _ChessBoardState extends State<ChessBoard> {
                       lastPieceMoved,
                       lastPieceOldLocation,
                       lastPieceNewLocation);
-                  winner = validate_legal_moviments.validateWinner(
-                      itensTabuleiro,
-                      chessMatch.currentPlayer == "Pretas"
-                          ? PieceColor.black
-                          : PieceColor.white);
+                  winner = validate_legal_moviments.getMatchResult(
+                      itensTabuleiro, chessMatch);
                 }
               }
 

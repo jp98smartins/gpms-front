@@ -19,6 +19,19 @@ class is_xequed {
           }
         }
       }
+      if (piece.legalMoviments != null) {
+        for (var legalMoviment in piece.legalMoviments!) {
+          ChessPiece? piece2 = findPiece(tabuleiro, legalMoviment);
+          if (piece2 != null) {
+            if (piece2.name == 'king' &&
+                piece.pieceColor != piece2.pieceColor &&
+                !piece.died) {
+              log('xequed');
+              return piece2;
+            }
+          }
+        }
+      }
     }
     return null;
   }
