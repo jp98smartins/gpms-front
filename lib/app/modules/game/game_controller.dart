@@ -1,10 +1,15 @@
 import 'dart:developer';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:get/get.dart';
-import 'package:gpms/app/modules/game/domain/entities/chess/chess_match.dart';
 
+import '../../core/adapters/svg_image_adapter.dart';
 import '../../core/data/dtos/menu_config_dto.dart';
+import '../../core/routes/app_routes.dart';
+import '../../core/theme/app_assets.dart';
 import 'domain/entities/bishop_entity.dart';
+import 'domain/entities/chess/chess_match.dart';
 import 'domain/entities/chess_piece_entity.dart';
 import 'domain/entities/king_entity.dart';
 import 'domain/entities/knight_entity.dart';
@@ -99,11 +104,93 @@ class GameController extends GetxController {
 
   Future<void> finishGame() async {
     isLoading = true;
-    try {} catch (e) {
+    try {
+      menuConfigDto = null;
+      Modular.to.popAndPushNamed(AppRoutes.menuRoute);
+      Get.delete<GameController>();
+    } catch (e) {
       log("[ GameController.finishGame() ] => $e");
       // Snackbar
     } finally {
       isLoading = false;
     }
+  }
+
+  void winDialog(context, color) {
+    showDialog(
+      builder: (c) {
+        return AlertDialog(
+          insetPadding: const EdgeInsets.symmetric(vertical: 200.0),
+          title: SvgImageAdapter.fromAsset(
+            AppAssets.award,
+            alignment: Alignment.center,
+            width: 75.0,
+          ),
+          content: color == 'black'
+              ? const Text(
+                  'PRETAS VENCERAM!',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.black),
+                )
+              : const Text(
+                  'BRANCAS VENCERAM!',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.white),
+                ),
+          actions: [
+            ElevatedButton(
+              onPressed: () => finishGame(),
+              child: const Text("NOVO JOGO"),
+            ),
+          ],
+          actionsAlignment: MainAxisAlignment.center,
+        );
+      },
+      context: context,
+    );
+  }
+
+  void drawDialog(context) {
+    showDialog(
+      builder: (c) {
+        return AlertDialog(
+          insetPadding: const EdgeInsets.symmetric(vertical: 200.0),
+          title: const Text(
+            'EMPATE!',
+            textAlign: TextAlign.center,
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () => finishGame(),
+              child: const Text("NOVO JOGO"),
+            ),
+          ],
+          actionsAlignment: MainAxisAlignment.center,
+        );
+      },
+      context: context,
+    );
+  }
+
+  void finishDialog(context) {
+    showDialog(
+      builder: (c) {
+        return AlertDialog(
+          insetPadding: const EdgeInsets.symmetric(vertical: 200.0),
+          title: const Text("DESISTIR DO JOGO?"),
+          content: const SizedBox(
+            height: 2,
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () => finishGame(),
+              child: const Text("DESISTIR DO JOGO"),
+            ),
+          ],
+          actionsAlignment: MainAxisAlignment.center,
+        );
+      },
+      context: context,
+    );
   }
 }
