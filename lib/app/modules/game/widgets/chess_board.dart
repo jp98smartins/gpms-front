@@ -168,6 +168,20 @@ class _ChessBoardState extends State<ChessBoard> {
                 }
               }
 
+              switch (winner) {
+                case MatchResult.black:
+                  widget.controller.winDialog(context, "black");
+                  break;
+                case MatchResult.white:
+                  widget.controller.winDialog(context, "white");
+                  break;
+                case MatchResult.draw:
+                  widget.controller.drawDialog(context);
+                  break;
+                case null:
+                  break;
+              }
+
               widget.controller.update();
             }
           }

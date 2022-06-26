@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -26,9 +28,16 @@ class GamePage extends StatelessWidget {
                   ),
                   title: const Text("xadrez"),
                   actions: [
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.more_vert),
+                    PopupMenuButton<String>(
+                      onSelected: (value) => {controller.finishDialog(context)},
+                      itemBuilder: (BuildContext context) {
+                        return {'Finalizar Partida'}.map((String choice) {
+                          return PopupMenuItem<String>(
+                            value: choice,
+                            child: Text(choice),
+                          );
+                        }).toList();
+                      },
                     ),
                   ],
                 ),
