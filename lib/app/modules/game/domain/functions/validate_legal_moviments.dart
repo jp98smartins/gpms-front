@@ -50,8 +50,8 @@ class validate_legal_moviments {
       [ChessPiece? lastPiece, Location? oldLocation, Location? newLocation]) {
     List<Location> removeIlegalMoviments = [Location(-1, -1)];
     List<Location> removeLocations = [Location(-1, -1)];
-    GenerateAllLegalMoviments.gerarMovimentosNEW(
-        tabuleiro, removeLocations, lastPiece, oldLocation, newLocation);
+    GenerateAllLegalMoviments.gerarMovimentos(
+        tabuleiro, lastPiece, oldLocation, newLocation);
     ChessPiece? xequedKing = is_xequed.getXequed(tabuleiro);
 
     if (xequedKing != null) {
@@ -186,8 +186,8 @@ class validate_legal_moviments {
       }
     }
 
-    GenerateAllLegalMoviments.gerarMovimentosNEW(
-        tabuleiro, removeLocations, lastPiece, oldLocation, newLocation);
+    GenerateAllLegalMoviments.gerarMovimentos(
+        tabuleiro, lastPiece, oldLocation, newLocation);
     for (ChessPiece piece in tabuleiro) {
       if (piece.ilegalMoviments != null) {
         for (Location location in piece.ilegalMoviments!) {
