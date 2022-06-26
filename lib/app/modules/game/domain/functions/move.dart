@@ -246,6 +246,9 @@ class Move {
     Location capturedOldLocation = Location(-1, -1);
     ChessPiece? captured = findPiece(boardPiecesCopy, location);
 
+    // print(
+    // "Trying ${pieceCopy.pieceColor.name} ${pieceCopy.name} to (${location.x},${location.y})");
+
     if (location.x < 1 || location.x > 8 || location.y < 0 || location.y > 7) {
       return false;
     }
