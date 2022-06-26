@@ -5,10 +5,50 @@ import 'package:gpms/app/modules/game/domain/functions/verify_moviment.dart';
 
 import 'generate_all_legal_moviments.dart';
 import 'is_xequed.dart';
+import 'move.dart';
 import '../entities/chess_piece_entity.dart';
 
 class validate_legal_moviments {
   static void validateLegalMoviments(List<ChessPiece> tabuleiro,
+      [ChessPiece? lastPiece, Location? oldLocation, Location? newLocation]) {
+    List<Location> removeLocations = [Location(-1, -1)];
+    GenerateAllLegalMoviments.gerarMovimentosNEW(
+        tabuleiro, removeLocations, lastPiece, oldLocation, newLocation);
+    for (var i = 0; i < 2; i++) {
+      for (var piece in tabuleiro) {
+        if (piece.legalMoviments != null) {
+          List<Location> locationsForRemove = [];
+          for (var legalMoviment in piece.legalMoviments!) {
+            if (!Move.isLegalMovement(tabuleiro, piece, legalMoviment)) {
+              Location? opForRm;
+              if (piece.opMoviments != null) {
+                for (var opMoviment in piece.opMoviments!) {
+                  if (opMoviment.x == legalMoviment.x &&
+                      opMoviment.y == legalMoviment.y) {
+                    opForRm = opMoviment;
+                    break;
+                  }
+                }
+              }
+              if (opForRm != null) {
+                piece.remOpMoviments(opForRm);
+              }
+              locationsForRemove.add(legalMoviment);
+            }
+          }
+          for (var lfr in locationsForRemove) {
+            if (piece.legalMoviments != null &&
+                piece.legalMoviments!.contains(lfr)) {
+              piece.remLegalMoviments(lfr);
+            }
+            piece.addIlegalMoviments(lfr);
+          }
+        }
+      }
+    }
+  }
+
+  static void validateLegalMoviments_deprecated(List<ChessPiece> tabuleiro,
       [ChessPiece? lastPiece, Location? oldLocation, Location? newLocation]) {
     List<Location> removeIlegalMoviments = [Location(-1, -1)];
     List<Location> removeLocations = [Location(-1, -1)];
