@@ -13,6 +13,7 @@ class Queen extends ChessPiece {
           pieceColor: pieceColor,
           value: 9,
           location: location,
+          promotion: '',
         );
 
   @override

@@ -13,6 +13,7 @@ class King extends ChessPiece {
           pieceColor: pieceColor,
           value: 10,
           location: location,
+          promotion: '',
         );
 
   @override

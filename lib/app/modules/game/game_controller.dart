@@ -193,4 +193,77 @@ class GameController extends GetxController {
       context: context,
     );
   }
+
+  void promotionDialog(context, ChessPiece piece) {
+    showDialog(
+      builder: (c) {
+        return AlertDialog(
+          insetPadding: const EdgeInsets.symmetric(vertical: 200.0),
+          title: const Text("Promoção do Peão"),
+          content: const SizedBox(
+            height: 2,
+          ),
+          actions: [
+            IconButton(
+              onPressed: () => arrumaPromotion(piece, "queen"),
+              icon: SvgImageAdapter.fromAsset(
+                AppAssets.whiteQueen,
+                alignment: Alignment.center,
+                width: 75.0,
+              ),
+            ),
+            IconButton(
+              onPressed: () => arrumaPromotion(piece, "bishop"),
+              icon: SvgImageAdapter.fromAsset(
+                AppAssets.whiteBishop,
+                alignment: Alignment.center,
+                width: 75.0,
+              ),
+            ),
+            IconButton(
+              onPressed: () => arrumaPromotion(piece, "knight"),
+              icon: SvgImageAdapter.fromAsset(
+                AppAssets.whiteKnight,
+                alignment: Alignment.center,
+                width: 75.0,
+              ),
+            ),
+            IconButton(
+              onPressed: () => arrumaPromotion(piece, "rook"),
+              icon: SvgImageAdapter.fromAsset(
+                AppAssets.whiteRook,
+                alignment: Alignment.center,
+                width: 75.0,
+              ),
+            ),
+          ],
+          actionsAlignment: MainAxisAlignment.center,
+        );
+      },
+      context: context,
+    );
+  }
+
+  void verifyPromotion(List<ChessPiece> tabuleiro, context) {
+    for (ChessPiece piece in tabuleiro) {
+      if (piece.pieceColor == PieceColor.black) {
+        if (piece.name == "pawn") {
+          if (piece.location.y == 7) {
+            promotionDialog(context, piece);
+          }
+        }
+      } else {
+        if (piece.name == "pawn") {
+          if (piece.location.y == 0) {
+            promotionDialog(context, piece);
+          }
+        }
+      }
+    }
+  }
+
+  void arrumaPromotion(ChessPiece piece, String nome) {
+    log(nome);
+    piece.promotion = nome;
+  }
 }

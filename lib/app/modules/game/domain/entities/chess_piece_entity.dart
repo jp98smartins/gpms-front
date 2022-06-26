@@ -23,6 +23,7 @@ abstract class ChessPiece {
   List<Location>? opMoviments;
   List<Location>? legalMoviments;
   List<Location>? ilegalMoviments;
+  String promotion;
 
   ChessPiece({
     required this.died,
@@ -31,6 +32,7 @@ abstract class ChessPiece {
     required this.pieceColor,
     required this.value,
     required this.location,
+    required this.promotion,
   });
 
   Widget get image;

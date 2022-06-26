@@ -262,28 +262,4 @@ class validate_legal_moviments {
 
     return matchResult;
   }
-
-  static PieceColor? validateWinner_deprecated(
-      List<ChessPiece> tabuleiro, PieceColor color) {
-    int cont = 0;
-    if (is_xequed.isXequed(tabuleiro)) {
-      for (ChessPiece piece in tabuleiro) {
-        if (piece.pieceColor == color) {
-          if (piece.legalMoviments == null) {
-            cont += 1;
-          }
-        }
-      }
-    }
-    if (cont >= 16) {
-      if (color == PieceColor.black) {
-        log("Brancas Win");
-        return null;
-      } else {
-        log("Pretas Win");
-        return null;
-      }
-    }
-    return null;
-  }
 }

@@ -13,6 +13,7 @@ class Pawn extends ChessPiece {
           pieceColor: pieceColor,
           value: 1,
           location: location,
+          promotion: '',
         );
 
   @override

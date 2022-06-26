@@ -13,6 +13,7 @@ class Bishop extends ChessPiece {
           pieceColor: pieceColor,
           value: 3,
           location: location,
+          promotion: '',
         );
 
   @override

@@ -124,7 +124,7 @@ class _ChessBoardState extends State<ChessBoard> {
                 Location(x, y))) {
               winner = validate_legal_moviments.getMatchResult(
                   itensTabuleiro, chessMatch);
-
+              widget.controller.verifyPromotion(itensTabuleiro, context);
               if (winner == null) {
                 chessMatch.addTurn();
                 chessMatch.changeCurrentPlayer();

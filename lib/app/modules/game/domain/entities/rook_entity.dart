@@ -13,6 +13,7 @@ class Rook extends ChessPiece {
           pieceColor: pieceColor,
           value: 5,
           location: location,
+          promotion: '',
         );
 
   @override
