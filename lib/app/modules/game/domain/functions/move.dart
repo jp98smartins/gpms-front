@@ -246,12 +246,12 @@ class Move {
     Location capturedOldLocation = Location(-1, -1);
     ChessPiece? captured = findPiece(boardPiecesCopy, location);
 
-    print(
-        "Trying ${pieceCopy.pieceColor.name} ${pieceCopy.name} to (${location.x},${location.y})");
-    if (captured != null) {
-      print(
-          "There's a piece at (${location.x},${location.y}). ${captured.pieceColor.name} ${captured.name}");
-    }
+    //print(
+    //    "Trying ${pieceCopy.pieceColor.name} ${pieceCopy.name} to (${location.x},${location.y})");
+    //if (captured != null) {
+    //  print(
+    //      "There's a piece at (${location.x},${location.y}). ${captured.pieceColor.name} ${captured.name}");
+    //}
 
     if (location.x < 1 || location.x > 8 || location.y < 0 || location.y > 7) {
       return false;
