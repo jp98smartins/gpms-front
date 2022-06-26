@@ -120,20 +120,8 @@ class _ChessBoardState extends State<ChessBoard> {
 
           final possivelPecaAntiga = findPiece(itensTabuleiro, ultimo);
           if (possivelPecaAntiga != null) {
-            if (VerifyMoviment.verifyMoviment(
-              possivelPecaAntiga.legalMoviments,
-              Location(x, y),
-              itensTabuleiro,
-              chessMatch.pecasMortas,
-            )) {
-              lastPieceOldLocation = Location(
-                  possivelPecaAntiga.location.x, possivelPecaAntiga.location.y);
-              if (moveTo(chessMatch, itensTabuleiro, possivelPecaAntiga,
-                  Location(x, y))) {
-                lastPieceMoved = possivelPecaAntiga;
-                lastPieceNewLocation = Location(x, y);
-              }
-
+            if (Move.moveTo(chessMatch, itensTabuleiro, possivelPecaAntiga,
+                Location(x, y))) {
               winner = validate_legal_moviments.validateWinner(
                   itensTabuleiro,
                   chessMatch.currentPlayer == "Pretas"
