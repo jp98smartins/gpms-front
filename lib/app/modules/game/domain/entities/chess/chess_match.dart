@@ -3,18 +3,22 @@ import 'dart:developer';
 
 import '../chess_piece_entity.dart';
 
+enum MatchResult { black, white, draw }
+
 class ChessMatch {
   bool inGame;
   int turn;
   List<ChessPiece> pecasMortas;
   String currentPlayer;
   PieceColor pieceColor;
+  MatchResult? matchResult;
   ChessMatch({
     required this.inGame,
     required this.turn,
     required this.pecasMortas,
     required this.currentPlayer,
     required this.pieceColor,
+    required this.matchResult,
   });
 
   addTurn() {
