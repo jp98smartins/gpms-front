@@ -128,12 +128,6 @@ class _ChessBoardState extends State<ChessBoard> {
               if (winner == null) {
                 chessMatch.addTurn();
                 chessMatch.changeCurrentPlayer();
-                GenerateAllLegalMoviments.gerarMovimentosNEW(
-                    itensTabuleiro,
-                    [Location(-1, -1)],
-                    lastPieceMoved,
-                    lastPieceOldLocation,
-                    lastPieceNewLocation);
                 validate_legal_moviments.validateLegalMoviments(itensTabuleiro,
                     lastPieceMoved, lastPieceOldLocation, lastPieceNewLocation);
 
@@ -152,19 +146,15 @@ class _ChessBoardState extends State<ChessBoard> {
                   chessMatch.changeCurrentPlayer();
                   winner = validate_legal_moviments.getMatchResult(
                       itensTabuleiro, chessMatch);
-                  GenerateAllLegalMoviments.gerarMovimentosNEW(
-                      itensTabuleiro,
-                      [Location(-1, -1)],
-                      lastPieceMoved,
-                      lastPieceOldLocation,
-                      lastPieceNewLocation);
-                  validate_legal_moviments.validateLegalMoviments(
-                      itensTabuleiro,
-                      lastPieceMoved,
-                      lastPieceOldLocation,
-                      lastPieceNewLocation);
-                  winner = validate_legal_moviments.getMatchResult(
-                      itensTabuleiro, chessMatch);
+                  if (winner == null) {
+                    validate_legal_moviments.validateLegalMoviments(
+                        itensTabuleiro,
+                        lastPieceMoved,
+                        lastPieceOldLocation,
+                        lastPieceNewLocation);
+                    winner = validate_legal_moviments.getMatchResult(
+                        itensTabuleiro, chessMatch);
+                  }
                 }
               }
 

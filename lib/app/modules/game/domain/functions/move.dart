@@ -66,8 +66,8 @@ class Move {
       } else if (location.x == 3 && location.y == 0) {
         if (isCheckedOn(boardPieces, piece, Location(2, 0)) ||
             isCheckedOn(boardPieces, piece, Location(3, 0)) ||
-            findPiece(boardPieces, Location(2, 0)) == null ||
-            findPiece(boardPieces, Location(3, 0)) == null) {
+            findPiece(boardPieces, Location(2, 0)) != null ||
+            findPiece(boardPieces, Location(3, 0)) != null) {
           return false;
         }
         ChessPiece? rook = findPiece(boardPieces, Location(1, 0));
@@ -81,8 +81,8 @@ class Move {
       } else if (location.x == 7 && location.y == 0) {
         if (isCheckedOn(boardPieces, piece, Location(6, 0)) ||
             isCheckedOn(boardPieces, piece, Location(7, 0)) ||
-            findPiece(boardPieces, Location(6, 0)) == null ||
-            findPiece(boardPieces, Location(7, 0)) == null) {
+            findPiece(boardPieces, Location(6, 0)) != null ||
+            findPiece(boardPieces, Location(7, 0)) != null) {
           return false;
         }
         ChessPiece? rook = findPiece(boardPieces, Location(8, 0));
@@ -96,8 +96,8 @@ class Move {
       } else if (location.x == 3 && location.y == 7) {
         if (isCheckedOn(boardPieces, piece, Location(2, 7)) ||
             isCheckedOn(boardPieces, piece, Location(3, 7)) ||
-            findPiece(boardPieces, Location(2, 7)) == null ||
-            findPiece(boardPieces, Location(3, 7)) == null) {
+            findPiece(boardPieces, Location(2, 7)) != null ||
+            findPiece(boardPieces, Location(3, 7)) != null) {
           return false;
         }
         ChessPiece? rook = findPiece(boardPieces, Location(1, 7));
@@ -111,8 +111,8 @@ class Move {
       } else if (location.x == 7 && location.y == 7) {
         if (isCheckedOn(boardPieces, piece, Location(6, 7)) ||
             isCheckedOn(boardPieces, piece, Location(7, 7)) ||
-            findPiece(boardPieces, Location(6, 7)) == null ||
-            findPiece(boardPieces, Location(7, 7)) == null) {
+            findPiece(boardPieces, Location(6, 7)) != null ||
+            findPiece(boardPieces, Location(7, 7)) != null) {
           return false;
         }
         ChessPiece? rook = findPiece(boardPieces, Location(8, 7));
@@ -246,14 +246,19 @@ class Move {
     Location capturedOldLocation = Location(-1, -1);
     ChessPiece? captured = findPiece(boardPiecesCopy, location);
 
-    // print(
-    // "Trying ${pieceCopy.pieceColor.name} ${pieceCopy.name} to (${location.x},${location.y})");
+    //print(
+    //    "Trying ${pieceCopy.pieceColor.name} ${pieceCopy.name} to (${location.x},${location.y})");
+    //if (captured != null) {
+    //  print(
+    //      "There's a piece at (${location.x},${location.y}). ${captured.pieceColor.name} ${captured.name}");
+    //}
 
     if (location.x < 1 || location.x > 8 || location.y < 0 || location.y > 7) {
       return false;
     }
 
-    if (piece.location.x == location.x && piece.location.y == location.y) {
+    if (pieceCopy.location.x == location.x &&
+        pieceCopy.location.y == location.y) {
       return false;
     }
 
@@ -281,7 +286,8 @@ class Move {
         if (checkedKing.pieceColor.name == pieceCopy.pieceColor.name) {
           isValid = false;
         }
-      } else if (location.x == 3 && location.y == 0) {
+      }
+      if (location.x == 3 && location.y == 0) {
         ChessPiece? rook = findPiece(boardPiecesCopy, Location(1, 0));
 
         if (isCheckedOn(boardPiecesCopy, pieceCopy, Location(2, 0)) ||
@@ -293,8 +299,8 @@ class Move {
           isValid = false;
         }
 
-        if (findPiece(boardPiecesCopy, Location(2, 0)) == null ||
-            findPiece(boardPiecesCopy, Location(3, 0)) == null) {
+        if (findPiece(boardPiecesCopy, Location(2, 0)) != null ||
+            findPiece(boardPiecesCopy, Location(3, 0)) != null) {
           isValid = false;
         }
       } else if (location.x == 7 && location.y == 0) {
@@ -309,8 +315,8 @@ class Move {
           isValid = false;
         }
 
-        if (findPiece(boardPiecesCopy, Location(6, 0)) == null ||
-            findPiece(boardPiecesCopy, Location(7, 0)) == null) {
+        if (findPiece(boardPiecesCopy, Location(6, 0)) != null ||
+            findPiece(boardPiecesCopy, Location(7, 0)) != null) {
           isValid = false;
         }
       } else if (location.x == 3 && location.y == 7) {
@@ -325,8 +331,8 @@ class Move {
           isValid = false;
         }
 
-        if (findPiece(boardPiecesCopy, Location(2, 7)) == null ||
-            findPiece(boardPiecesCopy, Location(3, 7)) == null) {
+        if (findPiece(boardPiecesCopy, Location(2, 7)) != null ||
+            findPiece(boardPiecesCopy, Location(3, 7)) != null) {
           isValid = false;
         }
       } else if (location.x == 7 && location.y == 7) {
@@ -341,8 +347,8 @@ class Move {
           isValid = false;
         }
 
-        if (findPiece(boardPiecesCopy, Location(6, 7)) == null ||
-            findPiece(boardPiecesCopy, Location(7, 7)) == null) {
+        if (findPiece(boardPiecesCopy, Location(6, 7)) != null ||
+            findPiece(boardPiecesCopy, Location(7, 7)) != null) {
           isValid = false;
         }
       }
@@ -351,8 +357,8 @@ class Move {
     pieceCopy.location.x = location.x;
     pieceCopy.location.y = location.y;
 
-    GenerateAllLegalMoviments.gerarMovimentosNEW(
-        boardPiecesCopy, [], pieceCopy, pieceOldLocation, location);
+    GenerateAllLegalMoviments.gerarMovimentos(
+        boardPiecesCopy, pieceCopy, pieceOldLocation, location);
     ChessPiece? checkedKing = is_xequed.getXequed(boardPiecesCopy);
     if (checkedKing != null &&
         checkedKing.pieceColor.name == pieceCopy.pieceColor.name) {
