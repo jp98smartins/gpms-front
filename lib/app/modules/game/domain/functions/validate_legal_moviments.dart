@@ -214,7 +214,58 @@ class validate_legal_moviments {
     }
   }
 
-  static PieceColor? validateWinner(
+  static MatchResult? getMatchResult(
+      List<ChessPiece> tabuleiro, ChessMatch chessMatch) {
+    MatchResult? matchResult;
+    ChessPiece? checkedKing = is_xequed.getXequed(tabuleiro);
+    bool whiteHasValidMoves = false;
+    bool blackHasValidMoves = false;
+
+    for (ChessPiece cp in tabuleiro) {
+      if (cp.pieceColor.name == 'white') {
+        if (cp.legalMoviments != null) {
+          for (var legalMovement in cp.legalMoviments!) {
+            whiteHasValidMoves = true;
+            break;
+          }
+        }
+      } else {
+        if (cp.legalMoviments != null) {
+          for (var legalMovement in cp.legalMoviments!) {
+            blackHasValidMoves = true;
+            break;
+          }
+        }
+      }
+      if (whiteHasValidMoves && blackHasValidMoves) {
+        break;
+      }
+    }
+
+    if (checkedKing != null) {
+      if (!blackHasValidMoves && chessMatch.pieceColor.name == 'black') {
+        matchResult = MatchResult.white;
+      }
+      if (!whiteHasValidMoves && chessMatch.pieceColor.name == 'white') {
+        matchResult = MatchResult.black;
+      }
+    } else {
+      if (!blackHasValidMoves && chessMatch.pieceColor.name == 'black') {
+        matchResult = MatchResult.draw;
+      }
+      if (!whiteHasValidMoves && chessMatch.pieceColor.name == 'white') {
+        matchResult = MatchResult.draw;
+      }
+    }
+
+    if (matchResult != null) {
+      print("Winner color: ${matchResult.name}");
+    }
+
+    return matchResult;
+  }
+
+  static PieceColor? validateWinner_deprecated(
       List<ChessPiece> tabuleiro, PieceColor color) {
     int cont = 0;
     if (is_xequed.isXequed(tabuleiro)) {
