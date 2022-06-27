@@ -29,6 +29,19 @@ class Move {
       return false;
     }
 
+    if (piece.name == 'pawn' && (location.y == 7 || location.y == 0)) {
+      PieceColor pawnColor = piece.pieceColor;
+      piece.location.x = -1;
+      piece.location.y = -1;
+      piece.died = true;
+      piece.legalMoviments = null;
+      piece.ilegalMoviments = null;
+      piece.opMoviments = null;
+      ChessPiece queen = Queen(pawnColor, Location(location.x, location.y));
+      boardPieces.add(queen);
+      return true;
+    }
+
     if (piece.name == 'pawn' &&
         piece.location.x != location.x &&
         findPiece(boardPieces, Location(location.x, location.y)) == null) {
