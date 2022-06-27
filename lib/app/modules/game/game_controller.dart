@@ -194,7 +194,7 @@ class GameController extends GetxController {
     );
   }
 
-  void promotionDialog(context, ChessPiece piece) {
+  void promotionDialog(context, ChessPiece piece, String color) {
     showDialog(
       builder: (c) {
         return AlertDialog(
@@ -207,7 +207,7 @@ class GameController extends GetxController {
             IconButton(
               onPressed: () => arrumaPromotion(piece, "queen"),
               icon: SvgImageAdapter.fromAsset(
-                AppAssets.whiteQueen,
+                color == 'black' ? AppAssets.blackQueen : AppAssets.whiteQueen,
                 alignment: Alignment.center,
                 width: 75.0,
               ),
@@ -215,7 +215,9 @@ class GameController extends GetxController {
             IconButton(
               onPressed: () => arrumaPromotion(piece, "bishop"),
               icon: SvgImageAdapter.fromAsset(
-                AppAssets.whiteBishop,
+                color == 'black'
+                    ? AppAssets.blackBishop
+                    : AppAssets.whiteBishop,
                 alignment: Alignment.center,
                 width: 75.0,
               ),
@@ -223,7 +225,9 @@ class GameController extends GetxController {
             IconButton(
               onPressed: () => arrumaPromotion(piece, "knight"),
               icon: SvgImageAdapter.fromAsset(
-                AppAssets.whiteKnight,
+                color == 'black'
+                    ? AppAssets.blackKnight
+                    : AppAssets.whiteKnight,
                 alignment: Alignment.center,
                 width: 75.0,
               ),
@@ -231,7 +235,7 @@ class GameController extends GetxController {
             IconButton(
               onPressed: () => arrumaPromotion(piece, "rook"),
               icon: SvgImageAdapter.fromAsset(
-                AppAssets.whiteRook,
+                color == 'black' ? AppAssets.blackRook : AppAssets.whiteRook,
                 alignment: Alignment.center,
                 width: 75.0,
               ),
@@ -249,13 +253,13 @@ class GameController extends GetxController {
       if (piece.pieceColor == PieceColor.black) {
         if (piece.name == "pawn") {
           if (piece.location.y == 7) {
-            promotionDialog(context, piece);
+            promotionDialog(context, piece, "black");
           }
         }
       } else {
         if (piece.name == "pawn") {
           if (piece.location.y == 0) {
-            promotionDialog(context, piece);
+            promotionDialog(context, piece, "white");
           }
         }
       }
