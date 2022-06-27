@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:get/get.dart';
 
@@ -194,54 +195,84 @@ class GameController extends GetxController {
     );
   }
 
-  void promotionDialog(context, ChessPiece piece) {
-    showDialog(
-      builder: (c) {
-        return AlertDialog(
-          insetPadding: const EdgeInsets.symmetric(vertical: 200.0),
-          title: const Text("Promoção do Peão"),
-          content: const SizedBox(
-            height: 2,
-          ),
-          actions: [
-            IconButton(
-              onPressed: () => arrumaPromotion(piece, "queen"),
-              icon: SvgImageAdapter.fromAsset(
-                AppAssets.whiteQueen,
-                alignment: Alignment.center,
-                width: 75.0,
-              ),
+  Future<Null> promotionDialog(List<ChessPiece> tabuleiro, context) async {
+    ChessPiece? piece;
+    for (ChessPiece p in tabuleiro) {
+      if (p.pieceColor == PieceColor.black) {
+        if (p.name == "pawn") {
+          if (p.location.y == 7) {
+            piece = p;
+          }
+        }
+      } else {
+        if (p.name == "pawn") {
+          if (p.location.y == 0) {
+            piece = p;
+          }
+        }
+      }
+    }
+    if (piece != null) {
+      String? returnVal = await showDialog(
+        builder: (c) {
+          return AlertDialog(
+            insetPadding: const EdgeInsets.symmetric(vertical: 200.0),
+            title: const Text("Promoção do Peão"),
+            content: const SizedBox(
+              height: 2,
             ),
-            IconButton(
-              onPressed: () => arrumaPromotion(piece, "bishop"),
-              icon: SvgImageAdapter.fromAsset(
-                AppAssets.whiteBishop,
-                alignment: Alignment.center,
-                width: 75.0,
+            actions: [
+              IconButton(
+                onPressed: () {
+                  arrumaPromotion(tabuleiro, piece, "queen");
+                  Navigator.of(context, rootNavigator: true).pop();
+                },
+                icon: SvgImageAdapter.fromAsset(
+                  AppAssets.whiteQueen,
+                  alignment: Alignment.center,
+                  width: 75.0,
+                ),
               ),
-            ),
-            IconButton(
-              onPressed: () => arrumaPromotion(piece, "knight"),
-              icon: SvgImageAdapter.fromAsset(
-                AppAssets.whiteKnight,
-                alignment: Alignment.center,
-                width: 75.0,
+              IconButton(
+                onPressed: () {
+                  arrumaPromotion(tabuleiro, piece, "bishop");
+                  Navigator.of(context, rootNavigator: true).pop();
+                },
+                icon: SvgImageAdapter.fromAsset(
+                  AppAssets.whiteBishop,
+                  alignment: Alignment.center,
+                  width: 75.0,
+                ),
               ),
-            ),
-            IconButton(
-              onPressed: () => arrumaPromotion(piece, "rook"),
-              icon: SvgImageAdapter.fromAsset(
-                AppAssets.whiteRook,
-                alignment: Alignment.center,
-                width: 75.0,
+              IconButton(
+                onPressed: () {
+                  arrumaPromotion(tabuleiro, piece, "knight");
+                  Navigator.of(context, rootNavigator: true).pop();
+                },
+                icon: SvgImageAdapter.fromAsset(
+                  AppAssets.whiteKnight,
+                  alignment: Alignment.center,
+                  width: 75.0,
+                ),
               ),
-            ),
-          ],
-          actionsAlignment: MainAxisAlignment.center,
-        );
-      },
-      context: context,
-    );
+              IconButton(
+                onPressed: () {
+                  arrumaPromotion(tabuleiro, piece, "rook");
+                  Navigator.of(context, rootNavigator: true).pop();
+                },
+                icon: SvgImageAdapter.fromAsset(
+                  AppAssets.whiteRook,
+                  alignment: Alignment.center,
+                  width: 75.0,
+                ),
+              ),
+            ],
+            actionsAlignment: MainAxisAlignment.center,
+          );
+        },
+        context: context,
+      );
+    }
   }
 
   void verifyPromotion(List<ChessPiece> tabuleiro, context) {
@@ -262,8 +293,36 @@ class GameController extends GetxController {
     }
   }
 
-  void arrumaPromotion(ChessPiece piece, String nome) {
-    log(nome);
-    piece.promotion = nome;
+  void arrumaPromotion(List<ChessPiece> pieces, ChessPiece? pawn, String nome) {
+    if (pawn != null) {
+      // Destroy pawn
+      Location pawnOldLocation = Location(pawn.location.x, pawn.location.y);
+      PieceColor pawnColor = pawn.pieceColor;
+      pawn.location.x = -1;
+      pawn.location.y = -1;
+      pawn.died = true;
+      pawn.legalMoviments = null;
+      pawn.ilegalMoviments = null;
+      pawn.opMoviments = null;
+      // Create new piece
+      switch (nome) {
+        case 'queen':
+          ChessPiece queen = Queen(pawnColor, pawnOldLocation);
+          pieces.add(queen);
+          break;
+        case 'rook':
+          ChessPiece rook = Rook(pawnColor, pawnOldLocation);
+          pieces.add(rook);
+          break;
+        case 'bishop':
+          ChessPiece bishop = Bishop(pawnColor, pawnOldLocation);
+          pieces.add(bishop);
+          break;
+        case 'knight':
+          ChessPiece knight = Knight(pawnColor, pawnOldLocation);
+          pieces.add(knight);
+          break;
+      }
+    }
   }
 }

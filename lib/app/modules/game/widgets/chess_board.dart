@@ -102,7 +102,7 @@ class _ChessBoardState extends State<ChessBoard> {
             ? Colors.red.withOpacity(0.6)
             : Colors.black.withOpacity(0.0),
       )),
-      onPressed: () {
+      onPressed: () async {
         var pieceCheck = chessMatch.isValidColor(
           possivelPecaAtual?.pieceColor,
           chessMatch.pieceColor,
@@ -124,7 +124,9 @@ class _ChessBoardState extends State<ChessBoard> {
                 Location(x, y))) {
               winner = validate_legal_moviments.getMatchResult(
                   itensTabuleiro, chessMatch);
-              widget.controller.verifyPromotion(itensTabuleiro, context);
+              await widget.controller.promotionDialog(itensTabuleiro, context);
+              winner = validate_legal_moviments.getMatchResult(
+                  itensTabuleiro, chessMatch);
               if (winner == null) {
                 chessMatch.addTurn();
                 chessMatch.changeCurrentPlayer();
