@@ -275,24 +275,6 @@ class GameController extends GetxController {
     }
   }
 
-  void verifyPromotion(List<ChessPiece> tabuleiro, context) {
-    for (ChessPiece piece in tabuleiro) {
-      if (piece.pieceColor == PieceColor.black) {
-        if (piece.name == "pawn") {
-          if (piece.location.y == 7) {
-            promotionDialog(context, piece);
-          }
-        }
-      } else {
-        if (piece.name == "pawn") {
-          if (piece.location.y == 0) {
-            promotionDialog(context, piece);
-          }
-        }
-      }
-    }
-  }
-
   void arrumaPromotion(List<ChessPiece> pieces, ChessPiece? pawn, String nome) {
     if (pawn != null) {
       // Destroy pawn
