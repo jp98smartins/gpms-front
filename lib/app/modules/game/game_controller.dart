@@ -197,17 +197,20 @@ class GameController extends GetxController {
 
   Future<Null> promotionDialog(List<ChessPiece> tabuleiro, context) async {
     ChessPiece? piece;
+    String color = '';
     for (ChessPiece p in tabuleiro) {
       if (p.pieceColor == PieceColor.black) {
         if (p.name == "pawn") {
           if (p.location.y == 7) {
             piece = p;
+            color = 'black';
           }
         }
       } else {
         if (p.name == "pawn") {
           if (p.location.y == 0) {
             piece = p;
+            color = 'white';
           }
         }
       }
@@ -228,7 +231,9 @@ class GameController extends GetxController {
                   Navigator.of(context, rootNavigator: true).pop();
                 },
                 icon: SvgImageAdapter.fromAsset(
-                  AppAssets.whiteQueen,
+                  color == 'black'
+                      ? AppAssets.blackQueen
+                      : AppAssets.whiteQueen,
                   alignment: Alignment.center,
                   width: 75.0,
                 ),
@@ -239,7 +244,9 @@ class GameController extends GetxController {
                   Navigator.of(context, rootNavigator: true).pop();
                 },
                 icon: SvgImageAdapter.fromAsset(
-                  AppAssets.whiteBishop,
+                  color == 'black'
+                      ? AppAssets.blackBishop
+                      : AppAssets.whiteBishop,
                   alignment: Alignment.center,
                   width: 75.0,
                 ),
@@ -250,7 +257,9 @@ class GameController extends GetxController {
                   Navigator.of(context, rootNavigator: true).pop();
                 },
                 icon: SvgImageAdapter.fromAsset(
-                  AppAssets.whiteKnight,
+                  color == 'black'
+                      ? AppAssets.blackKnight
+                      : AppAssets.whiteKnight,
                   alignment: Alignment.center,
                   width: 75.0,
                 ),
@@ -261,7 +270,7 @@ class GameController extends GetxController {
                   Navigator.of(context, rootNavigator: true).pop();
                 },
                 icon: SvgImageAdapter.fromAsset(
-                  AppAssets.whiteRook,
+                  color == 'black' ? AppAssets.blackRook : AppAssets.whiteRook,
                   alignment: Alignment.center,
                   width: 75.0,
                 ),
