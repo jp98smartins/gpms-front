@@ -120,6 +120,10 @@ class _ChessBoardState extends State<ChessBoard> {
 
           final possivelPecaAntiga = findPiece(itensTabuleiro, ultimo);
           if (possivelPecaAntiga != null) {
+            lastPieceMoved = possivelPecaAntiga;
+            lastPieceOldLocation = Location(
+                lastPieceMoved!.location.x, lastPieceMoved!.location.y);
+            lastPieceNewLocation = Location(x, y);
             if (Move.moveTo(chessMatch, itensTabuleiro, possivelPecaAntiga,
                 Location(x, y))) {
               winner = validate_legal_moviments.getMatchResult(
@@ -143,7 +147,10 @@ class _ChessBoardState extends State<ChessBoard> {
                       itensTabuleiro,
                       menuConfigDto?.gameDifficultyDto,
                       PieceColor.black,
-                      chessMatch);
+                      chessMatch,
+                      lastPieceMoved,
+                      lastPieceOldLocation,
+                      lastPieceNewLocation);
                   chessMatch.addTurn();
                   chessMatch.changeCurrentPlayer();
                   winner = validate_legal_moviments.getMatchResult(

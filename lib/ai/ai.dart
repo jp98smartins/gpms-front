@@ -10,17 +10,21 @@ import '../app/modules/game/domain/functions/verify_moviment.dart';
 
 class ChessAI {
   static void doMove(List<ChessPiece> tabuleiro, GameDifficulty? gameDifficulty,
-      PieceColor pieceColor, ChessMatch chessMatch) {
+      PieceColor pieceColor, ChessMatch chessMatch,
+      [ChessPiece? lastPiece, Location? oldLocation, Location? newLocation]) {
     if (gameDifficulty != null) {
       switch (gameDifficulty) {
         case GameDifficulty.easy:
-          easy(tabuleiro, gameDifficulty, pieceColor, chessMatch);
+          easy(tabuleiro, gameDifficulty, pieceColor, chessMatch, lastPiece,
+              oldLocation, newLocation);
           break;
         case GameDifficulty.medium:
-          medium(tabuleiro, gameDifficulty, pieceColor, chessMatch);
+          medium(tabuleiro, gameDifficulty, pieceColor, chessMatch, lastPiece,
+              oldLocation, newLocation);
           break;
         case GameDifficulty.hard:
-          hard(tabuleiro, gameDifficulty, pieceColor, chessMatch);
+          hard(tabuleiro, gameDifficulty, pieceColor, chessMatch, lastPiece,
+              oldLocation, newLocation);
           break;
       }
     }
@@ -28,7 +32,8 @@ class ChessAI {
 
   @protected
   static bool easy(List<ChessPiece> tabuleiro, GameDifficulty? gameDifficulty,
-      PieceColor pieceColor, ChessMatch chessMatch) {
+      PieceColor pieceColor, ChessMatch chessMatch,
+      [ChessPiece? lastPiece, Location? oldLocation, Location? newLocation]) {
     tabuleiro.shuffle(Random());
     var moved = false;
     for (var onlyNotMoved in [true, false]) {
@@ -40,7 +45,10 @@ class ChessAI {
             if (x >= 0 &&
                 y >= 0 &&
                 ((onlyNotMoved && !piece.moved) || !onlyNotMoved)) {
+              oldLocation = Location(piece.location.x, piece.location.y);
               if (Move.moveTo(chessMatch, tabuleiro, piece, legalMoviment)) {
+                lastPiece = piece;
+                newLocation = Location(legalMoviment.x, legalMoviment.y);
                 moved = true;
                 break;
               }
@@ -56,7 +64,8 @@ class ChessAI {
 
   @protected
   static bool medium(List<ChessPiece> tabuleiro, GameDifficulty? gameDifficulty,
-      PieceColor pieceColor, ChessMatch chessMatch) {
+      PieceColor pieceColor, ChessMatch chessMatch,
+      [ChessPiece? lastPiece, Location? oldLocation, Location? newLocation]) {
     bool moved = false;
     // Verifica se uma peca deve ser defendida
     List<ChessPiece> attackedList = [];
@@ -114,8 +123,12 @@ class ChessAI {
                     attackerToKill.location.y == legalMoviment.y &&
                     attackerToKill != piece) {
                   if (piece.value <= attackerToKill.value) {
+                    oldLocation = Location(piece.location.x, piece.location.y);
                     if (Move.moveTo(chessMatch, tabuleiro, piece,
                         attackerToKill.location)) {
+                      lastPiece = piece;
+                      newLocation = Location(
+                          attackerToKill.location.x, attackerToKill.location.y);
                       moved = true;
                       break;
                     }
@@ -146,8 +159,12 @@ class ChessAI {
               }
             }
             if (isSafe) {
+              oldLocation = Location(
+                  attackedToMove.location.x, attackedToMove.location.y);
               if (Move.moveTo(
                   chessMatch, tabuleiro, attackedToMove, legalMoviment)) {
+                lastPiece = attackedToMove;
+                newLocation = Location(legalMoviment.x, legalMoviment.y);
                 moved = true;
                 break;
               }
@@ -168,8 +185,11 @@ class ChessAI {
                     attackerToKill.location.y == y &&
                     attackerToKill != piece) {
                   if (piece.value < attackedToMove.value) {
+                    oldLocation = Location(piece.location.x, piece.location.y);
                     if (Move.moveTo(
                         chessMatch, tabuleiro, piece, legalMoviment)) {
+                      lastPiece = piece;
+                      newLocation = Location(legalMoviment.x, legalMoviment.y);
                       moved = true;
                       break;
                     }
@@ -195,8 +215,11 @@ class ChessAI {
               for (ChessPiece killed in tabuleiro) {
                 if (killed.location.x == x && killed.location.y == y) {
                   if (killed.value >= piece.value) {
+                    oldLocation = Location(piece.location.x, piece.location.y);
                     if (Move.moveTo(
                         chessMatch, tabuleiro, piece, legalMoviment)) {
+                      lastPiece = piece;
+                      newLocation = Location(legalMoviment.x, legalMoviment.y);
                       moved = true;
                       break;
                     }
@@ -222,8 +245,11 @@ class ChessAI {
               for (ChessPiece killed in tabuleiro) {
                 if (killed.location.x == x && killed.location.y == y) {
                   if (killed.value == piece.value) {
+                    oldLocation = Location(piece.location.x, piece.location.y);
                     if (Move.moveTo(
                         chessMatch, tabuleiro, piece, legalMoviment)) {
+                      lastPiece = piece;
+                      newLocation = Location(legalMoviment.x, legalMoviment.y);
                       moved = true;
                       break;
                     }
@@ -247,7 +273,8 @@ class ChessAI {
 
   @protected
   static bool hard(List<ChessPiece> tabuleiro, GameDifficulty? gameDifficulty,
-      PieceColor pieceColor, ChessMatch chessMatch) {
+      PieceColor pieceColor, ChessMatch chessMatch,
+      [ChessPiece? lastPiece, Location? oldLocation, Location? newLocation]) {
     bool moved = false;
     List<ChessPiece> myAttackedList = [];
     List<ChessPiece> attackerListForMy = [];
@@ -424,8 +451,13 @@ class ChessAI {
     }
 
     if (capture) {
-      if (Move.moveTo(chessMatch, tabuleiro, bestCaseMyAttacker!,
+      oldLocation = Location(
+          bestCaseMyAttacker!.location.x, bestCaseMyAttacker.location.y);
+      if (Move.moveTo(chessMatch, tabuleiro, bestCaseMyAttacker,
           bestCaseMyAttacked!.location)) {
+        lastPiece = bestCaseMyAttacker;
+        newLocation = Location(
+            bestCaseMyAttacked.location.x, bestCaseMyAttacked.location.y);
         moved = true;
       }
     } else if (defense) {
@@ -434,8 +466,12 @@ class ChessAI {
         if (adNotDefendedAttackedList.contains(bestCaseAdAttacker)) {
           int index = adNotDefendedAttackedList.indexOf(bestCaseAdAttacker);
           ChessPiece myAttacker = attackerListForAdNotDefended[index];
+          oldLocation = Location(myAttacker.location.x, myAttacker.location.y);
           if (Move.moveTo(
               chessMatch, tabuleiro, myAttacker, bestCaseAdAttacker.location)) {
+            lastPiece = myAttacker;
+            newLocation = Location(
+                bestCaseAdAttacker.location.x, bestCaseAdAttacker.location.y);
             moved = true;
           }
         }
@@ -446,8 +482,13 @@ class ChessAI {
             int index = adAttackedList.indexOf(bestCaseAdAttacker);
             ChessPiece myAttacker = attackerListForAd[index];
             if (myAttacker.value <= bestCaseAdAttacker.value) {
+              oldLocation =
+                  Location(myAttacker.location.x, myAttacker.location.y);
               if (Move.moveTo(chessMatch, tabuleiro, myAttacker,
                   bestCaseAdAttacker.location)) {
+                lastPiece = myAttacker;
+                newLocation = Location(bestCaseAdAttacker.location.x,
+                    bestCaseAdAttacker.location.y);
                 moved = true;
               }
             }
@@ -461,8 +502,13 @@ class ChessAI {
             ChessPiece myAttacker = attackerListForAd[index];
             if (myAttacker.value < bestCaseAdAttacked!.value &&
                 myAttacker != bestCaseAdAttacked) {
+              oldLocation =
+                  Location(myAttacker.location.x, myAttacker.location.y);
               if (Move.moveTo(chessMatch, tabuleiro, myAttacker,
                   bestCaseAdAttacker.location)) {
+                lastPiece = myAttacker;
+                newLocation = Location(bestCaseAdAttacker.location.x,
+                    bestCaseAdAttacker.location.y);
                 moved = true;
               }
             }
@@ -493,8 +539,13 @@ class ChessAI {
               }
             }
             if (validLocation) {
+              oldLocation = Location(
+                  bestCaseAdAttacked.location.x, bestCaseAdAttacked.location.y);
               if (Move.moveTo(chessMatch, tabuleiro, bestCaseAdAttacked,
                   attackedLegalMoviment)) {
+                lastPiece = bestCaseAdAttacked;
+                newLocation =
+                    Location(attackedLegalMoviment.x, attackedLegalMoviment.y);
                 moved = true;
                 break;
               }
@@ -528,8 +579,13 @@ class ChessAI {
               }
             }
             if (validLocation) {
+              oldLocation = Location(
+                  bestCaseAdAttacked.location.x, bestCaseAdAttacked.location.y);
               if (Move.moveTo(chessMatch, tabuleiro, bestCaseAdAttacked,
                   attackedLegalMoviment)) {
+                lastPiece = bestCaseAdAttacked;
+                newLocation =
+                    Location(attackedLegalMoviment.x, attackedLegalMoviment.y);
                 moved = true;
                 break;
               }
@@ -567,8 +623,11 @@ class ChessAI {
                 }
               }
               if (safePosition) {
+                oldLocation = Location(myPiece.location.x, myPiece.location.y);
                 if (Move.moveTo(
                     chessMatch, tabuleiro, myPiece, legalMoviment)) {
+                  lastPiece = myPiece;
+                  newLocation = Location(legalMoviment.x, legalMoviment.y);
                   moved = true;
                   break;
                 }
