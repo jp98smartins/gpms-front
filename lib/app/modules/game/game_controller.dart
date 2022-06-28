@@ -295,6 +295,7 @@ class GameController extends GetxController {
       pawn.legalMoviments = null;
       pawn.ilegalMoviments = null;
       pawn.opMoviments = null;
+      pieces.remove(pawn);
       // Create new piece
       switch (nome) {
         case 'queen':
