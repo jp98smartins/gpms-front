@@ -11,6 +11,10 @@ import '../entities/chess_piece_entity.dart';
 class validate_legal_moviments {
   static void validateLegalMoviments(List<ChessPiece> tabuleiro,
       [ChessPiece? lastPiece, Location? oldLocation, Location? newLocation]) {
+    if (lastPiece != null && oldLocation != null && newLocation != null) {
+      print(
+          "Last piece moved: ${lastPiece.pieceColor.name} ${lastPiece.name} from (${oldLocation.x},${oldLocation.y}) to (${newLocation.x},${newLocation.y})");
+    }
     List<Location> removeLocations = [Location(-1, -1)];
     GenerateAllLegalMoviments.gerarMovimentos(
         tabuleiro, lastPiece, oldLocation, newLocation);
@@ -224,14 +228,12 @@ class validate_legal_moviments {
         if (cp.legalMoviments != null) {
           for (var legalMovement in cp.legalMoviments!) {
             whiteHasValidMoves = true;
-            break;
           }
         }
       } else {
         if (cp.legalMoviments != null) {
           for (var legalMovement in cp.legalMoviments!) {
             blackHasValidMoves = true;
-            break;
           }
         }
       }
@@ -257,7 +259,7 @@ class validate_legal_moviments {
     }
 
     if (matchResult != null) {
-      print("Winner color: ${matchResult.name}");
+      log("Winner color: ${matchResult.name}");
     }
 
     return matchResult;
