@@ -58,12 +58,16 @@ class GameController extends GetxController {
   ];
   List<ChessPiece> pecasMortas = [];
   ChessMatch chessMatch = ChessMatch(
-      currentPlayer: 'Brancas',
-      inGame: true,
-      pecasMortas: [],
-      turn: 1,
-      pieceColor: PieceColor.white,
-      matchResult: null);
+    currentPlayer: 'Brancas',
+    inGame: true,
+    pecasMortas: [],
+    turn: 1,
+    pieceColor: PieceColor.white,
+    matchResult: null,
+    lastPieceMoved: null,
+    lastPieceOldLocation: null,
+    lastPieceNewLocation: null,
+  );
 
   GameController(this._fetchMenuConfigUseCase);
 

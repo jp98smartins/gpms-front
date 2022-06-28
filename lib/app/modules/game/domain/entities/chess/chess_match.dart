@@ -12,6 +12,9 @@ class ChessMatch {
   String currentPlayer;
   PieceColor pieceColor;
   MatchResult? matchResult;
+  ChessPiece? lastPieceMoved;
+  Location? lastPieceOldLocation;
+  Location? lastPieceNewLocation;
   ChessMatch({
     required this.inGame,
     required this.turn,
@@ -19,6 +22,9 @@ class ChessMatch {
     required this.currentPlayer,
     required this.pieceColor,
     required this.matchResult,
+    required this.lastPieceMoved,
+    required this.lastPieceOldLocation,
+    required this.lastPieceNewLocation,
   });
 
   addTurn() {
