@@ -633,18 +633,18 @@ class ChessAI {
               continue;
             }
             for (var legalMoviment in myPiece.legalMoviments!) {
-              var safePosition = false;
+              var safePosition = true;
               for (var adPiece in tabuleiro) {
-                if (adPiece.legalMoviments != null &&
+                if (adPiece.opMoviments != null &&
                     pieceColor != adPiece.pieceColor) {
-                  for (var adLegalMoviment in myPiece.legalMoviments!) {
-                    if (adLegalMoviment.x == legalMoviment.x &&
-                        adLegalMoviment.y == legalMoviment.y) {
-                      safePosition = true;
+                  for (var adOpMoviment in adPiece.opMoviments!) {
+                    if (adOpMoviment.x == legalMoviment.x &&
+                        adOpMoviment.y == legalMoviment.y) {
+                      safePosition = false;
                       break;
                     }
                   }
-                  if (safePosition) {
+                  if (!safePosition) {
                     break;
                   }
                 }
