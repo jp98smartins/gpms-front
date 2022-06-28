@@ -36,7 +36,6 @@ class _ChessBoardState extends State<ChessBoard> {
   bool primeiraTurno = true;
   var pecaAnterior = -1;
   Location ultimo = Location(-1, -1);
-
   ChessPiece? lastPieceMoved;
   Location? lastPieceOldLocation;
   Location? lastPieceNewLocation;
@@ -54,6 +53,20 @@ class _ChessBoardState extends State<ChessBoard> {
   Color pickBoardPositionColor(int x, int y) {
     // Cor das Letras/Números das casas do tabuleiro
     if (x == 0 || y == 8) return AppColors.backgroundPrimary;
+
+    // Ultimo lance
+    if (chessMatch.lastPieceOldLocation != null) {
+      if (x == chessMatch.lastPieceOldLocation!.x &&
+          y == chessMatch.lastPieceOldLocation!.y) {
+        return Color.fromARGB(255, 180, 180, 120);
+      }
+    }
+    if (chessMatch.lastPieceMoved != null) {
+      if (x == chessMatch.lastPieceMoved!.location.x &&
+          y == chessMatch.lastPieceMoved!.location.y) {
+        return Color.fromARGB(255, 210, 210, 120);
+      }
+    }
 
     // Casas Claras do Tabuleiro
     if ((x.isEven && y.isOdd) || (x.isOdd && y.isEven)) {
@@ -122,15 +135,21 @@ class _ChessBoardState extends State<ChessBoard> {
           if (possivelPecaAntiga != null) {
             lastPieceMoved = possivelPecaAntiga;
             lastPieceOldLocation = Location(
-                lastPieceMoved!.location.x, lastPieceMoved!.location.y);
+                possivelPecaAntiga.location.x, possivelPecaAntiga.location.y);
             lastPieceNewLocation = Location(x, y);
             if (Move.moveTo(chessMatch, itensTabuleiro, possivelPecaAntiga,
                 Location(x, y), false)) {
               await widget.controller.promotionDialog(itensTabuleiro, context);
+              chessMatch.lastPieceMoved = lastPieceMoved;
+              chessMatch.lastPieceOldLocation = lastPieceOldLocation;
+              chessMatch.lastPieceNewLocation = lastPieceNewLocation;
               chessMatch.addTurn();
               chessMatch.changeCurrentPlayer();
-              validate_legal_moviments.validateLegalMoviments(itensTabuleiro,
-                  lastPieceMoved, lastPieceOldLocation, lastPieceNewLocation);
+              validate_legal_moviments.validateLegalMoviments(
+                  itensTabuleiro,
+                  chessMatch.lastPieceMoved,
+                  chessMatch.lastPieceOldLocation,
+                  chessMatch.lastPieceNewLocation);
               winner = validate_legal_moviments.getMatchResult(
                   itensTabuleiro, chessMatch);
               if (winner == null) {
@@ -146,9 +165,9 @@ class _ChessBoardState extends State<ChessBoard> {
                   chessMatch.changeCurrentPlayer();
                   validate_legal_moviments.validateLegalMoviments(
                       itensTabuleiro,
-                      lastPieceMoved,
-                      lastPieceOldLocation,
-                      lastPieceNewLocation);
+                      chessMatch.lastPieceMoved,
+                      chessMatch.lastPieceOldLocation,
+                      chessMatch.lastPieceNewLocation);
                   winner = validate_legal_moviments.getMatchResult(
                       itensTabuleiro, chessMatch);
                 }
