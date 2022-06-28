@@ -6,25 +6,21 @@ import '../app/core/enums/game_difficulty.dart';
 import '../app/modules/game/domain/entities/chess_piece_entity.dart';
 import '../app/modules/game/domain/functions/find_piece.dart';
 import '../app/modules/game/domain/functions/move.dart';
-import '../app/modules/game/domain/functions/verify_moviment.dart';
+import '../app/modules/game/domain/functions/validate_legal_moviments.dart';
 
 class ChessAI {
   static void doMove(List<ChessPiece> tabuleiro, GameDifficulty? gameDifficulty,
-      PieceColor pieceColor, ChessMatch chessMatch,
-      [ChessPiece? lastPiece, Location? oldLocation, Location? newLocation]) {
+      PieceColor pieceColor, ChessMatch chessMatch) {
     if (gameDifficulty != null) {
       switch (gameDifficulty) {
         case GameDifficulty.easy:
-          easy(tabuleiro, gameDifficulty, pieceColor, chessMatch, lastPiece,
-              oldLocation, newLocation);
+          easy(tabuleiro, gameDifficulty, pieceColor, chessMatch);
           break;
         case GameDifficulty.medium:
-          medium(tabuleiro, gameDifficulty, pieceColor, chessMatch, lastPiece,
-              oldLocation, newLocation);
+          medium(tabuleiro, gameDifficulty, pieceColor, chessMatch);
           break;
         case GameDifficulty.hard:
-          hard(tabuleiro, gameDifficulty, pieceColor, chessMatch, lastPiece,
-              oldLocation, newLocation);
+          hard(tabuleiro, gameDifficulty, pieceColor, chessMatch);
           break;
       }
     }
@@ -32,8 +28,10 @@ class ChessAI {
 
   @protected
   static bool easy(List<ChessPiece> tabuleiro, GameDifficulty? gameDifficulty,
-      PieceColor pieceColor, ChessMatch chessMatch,
-      [ChessPiece? lastPiece, Location? oldLocation, Location? newLocation]) {
+      PieceColor pieceColor, ChessMatch chessMatch) {
+    ChessPiece? lastPiece;
+    Location? oldLocation;
+    Location? newLocation;
     tabuleiro.shuffle(Random());
     var moved = false;
     for (var onlyNotMoved in [true, false]) {
@@ -49,6 +47,8 @@ class ChessAI {
               if (Move.moveTo(chessMatch, tabuleiro, piece, legalMoviment)) {
                 lastPiece = piece;
                 newLocation = Location(legalMoviment.x, legalMoviment.y);
+                validate_legal_moviments.validateLegalMoviments(
+                    tabuleiro, lastPiece, oldLocation, newLocation);
                 moved = true;
                 break;
               }
@@ -64,8 +64,10 @@ class ChessAI {
 
   @protected
   static bool medium(List<ChessPiece> tabuleiro, GameDifficulty? gameDifficulty,
-      PieceColor pieceColor, ChessMatch chessMatch,
-      [ChessPiece? lastPiece, Location? oldLocation, Location? newLocation]) {
+      PieceColor pieceColor, ChessMatch chessMatch) {
+    ChessPiece? lastPiece;
+    Location? oldLocation;
+    Location? newLocation;
     bool moved = false;
     // Verifica se uma peca deve ser defendida
     List<ChessPiece> attackedList = [];
@@ -129,6 +131,8 @@ class ChessAI {
                       lastPiece = piece;
                       newLocation = Location(
                           attackerToKill.location.x, attackerToKill.location.y);
+                      validate_legal_moviments.validateLegalMoviments(
+                          tabuleiro, lastPiece, oldLocation, newLocation);
                       moved = true;
                       break;
                     }
@@ -165,6 +169,8 @@ class ChessAI {
                   chessMatch, tabuleiro, attackedToMove, legalMoviment)) {
                 lastPiece = attackedToMove;
                 newLocation = Location(legalMoviment.x, legalMoviment.y);
+                validate_legal_moviments.validateLegalMoviments(
+                    tabuleiro, lastPiece, oldLocation, newLocation);
                 moved = true;
                 break;
               }
@@ -190,6 +196,8 @@ class ChessAI {
                         chessMatch, tabuleiro, piece, legalMoviment)) {
                       lastPiece = piece;
                       newLocation = Location(legalMoviment.x, legalMoviment.y);
+                      validate_legal_moviments.validateLegalMoviments(
+                          tabuleiro, lastPiece, oldLocation, newLocation);
                       moved = true;
                       break;
                     }
@@ -220,6 +228,8 @@ class ChessAI {
                         chessMatch, tabuleiro, piece, legalMoviment)) {
                       lastPiece = piece;
                       newLocation = Location(legalMoviment.x, legalMoviment.y);
+                      validate_legal_moviments.validateLegalMoviments(
+                          tabuleiro, lastPiece, oldLocation, newLocation);
                       moved = true;
                       break;
                     }
@@ -250,6 +260,8 @@ class ChessAI {
                         chessMatch, tabuleiro, piece, legalMoviment)) {
                       lastPiece = piece;
                       newLocation = Location(legalMoviment.x, legalMoviment.y);
+                      validate_legal_moviments.validateLegalMoviments(
+                          tabuleiro, lastPiece, oldLocation, newLocation);
                       moved = true;
                       break;
                     }
@@ -275,6 +287,9 @@ class ChessAI {
   static bool hard(List<ChessPiece> tabuleiro, GameDifficulty? gameDifficulty,
       PieceColor pieceColor, ChessMatch chessMatch,
       [ChessPiece? lastPiece, Location? oldLocation, Location? newLocation]) {
+    ChessPiece? lastPiece;
+    Location? oldLocation;
+    Location? newLocation;
     bool moved = false;
     List<ChessPiece> myAttackedList = [];
     List<ChessPiece> attackerListForMy = [];
@@ -458,6 +473,8 @@ class ChessAI {
         lastPiece = bestCaseMyAttacker;
         newLocation = Location(
             bestCaseMyAttacked.location.x, bestCaseMyAttacked.location.y);
+        validate_legal_moviments.validateLegalMoviments(
+            tabuleiro, lastPiece, oldLocation, newLocation);
         moved = true;
       }
     } else if (defense) {
@@ -472,6 +489,8 @@ class ChessAI {
             lastPiece = myAttacker;
             newLocation = Location(
                 bestCaseAdAttacker.location.x, bestCaseAdAttacker.location.y);
+            validate_legal_moviments.validateLegalMoviments(
+                tabuleiro, lastPiece, oldLocation, newLocation);
             moved = true;
           }
         }
@@ -489,6 +508,8 @@ class ChessAI {
                 lastPiece = myAttacker;
                 newLocation = Location(bestCaseAdAttacker.location.x,
                     bestCaseAdAttacker.location.y);
+                validate_legal_moviments.validateLegalMoviments(
+                    tabuleiro, lastPiece, oldLocation, newLocation);
                 moved = true;
               }
             }
@@ -509,6 +530,8 @@ class ChessAI {
                 lastPiece = myAttacker;
                 newLocation = Location(bestCaseAdAttacker.location.x,
                     bestCaseAdAttacker.location.y);
+                validate_legal_moviments.validateLegalMoviments(
+                    tabuleiro, lastPiece, oldLocation, newLocation);
                 moved = true;
               }
             }
@@ -546,6 +569,8 @@ class ChessAI {
                 lastPiece = bestCaseAdAttacked;
                 newLocation =
                     Location(attackedLegalMoviment.x, attackedLegalMoviment.y);
+                validate_legal_moviments.validateLegalMoviments(
+                    tabuleiro, lastPiece, oldLocation, newLocation);
                 moved = true;
                 break;
               }
@@ -586,6 +611,8 @@ class ChessAI {
                 lastPiece = bestCaseAdAttacked;
                 newLocation =
                     Location(attackedLegalMoviment.x, attackedLegalMoviment.y);
+                validate_legal_moviments.validateLegalMoviments(
+                    tabuleiro, lastPiece, oldLocation, newLocation);
                 moved = true;
                 break;
               }
@@ -628,6 +655,8 @@ class ChessAI {
                     chessMatch, tabuleiro, myPiece, legalMoviment)) {
                   lastPiece = myPiece;
                   newLocation = Location(legalMoviment.x, legalMoviment.y);
+                  validate_legal_moviments.validateLegalMoviments(
+                      tabuleiro, lastPiece, oldLocation, newLocation);
                   moved = true;
                   break;
                 }

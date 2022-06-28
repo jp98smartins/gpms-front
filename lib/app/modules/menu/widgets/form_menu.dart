@@ -20,7 +20,7 @@ class _FormMenuState extends State<FormMenu> {
   final _gameModeItems = <Map<String, String>>[
     {"id": "0", "name": "PvP"},
     {"id": "1", "name": "PvE"},
-    {"id": "2", "name": "EvE"},
+    // {"id": "2", "name": "EvE"},
   ];
 
   // Game Difficulty

@@ -125,7 +125,7 @@ class _ChessBoardState extends State<ChessBoard> {
                 lastPieceMoved!.location.x, lastPieceMoved!.location.y);
             lastPieceNewLocation = Location(x, y);
             if (Move.moveTo(chessMatch, itensTabuleiro, possivelPecaAntiga,
-                Location(x, y))) {
+                Location(x, y), false)) {
               winner = validate_legal_moviments.getMatchResult(
                   itensTabuleiro, chessMatch);
               await widget.controller.promotionDialog(itensTabuleiro, context);
@@ -147,23 +147,11 @@ class _ChessBoardState extends State<ChessBoard> {
                       itensTabuleiro,
                       menuConfigDto?.gameDifficultyDto,
                       PieceColor.black,
-                      chessMatch,
-                      lastPieceMoved,
-                      lastPieceOldLocation,
-                      lastPieceNewLocation);
+                      chessMatch);
                   chessMatch.addTurn();
                   chessMatch.changeCurrentPlayer();
                   winner = validate_legal_moviments.getMatchResult(
                       itensTabuleiro, chessMatch);
-                  if (winner == null) {
-                    validate_legal_moviments.validateLegalMoviments(
-                        itensTabuleiro,
-                        lastPieceMoved,
-                        lastPieceOldLocation,
-                        lastPieceNewLocation);
-                    winner = validate_legal_moviments.getMatchResult(
-                        itensTabuleiro, chessMatch);
-                  }
                 }
               }
 

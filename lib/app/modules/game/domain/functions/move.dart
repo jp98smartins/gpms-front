@@ -16,10 +16,13 @@ import 'generate_all_legal_moviments.dart';
 
 class Move {
   static bool moveTo(ChessMatch chessMatch, List<ChessPiece> boardPieces,
-      ChessPiece piece, Location location) {
+      ChessPiece piece, Location location,
+      [bool? promotion]) {
     var hasPiece = false;
     var hasAdPiece = false;
     ChessPiece? toKill;
+    ChessPiece? captured = findPiece(boardPieces, location);
+    promotion ??= true;
 
     if (location.x < 1 || location.x > 8 || location.y < 0 || location.y > 7) {
       return false;
@@ -29,7 +32,13 @@ class Move {
       return false;
     }
 
-    if (piece.name == 'pawn' && (location.y == 7 || location.y == 0)) {
+    if (captured != null && captured.pieceColor.name == piece.pieceColor.name) {
+      return false;
+    }
+
+    if (piece.name == 'pawn' &&
+        (location.y == 7 || location.y == 0) &&
+        promotion) {
       PieceColor pawnColor = piece.pieceColor;
       piece.location.x = -1;
       piece.location.y = -1;
@@ -37,6 +46,7 @@ class Move {
       piece.legalMoviments = null;
       piece.ilegalMoviments = null;
       piece.opMoviments = null;
+      boardPieces.remove(piece);
       ChessPiece queen = Queen(pawnColor, Location(location.x, location.y));
       boardPieces.add(queen);
       return true;
@@ -56,6 +66,7 @@ class Move {
         toKill.location = Location(-1, -1);
         toKill.died = true;
         chessMatch.addPecasMortas(toKill);
+        boardPieces.remove(toKill);
         piece.location.x = location.x;
         piece.location.y = location.y;
         piece.moved = true;
@@ -170,6 +181,7 @@ class Move {
       toKill.location = Location(-1, -1);
       toKill.died = true;
       chessMatch.addPecasMortas(toKill);
+      boardPieces.remove(toKill);
       piece.location.x = location.x;
       piece.location.y = location.y;
       piece.moved = true;
@@ -258,6 +270,7 @@ class Move {
         Location(pieceCopy.location.x, pieceCopy.location.y);
     Location capturedOldLocation = Location(-1, -1);
     ChessPiece? captured = findPiece(boardPiecesCopy, location);
+    ChessPiece? checkedKing = is_xequed.getXequed(boardPiecesCopy);
 
     //print(
     //    "Trying ${pieceCopy.pieceColor.name} ${pieceCopy.name} to (${location.x},${location.y})");
@@ -372,9 +385,13 @@ class Move {
 
     GenerateAllLegalMoviments.gerarMovimentos(
         boardPiecesCopy, pieceCopy, pieceOldLocation, location);
-    ChessPiece? checkedKing = is_xequed.getXequed(boardPiecesCopy);
-    if (checkedKing != null &&
-        checkedKing.pieceColor.name == pieceCopy.pieceColor.name) {
+    ChessPiece? hasCheckedKing = is_xequed.getXequed(boardPiecesCopy);
+    if (hasCheckedKing != null &&
+        hasCheckedKing.pieceColor.name == pieceCopy.pieceColor.name) {
+      isValid = false;
+    }
+
+    if (is_xequed.isBothXequed(boardPiecesCopy)) {
       isValid = false;
     }
 
