@@ -407,6 +407,140 @@ class Move {
     return isValid;
   }
 
+  static bool isLegalOpMovement(
+      List<ChessPiece> boardPieces, ChessPiece piece, Location location) {
+    List<ChessPiece> boardPiecesCopy = deepCopyFromChessBoard(boardPieces);
+    ChessPiece pieceCopy = findPiece(
+        boardPiecesCopy, Location(piece.location.x, piece.location.y))!;
+    Location pieceOldLocation =
+        Location(pieceCopy.location.x, pieceCopy.location.y);
+    Location capturedOldLocation = Location(-1, -1);
+    ChessPiece? captured = findPiece(boardPiecesCopy, location);
+    ChessPiece? checkedKing = is_xequed.getXequed(boardPiecesCopy);
+
+    if (location.x < 1 || location.x > 8 || location.y < 0 || location.y > 7) {
+      return false;
+    }
+
+    if (pieceCopy.location.x == location.x &&
+        pieceCopy.location.y == location.y) {
+      return false;
+    }
+
+    if (captured != null) {
+      capturedOldLocation = Location(captured.location.x, captured.location.y);
+      captured.location.x = -1;
+      captured.location.y = -1;
+      captured.died = true;
+    }
+
+    bool isValid = true;
+    if (pieceCopy.name == 'king' &&
+        !pieceCopy.moved &&
+        ((location.x == 3 && location.y == 0) ||
+            (location.x == 7 && location.y == 0) ||
+            (location.x == 3 && location.y == 7) ||
+            (location.x == 7 && location.y == 7))) {
+      ChessPiece? checkedKing = is_xequed.getXequed(boardPiecesCopy);
+      if (checkedKing != null) {
+        if (checkedKing.pieceColor.name == pieceCopy.pieceColor.name) {
+          isValid = false;
+        }
+      }
+      if (location.x == 3 && location.y == 0) {
+        ChessPiece? rook = findPiece(boardPiecesCopy, Location(1, 0));
+
+        if (isCheckedOn(boardPiecesCopy, pieceCopy, Location(2, 0)) ||
+            isCheckedOn(boardPiecesCopy, pieceCopy, Location(3, 0))) {
+          isValid = false;
+        }
+
+        if (rook != null && rook.moved) {
+          isValid = false;
+        }
+
+        if (findPiece(boardPiecesCopy, Location(2, 0)) != null ||
+            findPiece(boardPiecesCopy, Location(3, 0)) != null) {
+          isValid = false;
+        }
+      } else if (location.x == 7 && location.y == 0) {
+        ChessPiece? rook = findPiece(boardPiecesCopy, Location(8, 0));
+
+        if (isCheckedOn(boardPiecesCopy, pieceCopy, Location(6, 0)) ||
+            isCheckedOn(boardPiecesCopy, pieceCopy, Location(7, 0))) {
+          isValid = false;
+        }
+
+        if (rook != null && rook.moved) {
+          isValid = false;
+        }
+
+        if (findPiece(boardPiecesCopy, Location(6, 0)) != null ||
+            findPiece(boardPiecesCopy, Location(7, 0)) != null) {
+          isValid = false;
+        }
+      } else if (location.x == 3 && location.y == 7) {
+        ChessPiece? rook = findPiece(boardPiecesCopy, Location(1, 7));
+
+        if (isCheckedOn(boardPiecesCopy, pieceCopy, Location(2, 7)) ||
+            isCheckedOn(boardPiecesCopy, pieceCopy, Location(3, 7))) {
+          isValid = false;
+        }
+
+        if (rook != null && rook.moved) {
+          isValid = false;
+        }
+
+        if (findPiece(boardPiecesCopy, Location(2, 7)) != null ||
+            findPiece(boardPiecesCopy, Location(3, 7)) != null) {
+          isValid = false;
+        }
+      } else if (location.x == 7 && location.y == 7) {
+        ChessPiece? rook = findPiece(boardPiecesCopy, Location(8, 7));
+
+        if (isCheckedOn(boardPiecesCopy, pieceCopy, Location(6, 7)) ||
+            isCheckedOn(boardPiecesCopy, pieceCopy, Location(7, 7))) {
+          isValid = false;
+        }
+
+        if (rook != null && rook.moved) {
+          isValid = false;
+        }
+
+        if (findPiece(boardPiecesCopy, Location(6, 7)) != null ||
+            findPiece(boardPiecesCopy, Location(7, 7)) != null) {
+          isValid = false;
+        }
+      }
+    }
+
+    pieceCopy.location.x = location.x;
+    pieceCopy.location.y = location.y;
+
+    GenerateAllLegalMoviments.gerarMovimentos(
+        boardPiecesCopy, pieceCopy, pieceOldLocation, location);
+    ChessPiece? hasCheckedKing = is_xequed.getXequed(boardPiecesCopy);
+    if (hasCheckedKing != null &&
+        hasCheckedKing.pieceColor.name == pieceCopy.pieceColor.name) {
+      isValid = false;
+    }
+
+    if (is_xequed.isBothXequed(boardPiecesCopy)) {
+      isValid = false;
+    }
+
+    if (captured != null) {
+      captured.location.x = capturedOldLocation.x;
+      captured.location.y = capturedOldLocation.y;
+      captured.died = false;
+    }
+
+    pieceCopy.location.x = pieceOldLocation.x;
+    pieceCopy.location.y = pieceOldLocation.y;
+
+    return isValid;
+  }
+
   static List<ChessPiece> deepCopyFromChessBoard(List<ChessPiece> chessPieces) {
     List<ChessPiece> copy = <ChessPiece>[];
     for (ChessPiece p in chessPieces) {

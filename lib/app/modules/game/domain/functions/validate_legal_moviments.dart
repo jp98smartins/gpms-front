@@ -12,8 +12,7 @@ class validate_legal_moviments {
   static void validateLegalMoviments(List<ChessPiece> tabuleiro,
       [ChessPiece? lastPiece, Location? oldLocation, Location? newLocation]) {
     if (lastPiece != null && oldLocation != null && newLocation != null) {
-      print(
-          "Last piece moved: ${lastPiece.pieceColor.name} ${lastPiece.name} from (${oldLocation.x},${oldLocation.y}) to (${newLocation.x},${newLocation.y})");
+      log("Last piece moved: ${lastPiece.pieceColor.name} ${lastPiece.name} from (${oldLocation.x},${oldLocation.y}) to (${newLocation.x},${newLocation.y})");
     }
     List<Location> removeLocations = [Location(-1, -1)];
     GenerateAllLegalMoviments.gerarMovimentos(
@@ -23,19 +22,6 @@ class validate_legal_moviments {
         List<Location> locationsForRemove = [];
         for (var legalMoviment in piece.legalMoviments!) {
           if (!Move.isLegalMovement(tabuleiro, piece, legalMoviment)) {
-            Location? opForRm;
-            if (piece.opMoviments != null) {
-              for (var opMoviment in piece.opMoviments!) {
-                if (opMoviment.x == legalMoviment.x &&
-                    opMoviment.y == legalMoviment.y) {
-                  opForRm = opMoviment;
-                  break;
-                }
-              }
-            }
-            if (opForRm != null) {
-              piece.remOpMoviments(opForRm);
-            }
             locationsForRemove.add(legalMoviment);
           }
         }
@@ -45,6 +31,19 @@ class validate_legal_moviments {
             piece.remLegalMoviments(lfr);
           }
           piece.addIlegalMoviments(lfr);
+        }
+      }
+      if (piece.opMoviments != null) {
+        List<Location> opLocationsForRemove = [];
+        for (var opMoviment in piece.opMoviments!) {
+          if (!Move.isLegalOpMovement(tabuleiro, piece, opMoviment)) {
+            opLocationsForRemove.add(opMoviment);
+          }
+        }
+        for (var olfr in opLocationsForRemove) {
+          if (piece.opMoviments != null && piece.opMoviments!.contains(olfr)) {
+            piece.remOpMoviments(olfr);
+          }
         }
       }
     }

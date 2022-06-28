@@ -126,20 +126,14 @@ class _ChessBoardState extends State<ChessBoard> {
             lastPieceNewLocation = Location(x, y);
             if (Move.moveTo(chessMatch, itensTabuleiro, possivelPecaAntiga,
                 Location(x, y), false)) {
-              winner = validate_legal_moviments.getMatchResult(
-                  itensTabuleiro, chessMatch);
               await widget.controller.promotionDialog(itensTabuleiro, context);
+              chessMatch.addTurn();
+              chessMatch.changeCurrentPlayer();
+              validate_legal_moviments.validateLegalMoviments(itensTabuleiro,
+                  lastPieceMoved, lastPieceOldLocation, lastPieceNewLocation);
               winner = validate_legal_moviments.getMatchResult(
                   itensTabuleiro, chessMatch);
               if (winner == null) {
-                chessMatch.addTurn();
-                chessMatch.changeCurrentPlayer();
-                validate_legal_moviments.validateLegalMoviments(itensTabuleiro,
-                    lastPieceMoved, lastPieceOldLocation, lastPieceNewLocation);
-
-                winner = validate_legal_moviments.getMatchResult(
-                    itensTabuleiro, chessMatch);
-
                 if (menuConfigDto?.gameModeDto != GameMode.pvp &&
                     chessMatch.currentPlayer == 'Pretas' &&
                     winner == null) {
@@ -150,6 +144,11 @@ class _ChessBoardState extends State<ChessBoard> {
                       chessMatch);
                   chessMatch.addTurn();
                   chessMatch.changeCurrentPlayer();
+                  validate_legal_moviments.validateLegalMoviments(
+                      itensTabuleiro,
+                      lastPieceMoved,
+                      lastPieceOldLocation,
+                      lastPieceNewLocation);
                   winner = validate_legal_moviments.getMatchResult(
                       itensTabuleiro, chessMatch);
                 }
