@@ -1,61 +1,39 @@
 import 'package:flutter/material.dart';
-import 'package:gpms/app/modules/game/widgets/player_card.dart';
-import 'package:gpms/app/modules/game/widgets/turn_card.dart';
 
 import '../game_controller.dart';
 import 'chess_board.dart';
+import 'player_card.dart';
+import 'turn_card.dart';
 
-class BodyGame extends StatefulWidget {
+class BodyGame extends StatelessWidget {
   const BodyGame({Key? key, required this.controller}) : super(key: key);
-  final GameController controller;
-  @override
-  State<BodyGame> createState() => _BodyGameState();
-}
 
-class _BodyGameState extends State<BodyGame> {
-  update() {
-    setState(() {});
-  }
+  final GameController controller;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        const SizedBox(height: 5),
         // Card do Turno do Jogo
-        TurnCard(
-          chessMatch: widget.controller.chessMatch,
-        ),
-        const SizedBox(
-          height: 25,
-        ),
+        TurnCard(chessMatch: controller.chessMatch),
+        const SizedBox(height: 5),
         // Card do Jogador de Pretas
         PlayerCard(
-          pecasMortas: widget.controller.pecasMortas,
           color: "black",
-          itensTabuleiro: widget.controller.itensTabuleiro,
+          diedPieces: controller.chessMatch.pecasMortas,
         ),
-        const SizedBox(
-          height: 25,
-        ),
+        const SizedBox(height: 5),
         // Tabuleiro
-        ChessBoard(
-          chessMatch: widget.controller.chessMatch,
-          itensTabuleiro: widget.controller.itensTabuleiro,
-          updateAll: update,
-        ),
-        const SizedBox(
-          height: 0,
-        ),
+        ChessBoard(controller: controller),
+        const SizedBox(height: 5),
         // Card do Jogador de Brancas
         PlayerCard(
-          pecasMortas: widget.controller.pecasMortas,
           color: "white",
-          itensTabuleiro: widget.controller.itensTabuleiro,
+          diedPieces: controller.chessMatch.pecasMortas,
         ),
-        const SizedBox(
-          height: 55,
-        ),
+        const SizedBox(height: 5),
       ],
     );
   }

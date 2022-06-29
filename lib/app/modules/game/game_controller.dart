@@ -1,10 +1,16 @@
 import 'dart:developer';
 
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:get/get.dart';
-import 'package:gpms/app/modules/game/domain/entities/chess/chess_match.dart';
 
+import '../../core/adapters/svg_image_adapter.dart';
 import '../../core/data/dtos/menu_config_dto.dart';
+import '../../core/routes/app_routes.dart';
+import '../../core/theme/app_assets.dart';
 import 'domain/entities/bishop_entity.dart';
+import 'domain/entities/chess/chess_match.dart';
 import 'domain/entities/chess_piece_entity.dart';
 import 'domain/entities/king_entity.dart';
 import 'domain/entities/knight_entity.dart';
@@ -57,11 +63,15 @@ class GameController extends GetxController {
     pecasMortas: [],
     turn: 1,
     pieceColor: PieceColor.white,
+    matchResult: null,
+    lastPieceMoved: null,
+    lastPieceOldLocation: null,
+    lastPieceNewLocation: null,
   );
 
   GameController(this._fetchMenuConfigUseCase);
 
-  late final MenuConfigDto menuConfigDto;
+  MenuConfigDto? menuConfigDto;
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -99,11 +109,216 @@ class GameController extends GetxController {
 
   Future<void> finishGame() async {
     isLoading = true;
-    try {} catch (e) {
+    try {
+      menuConfigDto = null;
+      Modular.to.popAndPushNamed(AppRoutes.menuRoute);
+      Get.delete<GameController>();
+    } catch (e) {
       log("[ GameController.finishGame() ] => $e");
       // Snackbar
     } finally {
       isLoading = false;
+    }
+  }
+
+  void winDialog(context, color) {
+    showDialog(
+      builder: (c) {
+        return AlertDialog(
+          insetPadding: const EdgeInsets.symmetric(vertical: 200.0),
+          title: SvgImageAdapter.fromAsset(
+            AppAssets.award,
+            alignment: Alignment.center,
+            width: 75.0,
+          ),
+          content: color == 'black'
+              ? const Text(
+                  'PRETAS VENCERAM!',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.black),
+                )
+              : const Text(
+                  'BRANCAS VENCERAM!',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.white),
+                ),
+          actions: [
+            ElevatedButton(
+              onPressed: () => finishGame(),
+              child: const Text("NOVO JOGO"),
+            ),
+          ],
+          actionsAlignment: MainAxisAlignment.center,
+        );
+      },
+      context: context,
+    );
+  }
+
+  void drawDialog(context) {
+    showDialog(
+      builder: (c) {
+        return AlertDialog(
+          insetPadding: const EdgeInsets.symmetric(vertical: 200.0),
+          title: const Text(
+            'EMPATE!',
+            textAlign: TextAlign.center,
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () => finishGame(),
+              child: const Text("NOVO JOGO"),
+            ),
+          ],
+          actionsAlignment: MainAxisAlignment.center,
+        );
+      },
+      context: context,
+    );
+  }
+
+  void finishDialog(context) {
+    showDialog(
+      builder: (c) {
+        return AlertDialog(
+          insetPadding: const EdgeInsets.symmetric(vertical: 200.0),
+          title: const Text("DESISTIR DO JOGO?"),
+          content: const SizedBox(
+            height: 2,
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () => finishGame(),
+              child: const Text("DESISTIR DO JOGO"),
+            ),
+          ],
+          actionsAlignment: MainAxisAlignment.center,
+        );
+      },
+      context: context,
+    );
+  }
+
+  Future<Null> promotionDialog(List<ChessPiece> tabuleiro, context) async {
+    ChessPiece? piece;
+    String color = '';
+    for (ChessPiece p in tabuleiro) {
+      if (p.pieceColor == PieceColor.black) {
+        if (p.name == "pawn") {
+          if (p.location.y == 7) {
+            piece = p;
+            color = 'black';
+          }
+        }
+      } else {
+        if (p.name == "pawn") {
+          if (p.location.y == 0) {
+            piece = p;
+            color = 'white';
+          }
+        }
+      }
+    }
+    if (piece != null) {
+      String? returnVal = await showDialog(
+        builder: (c) {
+          return AlertDialog(
+            insetPadding: const EdgeInsets.symmetric(vertical: 200.0),
+            title: const Text("Promoção do Peão"),
+            content: const SizedBox(
+              height: 2,
+            ),
+            actions: [
+              IconButton(
+                onPressed: () {
+                  arrumaPromotion(tabuleiro, piece, "queen");
+                  Navigator.of(context, rootNavigator: true).pop();
+                },
+                icon: SvgImageAdapter.fromAsset(
+                  color == 'black'
+                      ? AppAssets.blackQueen
+                      : AppAssets.whiteQueen,
+                  alignment: Alignment.center,
+                  width: 75.0,
+                ),
+              ),
+              IconButton(
+                onPressed: () {
+                  arrumaPromotion(tabuleiro, piece, "bishop");
+                  Navigator.of(context, rootNavigator: true).pop();
+                },
+                icon: SvgImageAdapter.fromAsset(
+                  color == 'black'
+                      ? AppAssets.blackBishop
+                      : AppAssets.whiteBishop,
+                  alignment: Alignment.center,
+                  width: 75.0,
+                ),
+              ),
+              IconButton(
+                onPressed: () {
+                  arrumaPromotion(tabuleiro, piece, "knight");
+                  Navigator.of(context, rootNavigator: true).pop();
+                },
+                icon: SvgImageAdapter.fromAsset(
+                  color == 'black'
+                      ? AppAssets.blackKnight
+                      : AppAssets.whiteKnight,
+                  alignment: Alignment.center,
+                  width: 75.0,
+                ),
+              ),
+              IconButton(
+                onPressed: () {
+                  arrumaPromotion(tabuleiro, piece, "rook");
+                  Navigator.of(context, rootNavigator: true).pop();
+                },
+                icon: SvgImageAdapter.fromAsset(
+                  color == 'black' ? AppAssets.blackRook : AppAssets.whiteRook,
+                  alignment: Alignment.center,
+                  width: 75.0,
+                ),
+              ),
+            ],
+            actionsAlignment: MainAxisAlignment.center,
+          );
+        },
+        context: context,
+      );
+    }
+  }
+
+  void arrumaPromotion(List<ChessPiece> pieces, ChessPiece? pawn, String nome) {
+    if (pawn != null) {
+      // Destroy pawn
+      Location pawnOldLocation = Location(pawn.location.x, pawn.location.y);
+      PieceColor pawnColor = pawn.pieceColor;
+      pawn.location.x = -1;
+      pawn.location.y = -1;
+      pawn.died = true;
+      pawn.legalMoviments = null;
+      pawn.ilegalMoviments = null;
+      pawn.opMoviments = null;
+      pieces.remove(pawn);
+      // Create new piece
+      switch (nome) {
+        case 'queen':
+          ChessPiece queen = Queen(pawnColor, pawnOldLocation);
+          pieces.add(queen);
+          break;
+        case 'rook':
+          ChessPiece rook = Rook(pawnColor, pawnOldLocation);
+          pieces.add(rook);
+          break;
+        case 'bishop':
+          ChessPiece bishop = Bishop(pawnColor, pawnOldLocation);
+          pieces.add(bishop);
+          break;
+        case 'knight':
+          ChessPiece knight = Knight(pawnColor, pawnOldLocation);
+          pieces.add(knight);
+          break;
+      }
     }
   }
 }

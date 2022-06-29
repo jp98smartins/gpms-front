@@ -11,7 +11,9 @@ class Rook extends ChessPiece {
           moved: false,
           name: 'rook',
           pieceColor: pieceColor,
+          value: 5,
           location: location,
+          promotion: '',
         );
 
   @override

@@ -21,4 +21,10 @@ class VerifyMoviment {
     }
     return false;
   }
+
+  static void verifyPromotion(
+    List<Location>? locations,
+    Location location,
+    List<ChessPiece> tabuleiro,
+  ) {}
 }

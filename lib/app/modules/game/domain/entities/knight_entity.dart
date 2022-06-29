@@ -10,8 +10,10 @@ class Knight extends ChessPiece {
           died: false,
           moved: false,
           name: 'knight',
+          value: 3,
           pieceColor: pieceColor,
           location: location,
+          promotion: '',
         );
 
   @override

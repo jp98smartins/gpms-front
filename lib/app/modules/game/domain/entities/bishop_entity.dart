@@ -11,7 +11,9 @@ class Bishop extends ChessPiece {
           moved: false,
           name: 'bishop',
           pieceColor: pieceColor,
+          value: 3,
           location: location,
+          promotion: '',
         );
 
   @override
