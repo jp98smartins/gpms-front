@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gpms/app/core/utils/app_validators.dart';
 
 import 'dropdown_form_field_app.dart';
 
@@ -16,12 +17,20 @@ class _FormMenuState extends State<FormMenu> {
 
   // Game Mode
   String? _gameMode;
-  void _changeMode(String mode) => setState(() => _gameMode = mode);
+  void _changeMode(String mode) => setState(() {
+        _gameMode = mode;
+        if (mode == "1") {
+          showGameDifficulty = true;
+          return;
+        }
+        showGameDifficulty = false;
+      });
   final _gameModeItems = <Map<String, String>>[
     {"id": "0", "name": "PvP"},
     {"id": "1", "name": "PvE"},
     // {"id": "2", "name": "EvE"},
   ];
+  var showGameDifficulty = false;
 
   // Game Difficulty
   String? _gameDifficulty;
@@ -62,21 +71,28 @@ class _FormMenuState extends State<FormMenu> {
                 )
                 .toList(),
             changeValue: (mode) => _changeMode(mode),
+            validator: (mode) => validatorEmpty(mode.toString()),
           ),
           const SizedBox(height: 10),
-          DropdownFormFieldApp(
-            label: "Nível do Jogo",
-            value: _gameDifficulty,
-            items: _gameDifficultyItems
-                .map<DropdownMenuItem<String>>(
-                  (Map<String, String> oneDifficulty) =>
-                      DropdownMenuItem<String>(
-                    value: oneDifficulty["id"].toString(),
-                    child: Text(oneDifficulty["name"].toString()),
-                  ),
-                )
-                .toList(),
-            changeValue: (difficulty) => _changeDifficulty(difficulty),
+          Visibility(
+            visible: showGameDifficulty,
+            child: DropdownFormFieldApp(
+              label: "Nível do Jogo",
+              value: _gameDifficulty,
+              items: _gameDifficultyItems
+                  .map<DropdownMenuItem<String>>(
+                    (Map<String, String> oneDifficulty) =>
+                        DropdownMenuItem<String>(
+                      value: oneDifficulty["id"].toString(),
+                      child: Text(oneDifficulty["name"].toString()),
+                    ),
+                  )
+                  .toList(),
+              changeValue: (difficulty) => _changeDifficulty(difficulty),
+              validator: showGameDifficulty
+                  ? (mode) => validatorEmpty(mode.toString())
+                  : null,
+            ),
           ),
           const SizedBox(height: 20),
           ElevatedButton(
