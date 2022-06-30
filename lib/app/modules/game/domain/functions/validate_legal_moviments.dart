@@ -221,23 +221,24 @@ class validate_legal_moviments {
     ChessPiece? checkedKing = is_xequed.getXequed(tabuleiro);
     bool whiteHasValidMoves = false;
     bool blackHasValidMoves = false;
+    int whitePiecesCount = 0;
+    int blackPiecesCount = 0;
 
     for (ChessPiece cp in tabuleiro) {
-      if (cp.pieceColor.name == 'white') {
+      if (cp.pieceColor.name == 'white' && !cp.died) {
+        whitePiecesCount++;
         if (cp.legalMoviments != null) {
           for (var legalMovement in cp.legalMoviments!) {
             whiteHasValidMoves = true;
           }
         }
       } else {
+        blackPiecesCount++;
         if (cp.legalMoviments != null) {
           for (var legalMovement in cp.legalMoviments!) {
             blackHasValidMoves = true;
           }
         }
-      }
-      if (whiteHasValidMoves && blackHasValidMoves) {
-        break;
       }
     }
 
@@ -254,6 +255,38 @@ class validate_legal_moviments {
       }
       if (!whiteHasValidMoves && chessMatch.pieceColor.name == 'white') {
         matchResult = MatchResult.draw;
+      }
+      if (whitePiecesCount < 2 && blackPiecesCount < 2) {
+        matchResult = MatchResult.draw;
+      }
+      if (whitePiecesCount + blackPiecesCount < 4) {
+        for (ChessPiece cp in tabuleiro) {
+          if (cp.name == 'knight' || cp.name == 'bishop') {
+            matchResult = MatchResult.draw;
+          }
+        }
+      }
+      if (whitePiecesCount + blackPiecesCount < 5) {
+        int knights = 0;
+        for (ChessPiece cp in tabuleiro) {
+          if (cp.name == 'knight') {
+            knights++;
+          }
+        }
+        if (knights == 2) {
+          matchResult = MatchResult.draw;
+        }
+      }
+      if (whitePiecesCount == 2 && blackPiecesCount == 2) {
+        int pieces = 0;
+        for (ChessPiece cp in tabuleiro) {
+          if (cp.name == 'knight' || cp.name == 'bishop') {
+            pieces++;
+          }
+        }
+        if (pieces == 2) {
+          matchResult = MatchResult.draw;
+        }
       }
     }
 
