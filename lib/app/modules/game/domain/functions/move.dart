@@ -97,6 +97,9 @@ class Move {
         }
         ChessPiece? rook = findPiece(boardPieces, Location(1, 0));
         if (rook != null) {
+          if (rook.moved) {
+            return false;
+          }
           rook.location.x = 4;
           rook.location.y = 0;
           rook.moved = true;
@@ -112,6 +115,9 @@ class Move {
         }
         ChessPiece? rook = findPiece(boardPieces, Location(8, 0));
         if (rook != null) {
+          if (rook.moved) {
+            return false;
+          }
           rook.location.x = 6;
           rook.location.y = 0;
           rook.moved = true;
@@ -128,6 +134,9 @@ class Move {
         }
         ChessPiece? rook = findPiece(boardPieces, Location(1, 7));
         if (rook != null) {
+          if (rook.moved) {
+            return false;
+          }
           rook.location.x = 4;
           rook.location.y = 7;
           rook.moved = true;
@@ -143,6 +152,9 @@ class Move {
         }
         ChessPiece? rook = findPiece(boardPieces, Location(8, 7));
         if (rook != null) {
+          if (rook.moved) {
+            return false;
+          }
           rook.location.x = 6;
           rook.location.y = 7;
           rook.moved = true;
@@ -323,7 +335,11 @@ class Move {
           isValid = false;
         }
 
-        if (rook != null && rook.moved) {
+        if (rook != null) {
+          if (rook.moved) {
+            isValid = false;
+          }
+        } else {
           isValid = false;
         }
 
@@ -340,7 +356,11 @@ class Move {
           isValid = false;
         }
 
-        if (rook != null && rook.moved) {
+        if (rook != null) {
+          if (rook.moved) {
+            isValid = false;
+          }
+        } else {
           isValid = false;
         }
 
@@ -356,7 +376,11 @@ class Move {
           isValid = false;
         }
 
-        if (rook != null && rook.moved) {
+        if (rook != null) {
+          if (rook.moved) {
+            isValid = false;
+          }
+        } else {
           isValid = false;
         }
 
@@ -373,7 +397,11 @@ class Move {
           isValid = false;
         }
 
-        if (rook != null && rook.moved) {
+        if (rook != null) {
+          if (rook.moved) {
+            isValid = false;
+          }
+        } else {
           isValid = false;
         }
 
